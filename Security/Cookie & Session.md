@@ -63,10 +63,10 @@
 <br/>
 
 ### 클라이언트에서 쿠키를 다루는 방법 (macOS, Chrome 기준)
-* 크롬 Console을 활용하는 방법 - 크롬 개발자 도구의 Console 탭에서 **document.cookie**를 입력하면 쿠키 정보를 확인할 수 있음
+* 크롬 Console을 활용하는 방법 - 크롬 개발자 도구의 Console 탭에서 **document.cookie**를 입력하면 쿠키 정보를 확인할 수 있음<br/>
 	<img width="771" alt="Cookie - Console" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9eb20c0e-6515-4ef2-bbb5-3fbda6dcae78">
  
-* 크롬 Application을 활용하는 방법: 크롬 개발자 도구의 Application 탭의 왼쪽 목록에서 Cookies를 펼치면 Origin 별로 설정된 쿠키 정보를 확인/수정할 수 있음
+* 크롬 Application을 활용하는 방법: 크롬 개발자 도구의 Application 탭의 왼쪽 목록에서 Cookies를 펼치면 Origin 별로 설정된 쿠키 정보를 확인/수정할 수 있음<br/>
 	<img width="779" alt="Cookie - Application" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f87bf7df-f4ce-4f7c-afc2-2127b3166b00">
 
 <br/><br/>
