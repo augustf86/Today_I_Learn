@@ -1,4 +1,4 @@
-# Background of Web Hacking
+# Background: Web
 
 ## Web
 ### 웹(World Wide Web, W3, Web)의 정의
