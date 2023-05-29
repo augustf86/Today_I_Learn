@@ -92,6 +92,7 @@ HTTP 요청(Request): 서버에게 특정 동작을 요구하는 메시지
 * 시작 줄 - **메소드(Method), 요청 URI(Request-URI), HTTP 버전**으로 구성 (각각은 띄어쓰기로 구분됨)
 	- 메소드: URI가 가리키는 리소스를 대상으로 서버가 수행하길 바라는 동작(= HTTP 전송 방법)을 나타냄
 		+ *8개의 메소드 중 GET, POST 메소드가 비교적 자주 사용됨*
+		+ 참고: [HTTP Method](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Supplement/HTTP%20Method%20%26%20Status%20Code.md)
 	- 요청 URI: 메소드의 대상
 	- HTTP 버전: 클라이언트가 사용하는 HTTP 프로토콜의 버전
 * 헤더와 바디
@@ -104,8 +105,11 @@ HTTP 응답(Response): HTTP 요청에 대한 결과를 반환하는 메시지
 * 시작 줄: **HTTP 버전, 상태코드(Status Code), 처리 사유(Reason Phrase)**로 구성 (각각은 띄어쓰기로 구분됨)
 	- HTTP 버전: 서버에서 사용하는 HTTP 프로토콜의 버전
 	- 상태 코드: 요청에 대한 처리 결과를 세 자릿수로 나타냄
+		+ 참고: [HTTP Status Code](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Supplement/HTTP%20Method%20%26%20Status%20Code.md)
 	- 처리 사유: 상태 코드가 발생한 이유를 짧게 기술한 것
 * 헤더와 바디
+
+
 
 ### HTTPS (HTTP over Secure socket layer)
 * HTTP의 문제점 - **응답과 요청을 평문으로 전달**하는 점
