@@ -153,6 +153,7 @@ HTTP 메시지
 
 ### URL(Uniform Resource Locator)
 URL은 웹에 있는 리소스의 위치를 표현하는 문자열로, 브라우저로 특정 웹 리소스를 서버에 요청할 때 사용함
+<img width="647" alt="URL" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/14b8ee3e-4e07-4cee-a7ec-90c5846fefdf">
 * Scheme, Authority(Userinfo, Host, Port), Path, Query, Fragment 등으로 구성됨
 	| 구성 요소 | 설명 |
 	|-------|----------------------------|
@@ -173,6 +174,7 @@ URL의 구성 요소 중 Host - **Domain Name**, **IP Address**의 값을 가질
 	- Domain Name을 Host 값으로 이용할 때, *브라우저는 Domain Name Server(DNS)에 Domain Name을 질의하고 DNS가 응답한 IP Address를 사용함*
 	- Domain Name 정보를 확인하는 방법
 		+ MacOS/Linux/Windows에서 **nslookup 명령어**를 사용해 확인할 수 있음 
+		<img width="422" alt="nslookup" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/1676689e-f922-42b2-92a8-c54ccfbdab58">
 
 <br/>
 
