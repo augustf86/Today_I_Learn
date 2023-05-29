@@ -190,6 +190,8 @@ URL의 구성 요소 중 Host - **Domain Name**, **IP Address**의 값을 가질
 		| 파이어폭스 | 개코(Gecko) |
 	- 각각의 엔진에 따라 렌더링 과정과 순서, 속도의 차이는 있지만, **HTML을 파싱하고 시각화하여 이용자에게 보여주는 것**은 동일함
 
+<br/>
+
 ### Browser: Devtools
 * 브라우저 개발자 도구(Devtools)의 기능
 	- HTML, CSS 코드를 브라우저에서 수정하고 결과를 바로 확인할 수 있음
@@ -199,6 +201,7 @@ URL의 구성 요소 중 Host - **Domain Name**, **IP Address**의 값을 가질
 	- macOS 환경의 크롬 브라우저 사용 시 개발자 도구 실행 방법
 		+ 브라우저를 열고 *option + command + I* 키를 누르거나 '보기 - 개발자 정보 - 개발자 도구'를 클릭함
 		+ 개발자 도구의 주요 패널
+		  <img width="777" alt="크롬 개발자 도구" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/841f159b-1d98-42d8-b82d-000cd8f8ec84">
 			| 패널 | 설명 |
 			|--------|-------------------------|
 			| Elements | 페이지를 구성하는 HTML 검사 |
