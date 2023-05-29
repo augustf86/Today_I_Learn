@@ -89,6 +89,7 @@ HTTP 메시지
 		+ 클라이언트나 서버에게 전송하려는 데이터가 바디에 담김
 
 HTTP 요청(Request): 서버에게 특정 동작을 요구하는 메시지
+<img width="1097" alt="HTTP Request Example(naver com)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/373ccedf-23c2-4318-96f9-072d76257c2e">
 * 시작 줄 - **메소드(Method), 요청 URI(Request-URI), HTTP 버전**으로 구성 (각각은 띄어쓰기로 구분됨)
 	- 메소드: URI가 가리키는 리소스를 대상으로 서버가 수행하길 바라는 동작(= HTTP 전송 방법)을 나타냄
 		+ *8개의 메소드 중 GET, POST 메소드가 비교적 자주 사용됨*
