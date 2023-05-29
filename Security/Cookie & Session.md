@@ -42,6 +42,8 @@
 쿠키 = 클라이언트의 브라우저에 저장되고 요청에 포함되는 정보 → 악의적인 클라이언트(공격자)는 쿠키 정보를 변조해 서버에 요청을 보낼 수 있음
 * 서버가 **별다른 검증 없이** 쿠키를 통해 이용자의 정보를 식별하는 경우 공격자가 **타 이용자를 사칭**해 정보를 탈취할 수 있음
 
+<br/>
+
 ### 쿠키를 웹 페이지에 적용할 수 있는 방법
 * 서버 *(일반적으로 서버가 쿠키를 설정함)*
 	- HTTP 응답 중 헤더에 **쿠키 설정 해더**(Set-Cookie)를 추가하면 클라이언트의 브라우저가 쿠키를 설정함
@@ -57,6 +59,16 @@
 		document.cookie = “name=alice;”
 		document.cookie = “age=25; Expires=Fri, 30 Sep 2022 14:51:50 GMT;”
 		```
+
+<br/>
+
+### 클라이언트에서 쿠키를 다루는 방법 (macOS, Chrome 기준)
+* 크롬 Console을 활용하는 방법
+	<img width="771" alt="Cookie - Console" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9eb20c0e-6515-4ef2-bbb5-3fbda6dcae78">
+	- 크롬 개발자 도구의 Console 탭에서 **document.cookie**를 입력하면 쿠키 정보를 확인할 수 있음
+* 크롬 Application을 활용하는 방법
+	<img width="779" alt="Cookie - Application" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f87bf7df-f4ce-4f7c-afc2-2127b3166b00">
+	- 크롬 개발자 도구의 Application 탭의 왼쪽 목록에서 Cookies를 펼치면 Origin 별로 설정된 쿠키 정보를 확인/수정할 수 있음
 
 <br/><br/>
 
