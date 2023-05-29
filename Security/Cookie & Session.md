@@ -54,8 +54,8 @@
 * 클라이언트
 	- 자바스크립트를 사용해 쿠키를 설정함
 		```javascript
-			document.cookie = “name=alice;”
-			document.cookie = “age=25; Expires=Fri, 30 Sep 2022 14:51:50 GMT;”
+		document.cookie = “name=alice;”
+		document.cookie = “age=25; Expires=Fri, 30 Sep 2022 14:51:50 GMT;”
 		```
 
 <br/><br/>
