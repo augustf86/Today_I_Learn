@@ -99,7 +99,7 @@ HTTP 메시지
 
 <br/>
 
-HTTP 요청(Request): 서버에게 특정 동작을 요구하는 메시지
+**HTTP 요청(Request)**: 서버에게 특정 동작을 요구하는 메시지
 <img width="1097" alt="HTTP Request Example(naver com)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/373ccedf-23c2-4318-96f9-072d76257c2e">
 * 시작 줄 - **메소드(Method), 요청 URI(Request-URI), HTTP 버전**으로 구성 (각각은 띄어쓰기로 구분됨)
 	- 메소드: URI가 가리키는 리소스를 대상으로 서버가 수행하길 바라는 동작(= HTTP 전송 방법)을 나타냄
@@ -115,7 +115,8 @@ HTTP 요청(Request): 서버에게 특정 동작을 요구하는 메시지
 
 <br/>
 
-HTTP 응답(Response): HTTP 요청에 대한 결과를 반환하는 메시지
+**HTTP 응답(Response)**: HTTP 요청에 대한 결과를 반환하는 메시지
+<img width="1030" alt="HTTP Response Example(naver)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f7c35151-c730-45d5-a506-79358853e32a">
 * 시작 줄: **HTTP 버전, 상태코드(Status Code), 처리 사유(Reason Phrase)**로 구성 (각각은 띄어쓰기로 구분됨)
 	- HTTP 버전: 서버에서 사용하는 HTTP 프로토콜의 버전
 	- 상태 코드: 요청에 대한 처리 결과를 세 자릿수로 나타냄
