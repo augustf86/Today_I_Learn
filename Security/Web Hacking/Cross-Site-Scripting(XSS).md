@@ -62,6 +62,8 @@
 * Stored XSS 취약점이 존재하는 곳 - 게시판이나 댓글, 자료실과 같이 **사용자가 입력한 값을 웹 애플리케이션에 저장해 두는 곳**
 	- 스크립트에 대한 필터링을 하지 않으면 해당 게시물을 열람하는 일반 이용자가 악성 스크립트에 피해를 입게 됨
 	- 특히 게시판은 불특정 다수에게 보여지기 때문에 해당 기능에서 XSS 취약점이 존재할 경우 높은 파급력을 가짐
+* Stored XSS 예시<br/><br/>
+	<img width="764" alt="Stored XSS" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2f13f43e-3d65-451f-ae34-ac1d1ad49a42">
 
 <br/>
 
@@ -73,6 +75,8 @@
 * 이용자에게 악성 스크립트가 포함된 링크를 전달하기 위해 Click Jacking 또는 Open Redirect 등 다른 취약점과 연계하여 사용함
 	- 링크를 직접 전달할 경우 악성 스크립트 포함 여부를 쉽게 파악할 수 있음
 	- 주로 공격 스크립트 코드를 인코딩한 후 전달하여 사용자가 쉽게 눈치채지 못하게 함
+* Reflect XSS 예시<br/><br/>
+	<img width="741" alt="Reflected XSS" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/060dc11c-98c3-4e2a-9fb5-a75bb0c4e688">
 
 <br/>
 
