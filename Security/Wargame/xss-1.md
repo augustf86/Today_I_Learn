@@ -88,7 +88,7 @@ memo_text = ""
 @app.route("/memo")
 def memo():
     global memo_text # memo_text 변수를 전역변수로 참조함
-    text = request.args.get("memo", "") # 이용자가 /memo?= 뒤에 입력한 memo 값을 가져옴
+    text = request.args.get("memo", "") # 이용자가 /memo?memo= 뒤에 입력한 memo 값을 가져옴
     memo_text += text + "\n" # 이용자가 전송한 memo 입력값을 memo_text에 추가함
     return render_template("memo.html", memo=memo_text) # 사이트에 기록된 memo_text를 화면에 출력함
 
