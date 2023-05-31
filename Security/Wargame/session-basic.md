@@ -104,8 +104,24 @@ if __name__ == '__main__':
 
 ## 문제 풀이
 ### 취약점이 존재하는 코드
+* Cookie 문제와 session-basic 문제의 비교
+	- Cookie 문제에서는 인덱스 페이지에서 이용자가 전송한 쿠키의 ```username``` 변수가 요청에 포함된 쿠키에 의해서 결정되었음
+	- session-basic 문제에서는 쿠키에 ```username``` 대신에 랜덤으로 생성된 ```session_id```가 사용됨
+		+ guest 계정으로 로그인한 후 크롬 개발자 도구의 Application 탭에서 Cookies 목록을 확인하면 session_id가 생성된 것을 확인할 수 있음
+* 문제 파일을 살펴보면 **사이트에 처음 접속할 때 admin의 session_id를 session_storage에 삽입하고, admin 페이지에 접속하면 session_storage를 출력한다는 것을 확인할 수 있음**
+	- admin 페이지로 이동하면 admin 계정의 session_id를 획득할 수 있으므로 이 부분을 통해 공격할 수 있음
 
 <br/>
 
 ### 익스플로잇
+1. guest 계정으로 로그인을 수행하여, 크롬 개발자 도구의 Application 탭의 Cookies 항목에 session_id를 생성함
+    <img width="1033" alt="session-basic_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2d53bda3-b6b1-44c7-a229-ff66e179fb72">
 
+2. 다음과 같이 주소를 입력하여 /admin 페이지로 이동함
+	- 화면에서 “admin”을 값으로 갖는 session_id 정보를 획득할 수 있음 → 이 값을 복사하여 인덱스 페이지로 이동함
+    <img width="1077" alt="session-basic_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/db6841de-83d5-4452-a86a-f2c5ceffd960">
+
+3. 인덱스 페이지의 Application 탭에서 session_id의 Value를 복사한 값으로 바꾼 후 페이지를 새로고침함
+    <img width="1077" alt="session-basic_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3a820a4d-2016-40f4-9462-d4b56c6a72b0">
+4. admin으로 로그인에 성공하여 flag를 획득할 수 있음
+    <img width="1077" alt="session-basic_4" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/6b90df63-ebed-4f55-8813-00a7efb99869">
