@@ -102,6 +102,11 @@ app.run(host="0.0.0.0", port=8000)
 
 ## 문제 풀이
 ### 취약점이 존재하는 코드
+* xss-1 문제와 달리 /vuln 엔드포인트에서 ```render_template``` 함수를 사용하여 HTML 엔티티 코드로 변환해 저장함
+* XSS 우회를 사용해서 익스플로잇 코드를 작성해야 XSS 공격(Reflected XSS)에 성공할 수 있음
+	- [Cross-site Scripting Cheat Sheet](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet) 사이트를 이용해 XSS 우회 방법을 체크함
+		+ 크롬 브라우저에서 사용할 수 있는 XSS 우회 방법 중 ```<svg>``` 태그를 이용한 방법을 사용
+		  - flag 엔드포인트에서 ```<svg onload=alert(1)>```를 입력하고 [제출] 버튼을 누르면 “good” 알림창이 뜨면서 XSS 발생을 확인할 수 있음
 
 <br/><br/>
 
