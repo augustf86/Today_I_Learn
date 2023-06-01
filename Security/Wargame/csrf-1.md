@@ -137,4 +137,30 @@ app.run(host="0.0.0.0", port=8000)
 
 ### 익스플로잇
 /vuln 페이지를 방문하는 로컬호스트 이용자가 /admin/notice_flag 페이지로 요청을 전송하는 코드를 작성해야 함
+* CSRF 취약점 테스트
+	- ```<img>``` 태그를 사용해 외부 웹 서버로 요청을 보내거나 memo 페이지에 메모를 기록하는 공격 코드를 작성한 뒤, 취약점이 발생하는 /vuln 페이지에 해당 코드를 삽입함
+		```html
+		<!— 외부 웹 서버로 요청을 보내는 코드—>
+		<img src=“http://RANDOMHOST.reuqest.dreamhack.games">
+		<!— memo 페이지에 요청을 보내는 코드—>
+		<img src=“/memo?memo=‘test csrf’”>
+		```
+		+ 외부 웹 서버를 이용해 테스트
+			<img width="1543" alt="취약점 테스트_1 사전 준비" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e660b69f-f635-449b-9b2d-d60f2ef8bc5e">
+			<img width="1025" alt="취약점 테스트_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/face3696-dcb8-48af-ac54-12f199459bc6">
+			<img width="1543" alt="취약점 테스트_1 결과" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e664ca5f-4182-48b1-a599-824c40fdbfae">
+		+ memo 페이지를 이용해 테스트
+			<img width="1025" alt="취약점 테스트_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/398eb557-2c63-441d-8ef1-14e4b181cbdf">
+			<img width="1025" alt="취약점 테스트_2 결과" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4b34fee2-fb6f-4a8f-ab6c-d65312badd09">
+
+<br/>
+
+#### 익스플로잇 과정
+1. flag 엔드포인트에서 ```<img src=“/admin/notice_flag?userid=admin”/>```를 입력하고 [제출] 버튼을 클릭함
+	* userid 파라미터의 값이 “admin”인지 검사하는 코드가 존재하기 때문에 해당 문자열을 반드시 포함해야 함
+	* 성공적으로 접속했다면 로컬 호스트에서 ```http://127.0.0.1:8000/vuln?param=<img src=“/admin/notice_flag?userid=admin”/>```에 접속하게 됨
+	<img width="1025" alt="익스플로잇1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/54189427-ff9e-4b3c-a721-57f4c1b36339">
+
+2. “good” 알림창이 출력되면 memo 페이지로 이동하여 CSRF 공격으로 관리자가 /admin/notice_flag 페이지를 방문한 것을 확인할 수 있음 (FLAG 획득)
+	<img width="1025" alt="익스플로잇2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f1f85181-2fb1-4c55-81fc-7f1c4decbf49">
 
