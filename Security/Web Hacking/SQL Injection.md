@@ -146,7 +146,7 @@ SELECT uid FROM user_table WHERE uid=‘’ AND upw=‘’
 <br/>
 
 * Blind SQL Injection 공격 스크립트 (공격 자동화)
-	- 파이썬의 requests 모듈을 이용해 자동화 스크립트 작성
+	- [파이썬의 requests 모듈](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Supplement/Python_requests.md)을 이용해 자동화 스크립트 작성
 		+ 아스키 범위 중 이용자가 이용자가 입력할 수 있는 모든 문자의 범위를 먼저 지정 → 비밀번호의 경우 알파벳, 숫자, 특수문자로 이뤄지기 때문에 32부터 126까지의 모든 문자를 범위로 지정함
 	- 작성한 공격 스크립트(python 코드)
 		```python
