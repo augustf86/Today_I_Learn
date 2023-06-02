@@ -12,3 +12,9 @@
     + [Cross Site Request Forgery(CSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Cross%20Site%20Request%20Forgery(CSRF).md)
   - Server Side Web Hacking
 * [Wargame](https://github.com/augustf86/Today_I_Learn/tree/main/Security/Wargame)
+
+<br/><br/>
+
+## Database (MySQL)
+  > 상명대학교 소프트웨어학과 3학년 데이터베이스 강의 백업
+  > * 도서 정보: MySQL로 배우는 데이터베이스 개론과 실습(2019), 박우창 외 2인, 한빛아카데미
