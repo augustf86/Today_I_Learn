@@ -236,3 +236,33 @@ MongoDB는 ```$```문자를 통해 연산자를 사용할 수 있음 (참고: [O
 <br/>
 
 ### Redis
+* Redis의 특징
+    - 키-값(Key-Value)의 쌍을 가진 데이터를 저장함
+    - **메모리 기반의 DBMS**
+        + 메모리를 사용해 데이터를 저장하고 접근함 → 읽고 쓰는 작업을 다른 DBMS보다 빠르게 수행함
+        + 다양한 서비스에서 임시 데이터를 캐싱하는 용도로 주로 사용함
+* [📚 Redis Document](https://redis.io/docs/)
+* [📚 Redis Commands](https://redis.io/commands/)
+
+#### Redis - 데이터 조회 및 조작 명령어
+| commands | syntax | description | 공식 문서 |
+|---|-----|-----|---|
+| GET | ```GET key``` | 데이터 조회 - key의 값을 가져옴 (키가 없으면 nil이 반환됨) | [📚 Redis GET](https://redis.io/commands/get/) |
+| MGET | ```MGET key [key ...]``` | 여러 데이터를 조회 - 지정된 모든 key의 값을 반환함 (문자열 값을 보유하지 않거나 존재하지 않는 모든 키 값에 대해 nil이 반환됨) | [📚 Redis MGET](https://redis.io/commands/mget/) |
+| SET | ```SET key value``` | 새로운 데이터 추가 (키에 이미 값이 있으면 덮어씀) | [📚 Redis SET](https://redis.io/commands/set/) |
+| MSET | ```MSET key value [key value ...]``` | 여러 데이터를 추가 - 주어진 키를 각각의 값으로 설정함 (기존 값이 존재하면 새 값으로 덮어씀) | [📚 Redis MSET](https://redis.io/commands/mset/) |
+| DEL | ```DEL key [key ...]``` | 데이터 삭제 - 지정된 키를 제거함 (존재하지 않으면 무시) | [📚 Redis DEL](https://redis.io/commands/del/) |
+| EXISTS | ```EXISTS key [key ...]``` | 데이터 유무 확인 - 키가 존재하면 반환함 | [📚 Redis EXISTS](https://redis.io/commands/exists/) |
+| INCR | ```INCR key``` | [64 bit signed integer] 데이터 값에 1을 더함 - 키에 저장된 숫자를 1씩 증가 (키가 없으면 해당 작업 수행 전에 0으로 설정됨) | [📚 Redis INCR](https://redis.io/commands/incr/) |
+| DECR | ```DECR key``` | [64 bit signed integer] 데이터 값에 1을 뺌 - 키에 저장된 숫자를 1씩 감소 (키가 없으면 해당 작업을 수행하기 전에 0으로 설정됨) | [📚 Redis DECR](https://redis.io/commands/decr/) | 
+
+#### Redis - 관리 명령어
+| commands | syntax | description | 공식 문서 |
+|---|-----|-----|---|
+| INFO | ```INFO [section]``` | DBMS 정보 조회 - 서버에 대한 정보와 통계를 컴퓨터가 분석하기 쉽고 사람이 읽기 쉬운 형식으로 반환함(자세한 옵션은 다음의 공식 문서 참고) | [📚 Redis INFO](https://redis.io/commands/info/) |
+| CONFIG GET | ```CONFIG GET parameter``` | 설정 조회 - 실행 중인 Redis 서버의 구성 매개변수를 읽는 데 사용함 | [📚 Redis CONFIG GET](https://redis.io/commands/config-get/) |
+| CONFIG SET | ```CONFIG SET parameter value``` | 새로운 설정을 입력 - 재시작 필요 없이 런타임에 서버를 재구성하기 위해 사용 | [📚 Redis CONFIG SET](https://redis.io/commands/config-set/) |
+
+<br/>
+
+### CouchDB
