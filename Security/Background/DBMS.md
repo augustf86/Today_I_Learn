@@ -266,3 +266,29 @@ MongoDB는 ```$```문자를 통해 연산자를 사용할 수 있음 (참고: [O
 <br/>
 
 ### CouchDB
+* CouchDB 특징
+    - JSON 형태인 도큐먼트(Document)를 저장함
+    - 웹 기반의 DBMS → **REST API 형식**으로 요청을 처리함
+        + 요청 시 사용할 수 있는 메소드
+            | 메소드 | 설명 |
+            |---|------|
+            | POST | 새로운 레코드를 추가함 |
+            | GET | 레코드를 조회함 |
+            | DELETE | 레코드를 삭제함 |
+
+#### CouchDB - 특수 구성 요소
+서버 또는 데이터베이스를 위해 제공하는 다양한 기능 중 ```_``` 문자로 시작하는 URL 필드
+* Server - 참고: [Server API Reference](https://docs.couchdb.org/en/latest/api/server/index.html)
+    | 요소 | 설명 |
+    |---|-----|
+    | / | 인스턴스에 대한 메타 정보를 반환함 (인스턴스 루트에 접근함) <br/> - 응답: 서버에 대한 정보를 포함하는 JSON structure |
+    | /_all_dbs | 인스턴스의 모든 데이터베이스 목록을 반환함 |
+    | /_utils | 관리자 페이지(built-in Fauxton administration interface)로 이동함 |
+
+* Database - 참고: [Database API Reference](https://docs.couchdb.org/en/latest/api/database/index.html)
+    | 요소 | 설명 |
+    |---|-----|
+    | /{db} | 지정된 데이터베이스에 대한 정보를 반환함 |
+    | /{db}/_all_docs | 지정된 데이터베이스에 포함된 모든 도큐먼트를 반환함 |
+    | /{db}/_find | 지정된 데이터베이스에서 JSON 쿼리에 해당하는 모든 도큐먼트를 반환함 |
+
