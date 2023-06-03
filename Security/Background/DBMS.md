@@ -17,6 +17,10 @@
   |--------|---------|---------------------|
 	| 관계형(Relational) | MySQL, MariaDB, PostgreSQL, SQLite | 행과 열의 집합인 테이블 형식으로 데이터를 저장함 |
 	| 비관계형(Non-Relational) | MongoDB, CouchDB, Redis | 키-값(Key-Value) 형태로 값을 저장함 |
+    - RDBMS: 스키마를 정의하고 해당 규격에 맞는 데이터를 2차원 테이블 형태로 저장함
+        + 복잡하고, 저장해야 하는 데이터의 수가 늘어나면 용량의 한계에 다다를 수 있다는 단점이 존재함 → 이러한 단점을 해결하기 위해 **비관계형 데이터베이스(Non-Relational DBMS, NRDBMS, NoSQL)**임
+    - RDBMS, NRDBMS 모두 SQL Injection이 발생할 수 있음
+        + 이용자의 입력값을 통해 동적으로 쿼리를 생성해 데이터를 저장하는 점은 동일하기 때문
 
 <br/><br/>
 
@@ -97,3 +101,138 @@ RDBMS의 데이터를 관리하기 위해 설계된 특수 목적의 프로그�
 		```
 		+ **주의**: ```UPDATE```문에 반드시 ```WHERE``` 구문을 추가해서 특정 사용자만 업데이트해야 함
 
+## Non-Relational DBMS (NRDBMS, 비관계형 데이터베이스)(NoSQL = Not Only SQL)
+* 키-값(Key-Value)를 사용해 데이터를 저장함
+* SQL을 사용하지 않고 복잡하지 않은 데이터를 저장함 → 단순 검색 및 추가 검색 작업을 위해 매우 최적화된 저장 공간임
+    + SQL이라는 정해진 문법을 통해 데이터를 저장하는 RDBMS는 한 가지 언어로 다양한 DBMS를 사용할 수 있음
+    + Redis, Dynamo, CouchDB, MongoDB 등 **다양한 DBMS별로 구조와 사용 문법을 배워야 한다**는 단점이 있음
+
+<br/>
+
+### MongoDB
+* JSON 형태의 도큐먼트(Document)를 저장함
+    - MongoDB의 특징
+        + 스키마를 따로 정의하지 않음 → 각 콜렉션(Collection)에 대한 정의가 필요하지 않음
+            - 콜렉션(Collection): 데이터베이스의 하위에 속하는 개념 (RDBMS의 테이블과 유사함)
+        + JSON 형식으로 쿼리를 작성할 수 있음
+        + ```_id``` 필드가 Primary Key 역할을 함
+    - [📚 MongoDB Manual](https://www.mongodb.com/docs/manual/)
+
+#### MongoDB의 연산자
+MongoDB는 ```$```문자를 통해 연산자를 사용할 수 있음 (참고: [Operators](https://www.mongodb.com/docs/manual/reference/operator/query/#std-label-query-selectors))
+* Comparison(비교)
+    | 연산자 | 설명 |
+    |-----|---------|
+    | $eq | 지정된 값과 같은 값을 찾음 (eq = equal) |
+    | $in | 배열 안의 값들과 일치하는 값을 찾음 (in) |
+    | $ne | 지정된 값과 같지 않은 값을 찾음 (ne = not equal) |
+    | $nin | 배열 안의 값들과 일치하지 않은 값을 찾음 (not in) |
+
+* Logical(논리)
+    | 연산자 | 설명 |
+    |-----|---------|
+    | $and | 논리적 AND (각각의 쿼리를 모두 만족하는 문서가 반환됨) |
+    | $not | 쿼리 식의 효과를 반전시킴 (= 쿼리와 일치하지 않는 문서를 반환함) |
+    | $nor | 논리적 NOR (각각의 쿼리를 모두 만족하지 않는 문서가 반환됨) |
+    | $or | 논리적 OR (각각의 쿼리 중 하나 이상 만족하는 문서가 반환됨) |
+
+* Element
+    | 연산자 | 설명 |
+    |-----|---------|
+    | $exists | 지정된 필드가 있는 문서를 찾음 |
+    | $type | 지정된 필드가 지정된 유형인 문서를 선택함 |
+
+* Evalutaion
+    | 연산자 | 설명 |
+    |-----|---------|
+    | $expr | 쿼리 언어 내에서 집계 식을 사용할 수 있음 |
+    | $regex | 지정된 정규식과 일치하는 문서를 반환함 |
+    | $text | 지정된 텍스트를 검색함 |
+
+#### MongoDB와 SQL의 문법 비교
+* SELECT (조회)
+    | SQL | MongoDB |
+    |-----|-----|
+    | ```SELECT * FROM account``` → account 테이블 전체 조회 | ```db.account.find()``` → db의 account 컬렉션을 검색 |
+    | ```SELECT * FROM account WHERE user_id="admin"``` → account 테이블에서 user_id가 "admin"인 데이터를 조회 | ```db.account.find({user_id: "admin"})``` → db의 account 컬렉션에서 user_id(key)가 "admin"(value)인 데이터를 검색 |
+    | ```SELECT user_idx FROM account WHERE user_id="admin"``` → account 테이블에서 user_id가 "admin"인 데이터의 user_idx 열에 해당하는 데이터를 조회 | ```db.acount.find({user_id: "admin"}, {user_idx:1, _id: 0})``` → db_account 셀력센에서 user_id가 "admin"인 데이터의 user_idx 정보를 조회 (```user_idx:1```는 포함한다는 의미이고, ```_id:0```은 제외한다는 의미) |
+
+    + MongoDB의 ```db.collection.find()```
+        - Definition
+            ```
+            db.collection.find(query, projection, options)
+            ```
+        - Parameter
+            | Parameter | Type | Description |
+            |----|----|----|
+            | query | document | (Optional) 연산자를 사용하여 선택 필터를 지정함 (모든 문서를 반환시키기 위해서는 매개변수 생략 또는, 빈 문서(```{}```)를 전달함) |
+            | projection | document | (Optional) query와 일치하는 문서에서 반환할 필드를 지정함 (일치하는 문서의 모든 필드를 반환하려면 매개변수를 생략함) |
+            | options | document | (Optional) query에 대한 추가 옵션을 지정함 (쿼리 동작과 결과가 반환되는 방식을 수정함) |
+        - [📚 Reference](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#std-label-find-projection)
+
+* INSERT (삽입, 추가)
+    | SQL | MongoDB |
+    |-----|-----|
+    | ```INSERT INTO account(user_id, user_pw) VALUES ("guest", "guest")``` → account 테이블의 user_id(첫 번째 열)에 "guest"(첫 번째 값)를, user_pw(두 번째 열)에 "guest"(두 번째 값)를 삽입 | ```db.account.insert({user_id: "guest"}, {user_pw: "guest"})``` → db의 account 셀렉션의 user_id(key)에 "guest"(value)를, user_pw(key)에 "guest"(value)를 삽입 |
+
+    + MongoDB의 ```db.collection.insert()```
+        - Definition
+            ```
+            db.collection.insert(
+                    <documnet or array of documents>,
+                    {
+                        writeConcern: <document>,
+                        orderer: <boolean>
+                    }
+            )
+            ```
+        - Parameter
+            | Parameter | Type | Description |
+            |----|----|----|
+            | document | document/array | 컬렉션에 삽입할 문서 또는 문서 배열 |
+            | writeConcern | document | (Optional) 기본으로 설정 시 생략 가능 (참고: [Write concern](https://www.mongodb.com/docs/manual/reference/method/db.collection.insert/#std-label-insert-wc)) |
+            | ordered | boolean | (Optioanl) true면 순서대로 삽입하고, false면 정렬하지 않고 삽입을 수행함 |
+        - [📚 Reference](https://www.mongodb.com/docs/manual/reference/method/db.collection.insert/)
+
+* DELETE (삭제)
+    | SQL | MongoDB |
+    |-----|-----|
+    | ```DELETE FROM account``` → account 테이블의 데이터 전체를 삭제 | ```db.account.remove()``` → db의 account 셀렉션 내의 모든 키-값을 삭제 |
+    | ```DELETE FROM account WHERE user_id="guest"``` → account 테이블에서 user_id가 "guest"인 데이터를 삭제함 | ```db.account.remove({user_id: "guest"})``` → db의 account 셀렉션에서 user_id(key)가 "guest"(value)인 데이터를 삭제함 |
+
+    + MongoDB의 ```db.account.remove()```
+        - Definition
+            ```
+            db.collection.remove(
+                <query>,
+                <justOne>
+            )
+            ```
+        - Parameter
+            | Parameter | Type | Description |
+            |----|----|----|
+            | query | document | 연산자를 사용하여 삭제 기준을 지정함 (모든 문서를 삭제하려면 빈 문서(```{}```)를 전달) |
+            | justOne | boolean | (optional) 삭제를 하나의 문서로 제한하려면 true, 일치하는 모든 문서를 삭제하려면 false |
+        - [📚 Reference](https://www.mongodb.com/docs/manual/reference/method/db.collection.remove/)
+
+* UPDATE (수정, 갱신)
+    | SQL | MongoDB |
+    |-----|-----|
+    | ```UPDATE account SET user_id="guest2" WHERE user_idx=2``` → account 테이블에서 user_idx가 2인 데이터의 user_id를 "guest2"로 변경함 | ```db.account.update({user_idx: 2}. {$set: {user_id: "guest2"}})``` → db의 account 셀력센여세 user_id가 2인 데이터의 user_id를 "guest2"로 설정($set)하고 변경사항을 반영함 |
+
+    + MongoDB의 ```db.account.update()```
+        - Definition
+            ```
+            db.collection.update(query, update, options)
+            ```
+        - Parameter
+            | Parameter | Type | Description |
+            |----|----|----|
+            | query | document | 업데이트 선택 기준 |
+            | update | document/pipeline | 적용할 수정 사항을 지정함 (연산식, 대체 문서, 파이프라인) |
+            | options | document | (Optional) query에 대한 추가 옵션을 지정함 (쿼리 동작과 결과가 반환되는 방식을 수정함) |
+        - [📚 Reference](https://www.mongodb.com/docs/manual/reference/method/db.collection.update/)
+
+<br/>
+
+### Redis
