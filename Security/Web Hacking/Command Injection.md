@@ -4,8 +4,8 @@
 * 명령어를 실행하는 함수에 이용자가 임의의 인자를 전달할 수 있을 때 발생함
     - 시스템 함수
         + PHP의 ```system```, NodeJS의 ```child_process```, 파이썬의 ```os.system``` 함수 등은 전달된 인자를 셸 프로그램에 전달해 명령어를 실행함
-        + 셸 프로그램에 명령어를 전달하여 실행함
-              <img width="704" alt="메타 문자" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d5a8386b-7388-4797-83af-b541bf45fe7e">
+            - 셸 프로그램이 지원하는 다양한 메타 문자
+                <img width="704" alt="메타 문자" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d5a8386b-7388-4797-83af-b541bf45fe7e">
               <br/>
         + 시스템 함수의 장단점
             | 장점 | 단점 |
