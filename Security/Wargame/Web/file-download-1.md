@@ -55,7 +55,7 @@ def read_memo():
     filename = request.args.get('name', '') # 이용자가 입력한 name 값을 가져옴
 
     try:
-        with open(f'{UPLOAD_DIR}/{filename}', 'rb') as f: # filename(이용자의 입려값)을 rb(read+binary) 모드로 열어 파일의 데이를 읽음
+        with open(f'{UPLOAD_DIR}/{filename}', 'rb') as f: # filename(이용자의 입력값)을 rb(read+binary) 모드로 열어 파일의 데이를 읽음
             data = f.read()
     except (IsADirectoryError, FileNotFoundError): # filename에 해당하는 파일을 발견할 수 없을 경우 에러 발생
         error = True
