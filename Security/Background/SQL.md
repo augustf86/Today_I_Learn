@@ -157,3 +157,58 @@
 
 
 ## SQL Features
+### UNION
+다수의 SELECT 구문을 결합하는 절(= '합집합'을 의미)
+* UNION 절을 통해 다른 테이블에 접근하거나 원하는 쿼리 결과를 생성해 애플리케이션에서 처리하는 타 데이터를 조작할 수 있음
+    - 애플리케이션이 데이터베이스 쿼리의 실행 결과를 출력할 경우 UNION 절이 유용하게 쓰일 수 있음
+    - ```UNION```은 중복을 포함하지 않지만, ```UNION AL```L은 중복을 포함하여 모든 결과를 구함
+* **UNION 절을 사용할 때에는 2가지 필수 조건을 만족해야 함** (만족하지 않으면 에러 발생)
+    1. 이전 SELECT 구문과 UNION을 사용한 구문의 실행 결과 중 컬럼의 갯수가 일치해야 함
+    2. 특정 DBMS에서는 이전 SELECT 구문과 UNION을 사용한 구문의 컬럼 타입이 같아야 함
+
+<br/>
+
+### Subquery
+한 쿼리 내에 또 다른 쿼리를 사용하는 것(= 하나의 SQL 문 안에 다른 SQL 문이 중첩된(nested) 질의, '부속질의'라고도 함)
+* 주질의(main query, 외부질의)와 부속질의(subquery, 내부질의)로 구성됨
+    - 서브쿼리는 메인 쿼리 내에서 괄호 안에 구문을 삽입해야 하며, SELECT 구문만 사용할 수 있음
+* 서브퀴리의 종류 - 위치와 역할에 따라 구분됨
+    | 명칭 | 위치 | 설명 |
+    |----|----|--------|
+    | 스칼라 부속질의(scalar subquery) | SELECT 절 | SELECT 절에서 사용되며 단일 값을 반환함 |
+    | 인라인 뷰(Inline View, table subquery) | FROM 절 | FROM 절에서 결과를 뷰(View) 형태로 반환함 |
+    | 중첩질의(nested subquery, predicate subquery) | WHERE 절 | WHERE 절에서 술어와 값이 사용되며 결과를 한정시키기 위해 사용됨 |
+
+#### *서브쿼리 사용 예시: Scalar subquery*
+SELECT 구문의 컬럼(COLUMNS) 절에서 서브 쿼리를 사용할 때에는 단일 행(Single Row)과 단일 컬럼(Single Column)이 반환되도록 해야 함
+* 복수의 행과 열을 반환하는 서브 쿼리를 작성하면 실행 시 에러가 발생할 수 있음
+    - 에러 발생 이유: 결과가 다중 행이거나 다중 열이라면 DBMS는 그 중 어떠한 행, 어떠한 열을 출력해야 하는지 알 수 없어 에러를 출력함
+    - 예시
+        ```sql
+        # 복수 행을 반환함 (에러 발생: Subquery returns more than 1 row)
+        SELECT username, (SELECT "ABCD" UNION SELECT 1234) FROM usres;
+
+        # 복수 열을 반환함 (에러 발생: Operand should contain 1 column(s))
+        SELECT username, (SELECT "ABCD", 1234) FROM users;
+        ```
+* SELECT 구문과 UPDATE 구문에서 스칼라 서브쿼리를 사용할 수 있음
+
+#### *서브쿼리 사용 예시: Inline View*
+FROM 절에서 서브 쿼리를 사용하면 다중 행(Multiple Row)과 다중 열(Multiple Column) 결과를 반환할 수 있음
+* 뷰(View): 기존 테이블로부터 일시적으로 만들어진 가상의 테이블
+    - ```AS```를 사용하여 뷰에 테이블별칭을 명명할 수 있음
+* 예시
+    ```sql
+    # 생성된 인라인 뷰(user 테이블의 모든 열에 1234를 추가한 테이블)의 별칭을 u로 명명함
+    SELECT * FROM (SELECT *, 1234 FROM users) AS u;
+    ```
+
+#### *서브쿼리 사용 예시: Nested subquery(predicate subquery)*
+WHERE 절에서 서브 쿼리를 사용하면 다중 행(Multiple Row) 결과를 반환하는 쿼리문을 실행할 수 있음
+* 주질의의 자료 집합에서 한 행씩 가져와 부속질의를 수행함
+    - 연산 결과에 따라 WHERE 절의 조건이 참인지 거짓인지 확인하여 참일 경우 주질의의 해당 행을 출력함
+* 예시
+    ```sql
+    # users 테이블에서 username이 "admin", "guest"인 행을 검색함
+    SELECT * FROM users WHERE username IN (SELECT "admin" UNION SELECT "guest");
+    ```
