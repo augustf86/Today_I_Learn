@@ -13,6 +13,7 @@
   -  [Cross Site Request Forgery(CSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Cross%20Site%20Request%20Forgery(CSRF).md)
 * Server Side Web Hacking
   - [SQL Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/SQL%20Injection.md)
+    + [Blind SQL Injection (Advanced)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Blind%20SQL%20Injection%20(Advanced).md)
   - [NoSQL Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/NoSQL%20Injection.md)
   - [Command Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection.md)
   - [File Vulnerability](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/File%20Vulnerability.md)
