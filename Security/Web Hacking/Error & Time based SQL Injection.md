@@ -50,6 +50,7 @@ app.run(host='0.0.0.0', port=8000, debug=True) # 디버그 모드 활성화(debu
             # 생성되는 쿼리 → 실행 결과 문법 에러(Syntax Error) 발생
             SELECT username FROM users WHERE username='admin 1''
             ```
+	    	![extractvalue_error](https://github.com/augustf86/Today_I_Learn/assets/122844932/1456e630-17c8-4ef3-8210-9243933f7493)
 
 * Error based SQL Injection 공격 코드
     - ```EXTRACTVALUE``` 함수: 첫 번째 인자로 전달된 XML 데이터에서 두 번째 인자인 XPATH 식을 통해 데이터를 추출하는 함수
