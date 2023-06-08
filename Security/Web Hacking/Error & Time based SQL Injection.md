@@ -117,3 +117,52 @@ Blind SQL Injection과 Error based SQL Injection을 동시에 활용하는 공�
     ```
 
 <br/><br/>
+
+## Time based SQL Injection
+시간 지연을 통해 쿼리의 참/거짓 여부를 판단하는 공격 기법
+* 시간을 지연시키는 방법
+    - ```SLEEP```과 같이 DBMS에서 제공하는 함수를 사용
+    - 시간이 많이 소요되는 연산을 수행하는 헤비 쿼리(heavy query)를 사용
+
+<br/>
+
+### DBMS별로 Time based SQLI을 통해 공격하는 방법
+* MySQL
+    - ```SLEEP``` 함수 사용
+        + ```SLEEP``` 함수: 대기할 시간(sec)을 인자로 받으며 지정한 시간만큼 대기하게 만드는 함수 (반환값 없음)
+            - ```WHERE``` 조건문엔 의해 선택되는 행의 수만큼 ```SLEEP``` 함수를 호출함 → ```WHERE``` 조건문을 이용해 ```SLEEP``` 함수를 반복하게 만들 수 있음
+        + 사용 예시
+            ```sql
+            SELECT SLEEP(1); # 결과: 1 row in set(1.00 sec)
+            ```
+    - ```BENCHMARK``` 함수 사용
+        + ```BENCHMARK``` 함수: 반복 수행할 횟수와 실행할 표현식(반드시 스칼라(단일) 값을 반환해야 함)을 인자로 필요로 하는 함수
+            - 지정한 횟수만큼 반복실행하는데 얼마나 시간이 소요되었는지가 중요함
+            - 해당 함수로 얻은 쿼리나 함수의 성능은 그 자체로는 별 의미가 없음에 유의 (두 개의 동일 기능을 상대적으로 비교 분석하는 용도로만 사용할 것을 권장함)
+        + 사용 예시
+            ```sql
+            SELECT BENCHMARK(4000000, SHA1(1)); # 결과: 1 row in set (10.78 sec)
+            ```
+    - 헤비 쿼리 사용
+        + 헤비 쿼리 예시
+            ```sql
+            SELECT (SELECT COUNT(*) FROM information_schema.tables A, information_schema.tables B, information_schema.tables C) as heavy; # 결과: 1 row in set (1.38 sec)
+            ```
+* MSSQL
+    - ```WAITFOR``` 사용
+        + ```WAITFOR DELAY 'time_to_pass'```는 특정 시간 동안 지연시킬 때 사용됨
+            - ```'time_to_pass'``` 부분에 '시:분:초:밀리세컨트' 형식으로 딜레이를 줄 수 있음
+        + 사용 예시
+            ```sql
+            SELECT '' IF((SELECT 'abc')='abc') WAITFOR DELAY '0:0:1';
+            ```
+    - 헤비 쿼리 사용
+        ```sql
+        SELECT (SELECT COUNT(*) FROM information_schema.columns A, information_schema.columns B, information_schema.columns C, information_schema.columns D);
+        ```
+* SQLite
+    - 헤비 쿼리 사용
+        ```sql
+        .timer ON
+        SELECT LIKE('ABCDEFG', UPPER(HEX(RANDOMBLOB(150000000000000/2)))) # SLEEP TIME: 150000000000000/2
+        ```
