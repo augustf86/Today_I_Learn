@@ -80,3 +80,40 @@ app.run(host='0.0.0.0', port=8000, debug=True) # 디버그 모드 활성화(debu
         + XPATH식에 삽입된 서브 쿼리가 실행되면서 에러 메시지에 users 테이블의 admin 사용자의 비밀번호가 포함되어 있음 → 공격자는 서브 쿼리를 사용해 임의 테이블의 데이터를 획득할 수 있음
 
 <br/><br/>
+
+## Error based Blind SQL Injection
+Blind SQL Injection과 Error based SQL Injection을 동시에 활용하는 공격 기법
+* Error based SQL Injection과 Error based Blind SQL Injection의 차이
+    | Error based SQLI | Error based Blind SQLI |
+    |---|---|
+    | 에러 메시지를 통해 출력된 데이터로 정보를 수집해 출력값에 영향을 받음 | 에러 발생 여부만을 필요로 하기 때문에 용이하게 사용할 수 있음 |
+* 서버가 반환하는 HTTP 상태 코드 또는 애플리케이션 응답 차이 등을 통해 에러 발생 여부를 확인하고 참/거짓 여부를 판단할 수 있음
+    - 예시: MySQL의 DOUBLE 자료형의 최댓값을 초과해 에러를 발생시키는 경우
+        ```sql
+        SELECT IF(1=1, 9e307*2, 0); # 1=1이 참이므로 9e307*2를 반환 (결과: ERROR 1690 (22003): DOUBLE value is out of range in '(9e307 * 2)')
+
+        SELECT IF(1=0, 9e307*2, 0); # 1=0이 거짓이므로 0을 반환
+        ```
+
+<br/>
+
+### Short-circuit evaluation
+로직 연산의 원리를 이용해 공격하는 방법
+* AND 연산자를 이용해 공격 → 처음의 식의 결과(참/거짓)에 따라 뒤의 식의 결과가 달라진다는 점을 이용함
+    ```sql
+    # 처음 식이 거짓을 반환하기 때문에 SLEEP 함수가 실행되지 않음
+    SELECT 0 AND SLEEP(1); # 결과: 1 row in set (0.00 sec)
+
+    # 처음 식이 참을 반환하기 때문에 SLEEP 함수가 실행됨
+    SELECT 1 AND SLEEP(10); # 결과: 1 row in set (10.04 sec)
+    ```
+* 예시: OR 연산자를 이용해 공격 → 처음 식이 참이라면 뒤의 식의 결과가 실행에 영향을 주지 않는다는 점을 이용함
+    ```sql
+    # 처음 식이 참이므로 뒤의 식이 DOUBLE 자료형의 최댓값을 초과함에도 불구하고 에러 메시지 대신에 상적인 결과를 출력함
+    SELECT 1=1 OR 9e307*2; # 결과: 1
+
+    # 처음 식이 거짓이고, 뒤의 식이 DOUBLE 자료형의 최댓값을 초과하므로 에러 메시지를 출력함
+    SELECT 1=0 OR 9e307*2; # 결과: ERROR 1690 (22003): DOUBLE value is out of range in '(9e307 * 2)'
+    ```
+
+<br/><br/>
