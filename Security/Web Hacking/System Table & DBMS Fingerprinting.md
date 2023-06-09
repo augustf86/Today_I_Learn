@@ -65,5 +65,57 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         */
         ```
 
+<br/>
+
+### MSSQL
+* MSSQLL의 특징
+    - 초기 설치 시 ```master```, ```tempdb```, ```model```, 그리고 ```msdb``` 데이터베이스가 존재함
+    - 생성된 데이터베이스의 목록을 확인하는 명령
+        ```sql
+        -- 데이터베이스의 목록을 출력함 (초기 설치 시 존재하는 데이터베이스들과 이용자 정의 데이터베이스가 출력됨)
+        SHOW databases;
+        ```
+* ```master``` 데이터베이스
+    - master 데이터베이스의 ```sysdatabases``` 테이블
+        + 데이터베이스의 정보를 조회할 수 있음
+        + ```master..sysdatabases``` 조회 예시
+            ```sql
+            -- master 데이터베이스의 sysdatabases 테이블에서 name(데이터베이스 이름)에 해당하는 정보를 출력함
+            SELECT name FROM master..sysdatabases; -- 초기 설치 시 존재하는 데이터베이스들과 이용자 정의 데이터베이스(들)의 이름이 출력됨
+
+            -- DB_NAME(num) 형식으로 데이터베이스의 정보를 알아낼 수도 있음
+            SELECT DB_NAME(1); -- 1번 데이터베이스가 master라면 master를 출력함 (0: 현재 데이터베이스를 의미)
+            ```
+    - master 데이터베이스의 ```sys.sql_logins``` 테이블
+        + MSSQL 서버의 계정 정보를 조회할 수 있음
+            - master 데이터베이스의 ```syslogins``` 테이블을 통해서도 조회 가능함
+        + ```master.sys.sql_logins``` 조회 예시
+            ```sql
+            -- master 데이터베이스의 sys.sql_logins 테이블을 통해 user(계정 이름)과 password_hash(비밀번호의 해시 정보)를 조회함
+            SELECT name, password_hash FROM master.sys.sql_logins;
+            -- 유사한 결과를 출력하는 쿼리 (master 데이터베이스의 syslogins 테이블 이용)
+            SELECT * FROM master..syslogins;
+            ```
+* 이용자 정의 데이터베이스의 ```sysobjects``` 테이블
+    - 이용자 정의 데이터베이스의 테이블 정보를 조회할 수 있음
+        + ```xtype='U'```: 이용자 정의 테이블을 의미함
+        + 이용자 정의 데이터베이스의 ```information_schema``` 스키마의 ```tables``` 테이블을 통해서도 조회 가능
+    - 이용자 정의 데이터베이스의 테이블 정보를 조회하는 예시(이용자 정의 데이터베이스: ```users```)
+        ```sql
+        -- sysobjects 테이블을 통해 users 데이터베이스의 테이블 정보를 조회함
+        SELECT name FROM users..sysobjects WHERE xtype='U';
+        -- 동일한 결과를 출력하는 쿼리 (information_schema의 tables 테이블 이용)
+        SELECT table_name FROM users.information_schema.tables;
+        ```
+* ```syscolumns``` 테이블
+    - 컬럼의 정보를 조회할 수 있음
+        + 이용자 정의 데이터베이스의 ```information_schema``` 스키마의 ```columns``` 테이블을 참조하여 조회 가능
+    - ```syscolumns``` 조회 예시
+        ```sql
+        -- syscolumns 테이블에서 서브쿼리의 결과에 해당하는 id의 name을 조회함
+        SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects FROM name='user1');
+        -- 유사한 결과를 출력하는 쿼리(information_schema의 columns 테이블 이용)
+        SELECT table_name, colunn_name FROM users.information_schema.columns;
+        ```
 
 <br/>
