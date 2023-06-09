@@ -119,3 +119,149 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         ```
 
 <br/>
+
+### PostgreSQL
+* ```pg_database```: 생성된 데이터베이스 목록을 확인할 수 있음
+    - 데이터베이스의 이름, 소유자, 정렬 순서 등의 데이터베이스 정보를 관리함
+    - ```pg_database``` 조회 예시
+        ```sql
+        -- pg_database의 datname(데이터베이스 이름)을 조회
+        SELECT datname FROM pg_database;
+        /* 출력 결과 (초기 설치 시 아래와 같은 세 개의 데이터베이스가 존재함)
+        datname
+        ----------
+        postgres
+        template1
+        template0
+        */
+        ```
+
+#### ```pg_catalog```: 주요 정보를 담고 있는 테이블을 포함한 스키마(시스템 카탈로그)
+* ```information_schema```로도 비슷한 정보를 조회할 수 있음
+* ```pg_catalog``` 조회 예시
+    ```sql
+    -- pg_catalog 스키마의 pg_namespace(스키마 정보) 테이블에서 nspname(네임스페이스의 이름)을 조회
+    SELECT nspname FROM pg_catalog.pg_namespace;
+    /* 출력 결과
+    nspname
+    ----------
+    pg_toast
+    pg_temp_1
+    pg_toast_temp_1
+    pg_catalog
+    public
+    information_schema
+    */
+    ```
+* ```pg_catalog``` 스키마의 각 테이블을 이용해 조회할 수 있는 정보들
+    | 테이블 | 조회할 수 있는 정보 |
+    |----|------|
+    | ```pg_catalog.pg_shadow``` 테이블 | PostgreSQL 서버의 계정 정보를 조회할 수 있음 |
+    | ```pg_catalog.pg_settings``` 테이블 | PostgreSQL 서버의 설정 정보를 조회할 수 있음 |
+    | ```pg_catalog.pg_stat_activity``` 테이블 | 실시간으로 실행되는 쿼리를 조회할 수 있음 |
+    - ```pg_catalog``` 스키마의 각 테이블 조회 예시
+        ```sql
+        --- DBMS 계정 정보 조회: pg_catalog 스키마의 pg_shadow 테이블을 통해 username(계정 이름)과 passwd(비밀번호의 해시 정보)를 조회함
+        SELECT username, passwd FROM pg_catalog.pg_shadow;
+
+        -- DBMS 설정 정보 조회: pg_catalog 스키마의 pg_settings 테이블을 통해 name(서버 명)과 setting(설정 정보)를 조회함
+        SELECT name, setting FROM pg_catalog.pg_settings;
+
+        -- 실시간 실행 쿼리 확인: pg_catalog 스키마의 pg_stat_activity 테이블을 통해 username(쿼리를 실행시킨 계정 이름)과 query(실행된 쿼리)를 조회함
+        SELECT username, query FROM pg_catalog.pg_stat_activity;
+        ```
+
+#### ```information_schema```: 데이터베이스의 모든 메타 정보를 가지고 있음
+* 각 테이블의 정보를 조회하는데 사용할 수 있음
+* ```information_schema``` 조회 예시
+    ```sql
+    -- information_schema 스키마의 tables 테이블에서 pg_catalog의 table_name(테이블 이름)을 조회
+    SELECT table_name FROM information_schema.tables WHERE table_schema='pg_catalog';
+    /* 출력 결과
+    table_name
+    ------------
+    pg_shadow
+    pg_settings
+    pg_databases
+    ...
+    */
+
+    -- information_schema 스키마의 tables 테이블에서 information_schema의 table_name(테이블 이름)을 조회
+    SELECT table_name FROM information_schema.tables WHERE table_schema='information_schema';
+    /* 출력 결과
+    table_name
+    -------------
+    schemata
+    tables
+    columns
+    ...
+    */
+    ```
+    + 쿼리 결과에 각 스키마의 테이블 이름이 출력됨
+* ```information_schema``` 스키마의 각 테이블을 이용해 조회할 수 있는 정보들
+    | 테이블 | 조회할 수 있는 정보 |
+    |----|------|
+    | ```information_schema.tables``` 테이블 | 데이터베이스의 스키마 및 테이블 정보 등을 조회할 수 있음 |
+    | ```information_schema.columns``` 테이블 | 컬럼 정보를 조회할 수 있음 |
+    - ```information_schema``` 스키마의 각 테이블 조회 예시
+        ```sql
+        -- 테이블 정보 조회: information_schema 스키마의 tables 테이블을 통해 table_schema(테이블의 스키마)와 table_name(테이블 이름)을 조회
+        SELECT table_schema, table_name FROM information_schema.tables;
+
+        -- 컬럼 정보 조회: information_schema 스키마의 columns 테이블을 통해 table_schema(테이블의 스키마), table_name(테이블 이름), column_name(컬럼 이름)을 조회
+        SELECT table_schema, table_name, column_name FROM information_schema.columns
+        ```
+
+
+<br/>
+
+### Oracle
+* ```all_tables```: 데이터베이스의 정보를 확인할 수 있는 테이블
+    - 현재 사용자가 접근할 수 있는 테이블의 집합 (= 로그인된 계정의 권한으로 접근할 수 있는 모든 테이블들)
+    - ```all_tables``` 테이블 조회 예시
+        ```sql
+        -- all_tables의 onwer(테이블을 소유한 사용자)를 조회
+        SELECT DISTINCT owner FROM all_tables; -- DISTINCT(중복 제거) 키워드로 중복된 데이터를 제거함
+
+        -- all_tables의 owenr(테이블을 소유한 사용자)와 table_name(테이블 이름)을 조회
+        SELECT owner, table_name FROM all_tables;
+        ```
+
+* ```all_tab_columns```: 특정 테이블의 컬럼 정보를 확인할 수 있는 테이블
+    - 현재 로그인된 계정의 권한으로 접근할 수 있는 모든 테이블 내의 컬럼의 집합
+    - WHERE 구문으로 ```table_name```에 조회하고 싶은 테이블을 조건으로 입력하면 해당 테이블의 컬럼 이름을 조회할 수 있음
+    - ```all_tab_columns``` 테이블 조회 예시
+        ```sql
+        -- all_tab_columns 테이블에서 table_name이 users인 테이블의 column_name(컬럼 이름)을 조회
+        SELECT column_name FROM all_tab_columns WHERE table_name = 'users';
+        ```
+
+* ```all_users```: DBMS 계정 정보를 확인할 수 있는 테이블
+    - 모든 유저의 정보를 조회할 수 있음
+    - ```all_users``` 테이블 조회 예시
+        ```sql
+        -- alㅣ_users 테이블의 모든 열을 조회하여 DBMS에 생성된 모든 유저를 조회
+        SELECT * FROM all_users; -- SELECT * FROM DBA_USERS;를 이용해도 동일한 결과가 출력됨
+        ```
+
+<br/>
+
+### SQLite
+* ```sqlite_master``` 시스템 테이블
+    - 생성되어 있는 테이블 등의 정보와 sql를 획득할 수 있음
+    - ```sqlite_master``` 테이블 조회 예시
+        ```sql
+        .header on -- 콜솔에서 실행 시 컬럼 헤더를 출력하기 위해 설정
+
+        -- sqlite_master 테이블의 전체 데이터를 조회함
+        SELECT * FROM sqlite_master;
+        /* 출력된 결과
+        type | name | tbl_name | rootpage | sql
+        table | users | users | 2 | CREATE TABLE users (uid text, upw text)
+        */
+        ```
+        + uid(text), upw(text)를 열으로 가지고 있는 users 테이블와 해당 테이블 생성 시 사용된 SQL를 획득
+
+<br/><br/>
+
+## DBMS Fingerprinting
