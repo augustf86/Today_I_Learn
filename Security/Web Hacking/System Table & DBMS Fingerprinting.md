@@ -416,3 +416,36 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         ```
 
 <br/>
+
+### SQLite
+* 쿼리 실행 결과 출력
+    - ```splite_version``` 함수를 이용해 DBMS의 버전을 알아낼 수 있음
+        ```sql
+        -- sqlite_version() 함수: 실행 중인 SQLite 버전 정보를 반환함
+        SELECT sqlite_version();
+        ```
+* 에러 메시지 출력
+    - ```UNION``` 문으로 에러 메시지를 출력시킨 다음, 포함된 키워드로 SQLite에서 출력된 문자열임을 검색을 통해 확인할 수 있음
+        ```sql
+        -- UNION 문은 컬럼의 개수가 같지 않다면 에러를 발생시킴
+        SELECT 1 UNION SELECT 1, 2;
+        -- Error: SELECTs to the left and right of UNION do not have the same number of result columns
+        ```
+* 참 또는 거짓 출력
+    - ```sqlite_version``` 함수로 가져온 버전의 각 위치에 해당하는 문자를 ```SUBSTR``` 함수를 통해 Blind SQL Injection으로 알아낼 수 있음
+        ```sql
+        -- sqlite_version()의 결과: '3.11.0'
+        -- SUBSTR(sqlite_version(), 1, 1) → sqlite_version()의 첫 번째 문자: '3'
+
+        -- sqlite_version()의 첫 번째 문자가 3인지 확인 → 결과: 1 (참)
+        SELECT SUBSTR(sqlite_version(), 1, 1) = '3';
+        -- sqlite_version()의 첫 번째 문자가 4인지 확인 → 결과: 0 (거짓)
+        SELECT SUBSTR(sqlite_version(), 1, 1) = '4';
+        ```
+* 예외 상황
+    - 애플리케이션에서 쿼리 실행 결과를 반환하지 않을 때 시간 지연 발생 여부로 그 결과를 알아낼 수 있음
+        ```sql
+        -- SUBSTR(sqlite_version(), 1, 1) → sqlite_version()의 첫 번째 문자: '3'
+        -- 조건식(WHEN 다음의 비교식)이 참이라면 LIKE(...)를, 아니라면 1=1을 실행함
+        SELECT CASE WHEN substr(sqlite_version(), 1, 1) = '3' THEN LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(300000000/2)))) ELSE 1=1 END;
+        ```
