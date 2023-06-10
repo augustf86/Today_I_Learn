@@ -381,3 +381,38 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         ```
 
 <br/>
+
+### PostgreSQL
+* 쿼리 실행 상황 출력
+    - ```version``` 함수를 사용해 DBMS의 상세 정보와 운영체제 정보를 알아낼 수 있음
+        ```sql
+        -- version() 함수: PostgreSQL 버전과 운영 체제 정보를 반환함
+        SELECT version();
+        ```
+* 에러 메시지 출력
+    - ```UNION``` 문으로 에러 메시지를 출력시킨 다음, 에러 메시지에 포함된 키워드로 PostgreSQL에서 출력된 문자열임을 검색을 통해 확인할 수 있음
+        ```sql
+        -- UNION 문은 컬럼의 개수가 같지 않다면 에러를 발생시킴
+        SELECT 1 UNION SELECT 1, 2;
+        -- ERROR: each UNION query must have the same number of columns
+        ```
+* 참 또는 거짓 출력
+    - ```version``` 함수로 가져온 버전의 각 위치에 해당하는 문자를 ```SUBSTR``` 함수를 통해 Blind SQL Injection으로 알아낼 수 있음
+        ```sql
+        -- version()의 결과: 'PostgreSQL ...'
+        -- SUBSTR(version(), 1, 1) → version()의 첫 번째 문자: 'P'
+        
+        -- version()의 첫 번째 문자가 'P'인지 확인 → 결과: t(참)
+        SELECT SUBSTR(version(), 1, 1) = 'P';
+        -- version()의 첫 번째 문자가 'Q'인지 확인 →결과: f(거짓)
+        SELECT SUBSTR(version(), 1, 1)= 'Q';
+        ```
+* 예외 상황
+    - 애플리케이션에서 쿼리 실행 결과를 반환하지 않을 때 ```pg_sleep``` 함수를 사용하여 시간 지연 발생 여부로 그 결과를 알아낼 수 있음
+        ```sql
+        -- SUBSTR(version(), 1, 1) → version()의 첫 번째 문자: 'P'
+        -- SUBSTR 함수의 결과가 t라면 AND 연산자 뒤에 위치하는 식을 실행시킴
+        SELECT SUBSTR(version(), 1, 1) = 'P' AND pg_sleep(10); # 10초 지연
+        ```
+
+<br/>
