@@ -9,7 +9,7 @@ SQL Injection 취약점이 발생할 때 데이터베이스의 테이블과 컬�
 
 <br/><br/>
 
-## System Tables
+# System Tables
 DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
 * 설정 및 계정 정보 외에도 테이블과 컬럼 정보, 현재 실행되고 있는 쿼리의 정보 등 다양한 정보를 포함하고 있음
 * **데이터베이스를 구성하기 위한 필수 요소이기 때문에 삭제할 수 없음**
@@ -64,6 +64,7 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         SELECT user, authentication_string FROM mysql.user;
         */
         ```
+
 
 <br/>
 
@@ -264,4 +265,45 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
 
 <br/><br/>
 
-## DBMS Fingerprinting
+# DBMS Fingerprinting
+### **DBMS의 종류와 버전**: SQL Injection 취약점을 발견했을 시 제일 먼저 알아내야 할 정보
+* DBMS는 용도와 목적에 따라 MySQL, MSSQL, Oracle, SQLite 등을 선택해 사용할 수 있음
+    - 모두 비슷한 형태를 띄지만 각 시스템 별로 제공하는 함수가 다름
+    - DBMS의 종류와 버전을 알아내면 해당 DBMS에서 제공하는 기능을 통해 보다 수월한 공격을 수행할 수 있음 <br/> &nbsp;&nbsp; → 알아낸 DBMS와 운영체제의 정보는 또 다른 공격을 시도하는데 있어 중요하게 작용함
+* SQL Injection 발생 상황 별로 DBMS 정보를 수집하는 방법
+    - 쿼리 실행 결과 출력
+        + 애플리케이션에서 삽입한 쿼리의 실행 결과를 출력한다면 **DBMS에서 지원하는 환경 변수의 값을 이용할 수 있음**
+        + 예시: DBMS에서 제공하는 환경 변수와 함수를 사용해 버전을 확인하는 쿼리문
+            ```sql
+            SELECT @@version;
+            SELECT version();
+            ```
+    - 에러 메시지 출력
+        + 삽입할 쿼리를 애플리케이션에서 실행하면서 에러 메시지를 출력하는 경우 **사용하는 DBMS를 알아낼 수 있음**
+        + 예시: 잘못된 쿼리를 삽입하여 에러 메시지를 출력시키는 경우
+            ```sql
+            -- 컬럼의 수가 일치하지 않으면 UNION 구문은 에러를 발생시킴
+            SELECT 1 UNION SELECT 1, 2;
+            /* 출력 결과(MySQL의 경우)
+            ERROR 1222 (21000): The used SELECT statements haver a different number of columns
+            → 해당 에러코드는 MySQL에서만 사용되므로 이를 통해 DBMS의 정보가 노출됨
+            */           
+            ```
+    - 참 또는 거짓 출력
+        + 애플리케이션에서 쿼리 실행 결과가 아닌 참과 거짓 여부만을 출력할 경우 **Blind SQL Injection 공격으로 사용 중인 DBMS를 알아낼 수 있음**
+        + 예시: Blind SQL Injection 기법을 이용한 쿼리문의 일부
+            ```sql
+            -- 버전 환경 변수 및 함수를 통해 가져온 버전을 한 바이트씩 비교해 알아냄
+            MID(@@version, 1, 1) = '5';
+            SUBSTR(version(), 1, 1) = 'P';
+            ```
+    - 예외 상황
+        + 애플리케이션에서 쿼리와 관련된 어떠한 결과도 출력하지 않는 경우 **시간 지연 함수를 사용함**
+            - 일부 DBMS에서는 시간 지연 함수가 존재하지 않음 → 시스템에 맞는 시간 지연 함수를 사용해야 함
+        + 예시: 시간 지연 함수
+            ```sql
+            SLEEP(10) -- (MySQL) 10sec 동안 대기
+            pg_sleep(10) -- (PostgreSQL)
+            ```
+
+<br/><br/>
