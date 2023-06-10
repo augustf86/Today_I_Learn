@@ -347,3 +347,37 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         ```
 
 <br/>
+
+### MSSQL
+* 쿼리 실행 결과 출력
+    - ```version``` 환경 변수를 이용해 DBMS의 버전과 운영 체제 정보를 알아낼 수 있음
+        ```sql
+        -- @@version(환경 변수)를 조회하면 사용하고 있는 DBMS의 종류와 버전, 현재 DBMS가 운영되고 있는 운영체제의 정보(종류와 버전)을 반환함
+        SELECT @@version;
+        ```
+* 에러 메시지 출력
+    - ```UNION``` 문으로 에러 메시지를 출력시킨 다음, 에러 메시지에 포함된 키워드로 MSSQL에서 출력된 문자열임을 검색을 통해 확인할 수 있음
+        ```sql
+        -- UNION 문은 컬럼의 개수가 같지 않다면 에러를 발생시킴
+        SELECT 1 UNION SELECT 1, 2;
+        -- All queries combined using a UNION, INTERSECT or EXCEPT operator must have an equal number of expressions in their target lists.asdf
+        ```
+* 참 또는 거짓 출력
+    - ```version``` 환경변수로 가져온 버전의 각 위치에 해당하는 문자를 ```SUBSTRING``` 함수를 통해 Blind SQL Injection으로 알아낼 수 있음
+        ```sql
+        -- @@version의 내용: 'Microsoft SQL Server ...'
+        -- SUBSTRING(@@version, 1, 1) → version 환경 변수의 첫 번째 문자: 'M'
+
+        -- @@version의 첫 번째 문자가 'M'인지 확인 → 결과: 1 출력(1 rows affected) → 참
+        SELECT 1 FROM test WHERE SUBSTRING(@@version, 1, 1) = 'M';
+        -- @@version의 첫 번째 문자가 'N'인지 확인 → 결과: 아무것도 출력하지 않음(0 rows affected) → 거짓
+        ```
+* 예외 상황
+    - 애플리케이션에서 쿼리 실행 결과를 반환하지 않을 때 ```WAITFOR DELAY```를 사용하여 시간 지연 발생 여부로 그 결과를 알아낼 수 있음
+        ```sql
+        -- SUBSTRING(@@version, 1, 1) → version 환경 변수의 첫 번째 문자: 'M'
+        -- WHERE 절에서 AND 앞의 식이 참이므로 WAITFROY DELAY '0:0:5'가 실행되어 5초 지연됨
+        SELECT 1 WHERE SUBSTRING(@@version, 1, 1) = 'M' AND WAITFOR DELAY '0:0:5';
+        ```
+
+<br/>
