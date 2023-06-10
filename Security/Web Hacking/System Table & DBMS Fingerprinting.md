@@ -307,3 +307,43 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
             ```
 
 <br/><br/>
+
+## DBMS의 종류에 따른 데이터베이스 정보 수집 방법
+### MySQL
+* 쿼리 실행 결과 출력
+    - ```version``` 환경 변수 또는 ```version``` 함수를 사용해 MySQL DBMS의 버전과 운영 체제 정보를 알아낼 수 있음
+        ```sql
+        -- 사용하고 있는 MySQL의 버전과 운영 체제 정보를 출력함
+        SELECT @@version; -- 1> version 환경 변수 사용
+        SELECT version(); -- 2> version() 함수 사용
+        ```
+* 에러 메시지 출력
+    - ```UNION``` 문으로 에러 메시지를 출력시킨 다음, 에러 메시지에 포함된 에러 코드로 DBMS가 MySQL임을 알 수 있음
+        ```sql
+        -- UNION 문의 컬럼의 개수가 일치하지 않으면 에러를 발생시킨다는 점을 이용하여 에러를 발생시킴
+        SELECT 1 UNION SELECT 1, 2;
+        -- ERROR 1222 (21000): The used SELECT statements have a different number of columns
+        ```
+* 참 또는 거짓 출력
+    - ```version``` 환경 변수의 값(버전)의 각 위치에 해당하는 문자를 ```MID``` 함수를 통해 Blind SQL Injection으로 알아낼 수 있음
+        ```sql
+        -- @@version의 내용: '5.7.29-0ubuntu0.16.04.'
+        -- MID(@@version, 1, 1) → version 환경 변수의 첫 번째 문자: '5'
+
+        -- @@version의 첫 번째 문자가 '5'인지 확인 → 결과: 1 (true)
+        SELECT MID(@@version, 1, 1) = '5';
+        -- @@version의 첫 번째 문자가 '6'인지 확인 → 결과: 0 (false)
+        SELECT MID(@@VERSION, 1, 1) = '6';
+        ```
+* 예외 상황
+    - 애플리케이션에서 쿼리 실행 결과를 반환하지 않을 때 ```SLEEP``` 함수를 사용하여 시간 지연 발생 여부로 그 결과를 알아낼 수 있음
+        ```sql
+        -- SUBSTRING(@@version, 1, 1) → version 환경 변수의 첫 번째 문자: 'M'
+
+        -- SELECT 문에서 AND 앞의 식이 참(1)이므로 SLEEP(2)가 실행되어 2초 지연됨
+        SELECT MID(@@version, 1, 1) = '5' AND SLEEP(2); -- 결과: 1 row in set (2.00 sec)
+        -- SELECT 문에서 AND 앞의 식이 거짓(0)이므로 SLEEP(2)는 실행되지 않음
+        SELECT MID(@@version, 1, 1) = '6' AND SLEEP(2); -- 결과: 1 row in set (0.00 sec)
+        ```
+
+<br/>
