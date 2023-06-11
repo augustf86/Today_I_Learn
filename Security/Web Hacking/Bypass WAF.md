@@ -76,3 +76,72 @@ SQL은 데이터베이스와 컬럼명을 포함해 질의문의 **대소문자�
     ```
 
 <br/><br/>
+
+## 각 DBMS 별 탐지 우회
+### MySQL
+* 문자열 검사 우회
+    - 문자열 검사 우회 시 사용할 수 있는 MySQL 함수
+        | 함수 | 형식 | 설명 |
+        |---|-----|---------|
+        | CHAR 함수 | ```CHAR(N, ...)``` | 각 인수 N을 정수로 해석하고 해당 정수의 코드 값으로 지정된 문자로 구성된 문자열을 반환함 |
+        | CONCAT 함수 | ```CONCAT(str1, str2, ...)``` | 인수로 주어진 문자열을 연결한 결과 문자열을 반환함 |
+        | MID 함수 | ```MID(str, pos, len)``` | str에서 pos 위치에서 시작해 len만큼을 자른 하위 문자열을 반환함 |
+    - 예시
+        ```sql
+        SELECT 0x6162, 0b110000101100010; -- 결과: ab (16진수, 2진수를 이용해 문자열 ab를 표현함)
+        
+        SELECT CHAR(0x61, 0x62); -- 결과: ab
+        SELECT CONCAT(CHAR(0x61), CHAR(0x62)); -- 결과: ab
+
+        SELECT MID(@@version, 12, 1); -- 결과: n
+        ```
+
+* 공백 검사 우회
+    - MySQL에서는 개행과 주석을 이용해 공백 검사를 우회할 수 있음
+    - 예시
+        ```sql
+        SELECT
+        1; -- 결과: 1 (개행을 이용해 공백 검사를 우회할 수 있음)
+
+        SELECT/**/1; --결과: 1 (주석 /**/를 이용해 공백 검사를 우회할 수 있음)
+        ```
+
+* 주석 구문 실행
+    - WAF에서는 ```/* ... */```을 주석으로 인식하고 쿼리 구문으로 해석하지 않음
+    - MySQL Server에서 제공하는 기능 중 ```/*! MySQL-specific code */```는 주석 내 구문을 분석하고, 이를 쿼리의 일부로 실행함 → WAF를 우회하고 MySQL에서 임의의 쿼리를 실행할 수 있음
+        ```sql
+        SELECT 1 /*!union*/ SELECT 2; -- /*! ... */ 안의 union을 쿼리의 일부로 실행하고 있음
+        /* 결과
+        1
+        2
+        */
+        ```
+
+<br/>
+
+### MSSQL
+* 문자열 검사 우회
+    - 문자열 검사 우회 시 사용할 수 있는 MSSQL 함수
+        | 함수 | 형식 | 설명 |
+        |---|-----|---------|
+        | CHAR 함수 | ```CHAR(integer_expression)``` | 0에서 255 사이의 정수를 입력받아 현재 데이터베이스의 기본 데이터 정렬 문자 집합 및 인코딩에 정의된 대로 지정된 정수 코드를 사용하는 싱글 바이트 문자를 반환함 |
+        | CONCAT 함수 | ```CONCAT(string_value1, string_value2 [, string_valueN])``` | 둘 이상의 string_value 인수를 연결한 문자열을 반환함 |
+        | SUBSTRING 함수 | ```SUBSTRING(expression, start, length)``` | expression에서 start 위치부터 length 길이만큼 자른 문자열을 반환함 |
+    - 예시
+        ```sql
+        SELECT CHAR(0x61); -- 결과: a
+        SELECT CONCAT(CHAR(0x61), CHAR(0x62)); -- 결과: ab
+        SELECT SUBSTRING(@@version, 134, 1); -- 결과: n
+        ```
+
+* 공백 검사 우회
+    - MSSQL에서는 개행과 주석을 이용해 공백 검사를 우회할 수 있음
+    - 예시
+        ```sql
+        SELECT
+        1; -- 결과: 1 (개행을 이용해 공백 검사를 우회할 수 있음)
+
+        SELECT/**/1; -- 결과: 1 (주석 /**/를 이용해 공백 검사를 우회할 수 있음)
+        ```
+
+<br/>
