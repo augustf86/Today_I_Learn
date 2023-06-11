@@ -17,6 +17,7 @@
     + [Error & Time based SQL Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Error%20&%20Time%20based%20SQL%20Injection.md)
     + [System Table & DBMS Fingerprinting](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/System%20Table%20&%20DBMS%20Fingerprinting.md)
     + [DBMS Misconfiguration](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/DBMS%20Misconfiguration.md)
+    + [Bypass WAF](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Bypass%20WAF.md)
   - [NoSQL Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/NoSQL%20Injection.md)
   - [Command Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection.md)
   - [File Vulnerability](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/File%20Vulnerability.md)
