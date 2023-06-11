@@ -145,3 +145,65 @@ SQL은 데이터베이스와 컬럼명을 포함해 질의문의 **대소문자�
         ```
 
 <br/>
+
+### PostgreSQL
+* 문자열 검사 우회
+    - 문자열 검사 우회 시 사용할 수 있는 PostgreSQL 함수
+        | 함수 | 형식 | 설명 |
+        |---|-----|---------|
+        | CHR 함수 | ```CHR(num)``` | num(ASCII 코드 또는 UTF8로 변환되는 정수)를 입력받아 ASCII 코드 값 또는 유니코드 코드 포인트에 해당하는 값을 반환함 |
+        | CONCAT 함수 | ```CONCAT(str_1, str_2, ...)``` | 문자열로 변환할 수 있는 인수 목록을 받아 이를 연결하여 하나의 문자열을 반환함 |
+        | SUBSTRING 함수 | ```SUBSTRING(string, start_position, length)``` | string에서 start_position 위치부터 length만큼 자른 문자열을 반환함 |
+    - 예시
+        ```sql
+        SELECT CHR(65); -- CHR(65) 결과: A
+        SELECT CONCAT(CHR(65), CHR(66)); -- CONCAT 결과: AB
+        SELECT SUBSTRING(version(), 23, 1); -- SUBSTRING 결과: n
+        ```
+
+* 공백 검사 우회
+    - PostgreSQL에서는 개행과 주석을 이용하여 공백 검사를 우회할 수 있음
+    - 예시
+        ```sql
+        SELECT
+        1; -- SELECT 다음의 개행으로 공백 검사를 우회함
+
+        SELECT/**/1; -- 주석 /**/를 사용하여 공백 검사를 우회함
+        ```
+
+<br/>
+
+### SQLite
+* 문자열 검사 우회
+    - 문자열 검사 우회 시 사용할 수 있는 SQLite 함수
+        | 함수 | 형식 | 설명 |
+        |---|-----|---------|
+        | CHAR 함수 | ```CHAR(X1, X2, ..., Xn)``` | 정수 X1에서 Xn까지의 유니코드 코드 포인트 값을 갖는 문자열로 구성된 문자열을 반환함 |
+    - SQLite에서 문자열을 합치기 위해 ```||```를 사용함
+    - 예시
+        ```sql
+        SELECT CHAR(0x61); -- 결과: a
+        SELECT CHAR(0x61)||CHAR(0x62); -- 결과: ab
+        ```
+
+* 공백 검사 우회
+    - SQLite에서는 개행과 주석을 이용해 공백 검사를 우회할 수 있음
+    - 예시
+        ```sql
+        SELECT
+         1; -- 결과: 1 (개행으로 공백 검사를 우회)
+
+        SELECT/**/1; -- 결과: 1 (주석 /**/를 이용해 공백 검사를 우회)
+        ```
+
+* 구문 검사 우회
+    - ```SELECT``` 구문을 사용하지 못해 원하는 값을 반환할 수 없을 경우 SQLite에서는 ```UNION VALUES(num)```를 이용하여 원하는 값을 반환시킬 수 있음
+    - 예시
+        ```sql
+        SELECT 1 UNION VALUE(2);
+        /* 결과
+        1
+        2
+        */
+        ```
+
