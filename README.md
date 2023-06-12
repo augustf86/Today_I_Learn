@@ -44,6 +44,10 @@
   | web-ssrf | SSRF | [web-ssrf.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/web-ssrf.md) |
   | Carve Party | 브라우저 개발자 도구 | [Carve Party.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Carve%20Party.md) |
   | blind-command | Command Injection | [blind-command.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/blind-command.md) |
+  | blind sql injection advanced | Blind SQL Injection | [blind sql injection advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/blind%20sql%20injection%20advanced.md) |
+  | error based sql injection | SQL Injection | [error based sql injection.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/error%20based%20sql%20injection.md) |
+  | sql injection bypass WAF | SQL Injection | [sql injection bypass WAF.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF.md) |
+  | sql injection bypass WAF Advanced | Blind SQL Injection | [sql injection bypass WAF Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF%20Advanced.md) |
 
 <br/>
 
