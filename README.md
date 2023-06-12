@@ -42,7 +42,7 @@
   | image-storage | File Upload Vulnerability | [image-storage](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/image-storage.md) |
   | file-download-1 | File Download Vulnerability | [file-download-1](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/file-download-1.md) |
   | web-ssrf | SSRF | [web-ssrf.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/web-ssrf.md) |
-  | Carve Party | 브라우저 개발자 도구 | [Carve Party.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Carve Party.md) |
+  | Carve Party | 브라우저 개발자 도구 | [Carve Party.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Carve%20Party.md) |
   | blind-command | Command Injection | [blind-command.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/blind-command.md) |
 
 <br/>
