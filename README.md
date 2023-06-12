@@ -25,8 +25,7 @@
 
 <br/>
 
-### Wargame
-* Web Hacking
+* Wargame
   | Wargame 문제 | 분류 | 📌 풀이 |
   |------|----|----|
   | devtools-sources | 브라우저 개발자 도구 | [devtools-sources.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/devtools-sources.md) |
