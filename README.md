@@ -49,6 +49,7 @@
   | sql injection bypass WAF | SQL Injection | [sql injection bypass WAF.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF.md) |
   | sql injection bypass WAF Advanced | Blind SQL Injection | [sql injection bypass WAF Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF%20Advanced.md) |
   | NoSQL-CouchDB | NoSQL Injection (CouchDB) | [NoSQL-CouchDB.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/NoSQL-CouchDB.md) |
+  | phpMyRedis | NoSQL Injection (Redis) | |
 
 <br/>
 
