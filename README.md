@@ -48,7 +48,7 @@
   | error based sql injection | SQL Injection | [error based sql injection.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/error%20based%20sql%20injection.md) |
   | sql injection bypass WAF | SQL Injection | [sql injection bypass WAF.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF.md) |
   | sql injection bypass WAF Advanced | Blind SQL Injection | [sql injection bypass WAF Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF%20Advanced.md) |
-  | NoSQL-CouchDB | NoSQL Injection (CouchDB) | |
+  | NoSQL-CouchDB | NoSQL Injection (CouchDB) | [NoSQL-CouchDB.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/NoSQL-CouchDB.md) |
 
 <br/>
 
