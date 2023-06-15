@@ -32,15 +32,15 @@
   | devtools-sources | 브라우저 개발자 도구 | [devtools-sources.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/devtools-sources.md) |
   | cookie | 쿠키 | [cookie.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/cookie.md) |
   | session-basic | 세션 | [session-basic.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/session-basic.md) |
-  | xss-1 | Reflected XSS | [xss-1](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-1.md) |
-  | xss-2 | Reflected XSS | [xss-2](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-2.md) |
+  | xss-1 | Reflected XSS | [xss-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-1.md) |
+  | xss-2 | Reflected XSS | [xss-2.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-2.md) |
   | csrf-1 | CSRF | [csrf-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/csrf-1.md) |
   | csrf-2 | CSRF | [csrf-2.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/csrf-2.md) |
   | simple_sqli | SQL Injection/Blind SQL Injection | [simple_sqli.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/simple_sqli.md) |
   | Mango | Blind NoSQL Injection | [Mango.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Mango.md) |
-  | command-injection-1 | Command Injection | [command-injection-1](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/command-injection-1.md) |
-  | image-storage | File Upload Vulnerability | [image-storage](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/image-storage.md) |
-  | file-download-1 | File Download Vulnerability | [file-download-1](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/file-download-1.md) |
+  | command-injection-1 | Command Injection | [command-injection-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/command-injection-1.md) |
+  | image-storage | File Upload Vulnerability | [image-storage.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/image-storage.md) |
+  | file-download-1 | File Download Vulnerability | [file-download-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/file-download-1.md) |
   | web-ssrf | SSRF | [web-ssrf.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/web-ssrf.md) |
   | Carve Party | 브라우저 개발자 도구 | [Carve Party.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Carve%20Party.md) |
   | blind-command | Command Injection | [blind-command.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/blind-command.md) |
