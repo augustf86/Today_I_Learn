@@ -449,3 +449,9 @@ DBMS마다 존재하는, 데이터베이스의 정보를 포괄하는 테이블
         -- 조건식(WHEN 다음의 비교식)이 참이라면 LIKE(...)를, 아니라면 1=1을 실행함
         SELECT CASE WHEN substr(sqlite_version(), 1, 1) = '3' THEN LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(300000000/2)))) ELSE 1=1 END;
         ```
+
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [ExploitTech: System Table Fingerprinting](https://dreamhack.io/lecture/courses/306)
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [ExploitTech: DBMS Fingerprinting](https://dreamhack.io/lecture/courses/305)
