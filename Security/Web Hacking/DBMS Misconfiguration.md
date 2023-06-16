@@ -116,3 +116,8 @@ DBMS에서 제공하는 특별한 함수 또는 기능 등을 이용해 **파일
             | ```query``` 함수 | 다중 쿼리를 지원하지 않음 |
             | ```exec``` 함수 | 다중 쿼리를 지원함 |
             - ```exec``` 함수 사용 시 다중 쿼리를 실행시킬 수 있음 (사용하지 않아야 함)
+
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [ExploitTech: DBMS Misconfiguration](https://dreamhack.io/lecture/courses/288)
