@@ -166,3 +166,8 @@ Blind SQL Injection과 Error based SQL Injection을 동시에 활용하는 공�
         .timer ON
         SELECT LIKE('ABCDEFG', UPPER(HEX(RANDOMBLOB(150000000000000/2)))) # SLEEP TIME: 150000000000000/2
         ```
+
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [ExploitTech: Error & Time based SQL Injection](https://dreamhack.io/lecture/courses/286)
