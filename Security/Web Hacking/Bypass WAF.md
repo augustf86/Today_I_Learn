@@ -207,3 +207,7 @@ SQL은 데이터베이스와 컬럼명을 포함해 질의문의 **대소문자�
         */
         ```
 
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [ExploitTech: Bypass WAF](https://dreamhack.io/lecture/courses/309)
