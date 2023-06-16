@@ -69,3 +69,8 @@
         SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 7, 1)=1; # 결과가 출력되지 않음 (일곱번째 자리 0)
         # 비밀번호의 첫 번째 바이트: 1010000 → 10진수로 표현하면 80 (문자로 표현하면 'P')
         ```
+
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [ExploitTech: Blind SQL Injection Advanced](https://dreamhack.io/lecture/courses/304)
