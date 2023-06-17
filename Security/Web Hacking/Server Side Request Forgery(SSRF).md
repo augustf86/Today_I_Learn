@@ -187,3 +187,7 @@ app.run(host="127.0.0.1", port=8000, debug=True)
     ```
     - 내부 API에서는 전달받은 값을 파싱할 때 앞에 존재하는 파라미터의 값을 가져와 사용함
         + ```user=admin```이 ```user=guest```보다 앞에 위치하므로 user의 값을 변조할 수 있음
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [ServerSide: SSRF](https://dreamhack.io/lecture/courses/190)
