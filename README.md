@@ -22,6 +22,7 @@
     + [NoSQL Injection: Exploit Tech](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/NoSQL%20Injection:%20Exploit%20Tech.md)
   - [Command Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection.md)
     + [Command Injection for Linux](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection%20for%20Linux.md)
+    + [Command Injection for Windows](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection%20for%20Windows.md)
   - [File Vulnerability](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/File%20Vulnerability.md)
   - [Server Side Request Forgery(SSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Server%20Side%20Request%20Forgery(SSRF).md)
 
