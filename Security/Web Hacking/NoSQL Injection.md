@@ -96,3 +96,7 @@ SQL Blind Injection과 같이 참/거짓 반환 결과 또는 정상적인 쿼�
         + Error based Injection
             - 에러를 기반으로 데이터를 알아내는 기법
                 + 올바르지 않은 문법을 입력해 고의로 에러를 발생시킴
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [ServerSide: NoSQL Injection](https://dreamhack.io/lecture/courses/189)
