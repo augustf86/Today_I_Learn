@@ -20,3 +20,7 @@
 * Command Injection 방지 방법
     - 입력 값에 대해 메타 문자의 유무룰 철저히 검사
     - 시스템 메타 문자를 해석하지 않고 그대로 사용하는 함수를 사용해야 함
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [ServerSide: Command Injection](https://dreamhack.io/lecture/courses/187)
