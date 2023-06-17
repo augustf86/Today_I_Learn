@@ -292,3 +292,7 @@ MongoDB는 ```$```문자를 통해 연산자를 사용할 수 있음 (참고: [O
     | /{db}/_all_docs | 지정된 데이터베이스에 포함된 모든 도큐먼트를 반환함 |
     | /{db}/_find | 지정된 데이터베이스에서 JSON 쿼리에 해당하는 모든 도큐먼트를 반환함 |
 
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [Background: Relational DBMS](https://dreamhack.io/lecture/courses/169)
+* [드림핵 Web Hacking] 📌 [Background: Non-Relational DBMS](https://dreamhack.io/lecture/courses/168)
