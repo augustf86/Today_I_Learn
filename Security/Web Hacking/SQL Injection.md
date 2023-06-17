@@ -190,3 +190,7 @@ SELECT uid FROM user_table WHERE uid=‘’ AND upw=‘’
 
 <br/>
 
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [ServerSide: SQL Injection](https://dreamhack.io/lecture/courses/191)
