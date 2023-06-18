@@ -58,6 +58,7 @@
 
 ### 📖 NOTE
 * [웹 해킹 과정](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/웹%20해킹%20과정.md)
+* [OWASP TOP 10 2021](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/OWASP%20TOP%2010%202021.md)
 
 <br/><br/>
 
