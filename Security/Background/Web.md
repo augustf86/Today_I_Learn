@@ -209,3 +209,10 @@ URL의 구성 요소 중 Host - **Domain Name**, **IP Address**의 값을 가질
 			| Sources | HTML, CSS, JS 등 페이지를 구성하는 리소스를 확인하고 디버깅할 수 있음 |
 			| Network | 서버와 오가는 데이터를 확인할 수 있음 |
 			| Application | 쿠키를 포함하여 웹 애플리케이션과 관련된 데이터를 확인할 수 있음 |
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [Background: Web](https://dreamhack.io/lecture/courses/170)
+* [드림핵 Web Hacking] 📌 [Background: HTTP/HTTPS](https://dreamhack.io/lecture/courses/199)
+* [드림핵 Web Hacking] 📌 [Background: Web Browser](https://dreamhack.io/lecture/courses/171)
+* [드림핵 Web Hacking] 📌 [Tools: Browser DevTools](https://dreamhack.io/lecture/courses/198)
