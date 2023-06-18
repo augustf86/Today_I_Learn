@@ -77,3 +77,7 @@ HTML 또는 Javascript를 통해 작성할 수 있음
 >	  | XSS | 인증 정보인 세션 및 쿠키 **탈취**를 목적으로 하는 공격 <br/> → 공격할 사이트의 오리진에서 스크립트를 실행시킴 |
 >	  | CSRF | 이용자가 임의 페이지에 **HTTP 요청**을 보내는 것을 목적으로 하는 공격 <br/> → 공격자는 악성 스크립트가 포함된 페이지에 *접근한 이용자의 권한으로 웹 서비스의 임의 기능을 실행할 수 있음* |
 
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [ClientSide: CSRF](https://dreamhack.io/lecture/courses/172)
