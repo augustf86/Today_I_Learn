@@ -74,10 +74,14 @@ HTTP 헤더에 기반하여 Cross Origin 간에 리소스를 공유하는 방법
 	
 		<script src=‘https://sample.com/whoami?callback=CallbackFunc'></script>
 		```
-		+ https://sample.com 스크립트를 로드하는 HTML 코드 (callback 파라미터를 CallbackFunc으로 지정함으로써 **수신 측에게 CallbackFunc 함수를 사용해 수신 받겠다고 알림**)
+		+ ```https://sample.com``` 스크립트를 로드하는 HTML 코드 (callback 파라미터를 CallbackFunc으로 지정함으로써 **수신 측에게 CallbackFunc 함수를 사용해 수신 받겠다고 알림**)
 		+ *반환된 코드는 요청 측에서 실행*되기 때문에 CallbackFunc 함수가 Cross Origind에서 전달된 데이터를 읽을 수 있음
 	- 웹 리소스 요청에 따른 응답 코드
 		```javascript
 		CallbackFunc({‘id’: ‘augustf’});
 		```
 		+ 수신 측은 CallbackFunc 함수를 통해 요청 측에 데이터를 전달함
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking] 📌 [Mitigation: Same Origin Policy](https://dreamhack.io/lecture/courses/186)
