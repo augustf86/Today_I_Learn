@@ -8,6 +8,22 @@
 <br/><br/>
 
 ## List of OWASP Top 10 2021
+<img width="468" alt="OWASP_Top10_2021" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/6f6f8d09-3bec-418b-9669-622fc0ca411e"><br/>
+
+| OWASP Top 10 2021 | Avg Incidence Rate | Total CVEs | Documentation |
+|---------|-----:|-----:|---|
+| A01:2021 - Broken Access Control | 3.81% | 19,013 | 📚[A01:2021](https://owasp.org/Top10/A01_2021-Broken_Access_Control/) |
+| A02:2021 - Cryptographic Failures | 4.49% | 3,075 | 📚[A02:2021](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/) |
+| A03:2021 - Injection | 3.37% | 32,078 | 📚[A03:2021](https://owasp.org/Top10/A03_2021-Injection/) |
+| A04:2021 - Insecure Design | 3.00% | 2,691 | 📚[A04:2021](https://owasp.org/Top10/A04_2021-Insecure_Design/) |
+| A05:2021 - Security Misconfiguration | 4.51% | 789 | 📚[A05:2021](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) |
+| A06:2021 - Vulnerable and Outdated Components | 8.77% | 0 | 📚[A06:2021](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/) |
+| A07:2021 - Identification and Authentication Failures | 2.55% | 3,897 | 📚[A07:2021](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) |
+| A08:2021 - Software and Data Integrity Failures | 2.05% | 1,152 | 📚[A08:2021](https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/) |
+| A09:2021 - Security Logging and Monitoring Failures | 6.51% | 242 | 📚[A09:2021](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/) |
+| A10:2021 - Server-Side Request Forgery(SSRF) | 2.72% | 385 | 📚[A10:2021](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/) |
+
+<br/><br/>
 
 ### A01: Broken Access Control (잘못된 접근 통제, 접근 권한 취약점)
 * 2017년 버전에서 5위였던 Broken Access Control(잘못된 접근 통제)가 2021년 버전에서는 1위로 올라감
