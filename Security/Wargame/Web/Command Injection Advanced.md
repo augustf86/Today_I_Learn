@@ -1,5 +1,6 @@
 # [Dreamhack Wargame] Command Injection Advanced
 ### [🚩Command Injection Advanced](https://dreamhack.io/wargame/challenges/413/)
+<img width="1069" alt="CommandInjectionAdvanced_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9012fc35-0864-40c2-b060-5054290718a8">
 
 <br/><br/>
 
