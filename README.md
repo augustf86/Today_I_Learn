@@ -25,6 +25,7 @@
     + [Command Injection for Windows](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection%20for%20Windows.md)
     + [Command Injection Vulnerability cases](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Command%20Injection%20Vulnerability%20cases.md)
   - [File Vulnerability](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/File%20Vulnerability.md)
+    + [File Vulnerabilities for Windows](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/File%20Vulnerabilities%20for%20Windows.md)
   - [Server Side Request Forgery(SSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Server%20Side%20Request%20Forgery(SSRF).md)
 
 <br/>
