@@ -103,3 +103,27 @@
     | %UserProfile%\AppData\Local\Temp | 일반적으로 사용자별 임시 팡리이 저장되는 경로 |
 
 <br/><br/>
+
+## 파일 업로드 공격
+* 일반적으로 윈도우 웹 서버는 ```AUTHORITY\LocalService``` 또는 ```NTAUTHORITY\NetworkService``` 사용자 권한으로 실행됨
+    - 웹 서비스가 높은 권한이 아닌 일반 권한으로 실행됨 → **파일 업로드 공격으로 인한 피해를 최소화할 수 있음**
+    - 웹 서버의 파일 시스템 구조를 이해하고 있다면 일반 권한으로 덮어쓸 수 있는 파일을 덮어써서 임의 코드를 실행 할 수 있음
+
+<br/>
+
+### Apache Web Server: 일반 권한으로 임의 코드를 실행하는 방법
+* 아파치 웹 서버의 설정 파일
+    - 일반적으로 **C:\ApacheXY\htdocs** 또는 **C:\www** 디렉터리에서 관리함
+    - 설정 파일 내에서 ```AccessFileName``` 지시어를 사용하면 설정 파일을 분산하여 관리할 수도 있음
+        ```Apache
+        AccessFileName filename [filename ...]
+        ```
+        + 기본값: [.htaccess](https://httpd.apache.org/docs/2.4/ko/howto/htaccess.html) 파일
+            ```Apache
+            AccessFileName .htaccess
+            ```
+            - ⚠️ **.htaccess 파일은 웹 서버의 권한만 있다면 덮어쓸 수 있음 → .htaccess 파일을 사용하는 웹 서버에서 파일 업로드 취약점 발생 시 다양한 공격 행위를 수행할 수 있음**
+        + ```AccessFileName``` 지시어로 설정한 설정 파일에서 모든 설정을 변경할 수 있는 것은 아님
+            - ```AllowOverride```와 ```AllowOverrideList``` 지시어를 통해 명시한 지시어만 사용할 수 있음 (참고: [AllowOverride Documentation](https://httpd.apache.org/docs/2.4/ko/mod/core.html#allowoverride))
+
+* .htaccess 파일을 이용해 공격하는 방법
