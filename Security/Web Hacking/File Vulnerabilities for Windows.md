@@ -217,7 +217,7 @@
 <br/>
 
 ### 경로 변환
-* **유닉스 계열의 운영 체제와의 호환성**을 위해 경로 구분 문자인 '/'를 '\'로 변환함
+* **유닉스 계열의 운영 체제와의 호환성**을 위해 경로 구분 문자인 '/'를 '\\'로 변환함
     - 이를 이용한 경로 검사 우회 가능
         + 경로 변환이 적용된 예시
             | 경로 | 실제 경로 |
@@ -226,7 +226,7 @@
             | C:\htdocs\upload/foo/bar | C:\htdocs\uploads\foo\bar |
             | C:\htdocs\upload\bax/../../..Windows | C:\Windows (```..```은 상위 디렉터리를 의미) |
             | \\\\?\C:\htdocs\upload\qux\\../.. | \\\\?\C:\htdocs\upload\qux\\../.. |
-            | \\\\?\C:\htdocs\upload\quux\\../..//./ | \\\\?\C:\htdocs\upload\quux\\../..//./ |
+            | \\\\?\C:\htdocs\upload\quux\\../../../ | \\\\?\C:\htdocs\upload\quux\\../../../ |
         +  ⚠️ ```"\\?\"``` 문자열로 시작하는 경로에 대해서는 경로 문자 변환이 이루어지지 않음에 주의
 
 <br/><br/>
