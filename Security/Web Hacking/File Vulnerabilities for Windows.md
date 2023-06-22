@@ -203,3 +203,114 @@
     | %ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\StartUp | 모든 로컬 사용자의 시작 프로그램 목록이 저장됨 |
 
 <br/><br/>
+
+## 윈도우 파일 및 경로
+### 윈도우 파일명
+* 파일명 뒷부분에 '.' 또는 스페이스 문자가 포함될 경우 이를 자동으로 제거함
+    - EX: ```ShellL.php.. . . ...``` 파일명 → 운영 체제에서 ```Shell.php```로 해석 ('.' 문자와 스페이스 문자를 제거한 나머지만을 파일명으로 해석함) 
+* 윈도우의 바탕이 되는 DOS 운영 체제
+    - 파일명에 최대 8글자, 확장자를 최대 3 바이트까지 허용
+    - '.' 문자를 허용하지 않았음
+    - 파일명에 11바이트의 고정 버퍼를 사용함
+        + EX: ```ALICE.H```의 경우 ```ALICE H ```로 표현함
+
+<br/>
+
+### 경로 변환
+* **유닉스 계열의 운영 체제와의 호환성**을 위해 경로 구분 문자인 '/'를 '\'로 변환함
+    - 이를 이용한 경로 검사 우회 가능
+        + 경로 변환이 적용된 예시
+            | 경로 | 실제 경로 |
+            |---|---|
+            | C:/Windows | C:\Windows |
+            | C:\htdocs\upload/foo/bar | C:\htdocs\uploads\foo\bar |
+            | C:\htdocs\upload\bax/../../..Windows | C:\Windows (```..```은 상위 디렉터리를 의미) |
+            | \\\\?\C:\htdocs\upload\qux\\../.. | \\\\?\C:\htdocs\upload\qux\\../.. |
+            | \\\\?\C:\htdocs\upload\quux\\../..//./ | \\\\?\C:\htdocs\upload\quux\\../..//./ |
+        +  ⚠️ ```"\\?\"``` 문자열로 시작하는 경로에 대해서는 경로 문자 변환이 이루어지지 않음에 주의
+
+<br/><br/>
+
+## 윈도우 경로 표기
+### 드라이브 및 디바이스 경로
+* 윈도우 운영 체제는 파일 경로를 다양하게 표현할 수 있음
+    - 일반적으로 윈도우에서 파일 접근 시 사용하는 경로의 유형
+        | 유형 | 형식 | 예시 |
+        |----|----|--------|
+        | 드라이브 상대 경로 | ```{드라이브 문자}:\{경로}``` | ```C:\Windows\system32\calc.exe``` <br/> ```C:\Users\user1\Documents\crackme\..\README.md``` <br/> ```F:\Media\Intro.mp4``` |
+    - 상대 경로를 이용하는 방법 (리눅스와 유사함)
+        | 유형 | 형식 | 예시 |
+        |----|----|--------|
+        | 드라이브 상대 경로 | ```{드라이브 문자}:{경로}``` | ```C:notes.txt``` <br/> ```C:Foo\bar.obj``` <br/> ```D:..\Test\other.doc``` |
+        + 상대 경로 사용 시 ```\``` 문자를 포함하지 않고 다른 드라이브 파일에 접근할 수 있음
+        + [DOS 프로그램과의 호환성] ```=C:```, ```=D:```와 같은 환경 변수를 통해 각각의 드라이브의 위치를 저장할 수 있음
+            | 환경변수 | 예시 | 설명 |
+            |------|---|---|
+            | ```=D:``` 환경변수에 <br/>```D:\Apache2\Bin```이 저장 | ```D:httpd.exe``` 입력 | ```D:\Apache2\Bin\httpd.exe``` 파일에 접근함 |
+            + 해당 환경 변수에 값이 할당되지 있지 않으면 드라이브의 최상위 경로를 가리킴
+    - 특정 경로에 접근하기 위해 NT Object Manager 네임 스페이스 경로를 사용하는 방법
+        | 유형 | 형식 |
+        |----|----|
+        | NT 객체 경로 | ```\\?\{객체 경로명}``` → 경로명 그대로 사용 <br/> ```\??\{객체 경로명}``` → ```..```와 같은 요소가 경로에 포함되어 있으면 자동 확장 처리되어 특수 파일명을 사용할 수 없음 |
+        + 윈도우에서 미리 등록한 장치 및 드라이브의 예약어를 사용함
+        + NT 객체 경로의 예시
+            | 예시 | 설명 |
+            |---|-----|
+            | ```\\?\C:\Windows\system32``` | ```C:\Windows\system32``` 경로명을 그대로 사용함 <br/> &nbsp;&nbsp; - 드라이브의 절대 경로와 유사히지만 특수 문자 및 파일명을 사용할 수 있음 |
+            |```\\?\GLOBALROOT\Device\HarddiskVolume1\C:\Windows\system32``` <br/> ```\??\GLOBALROOT\Device\HarddiskVolume1\C:\Windows\system32``` | 드라이브 대신에 볼륨명을 사용함 <br/> &nbsp;&nbsp; - ```\\?\GLOBALROOT\Device\HarddiskVolumne[N]```, ```\??\GLOBALROOT\Device\HarddiskVolumne[N]``` 구문으로 볼륨을 지정함 |
+            | ```\\?\GLOBALROOT\SystemRoot``` <br/> ```\??\GLOBALROOT\SystemRoot``` | C:\Windows 디렉터리에 접근할 수 있음 |
+            | ```\\?\127.0.0.1\c$\``` | 웹 서버에 네트워크 공유 서비스가 존재할 때 예시와 같이 내부 서비스를 이용한 파일 접근이 가능함 |
+    - 그 외의 윈도우 운영 체제에서 사용하는 경로의 유형들
+        | 유형 | 형식 | 예시 |
+        |----|----|--------|
+        | 드라이브 내 절대 경로 | ```\{경로명}``` | ```\Window\system32\calc.exe``` <br/> ```\Build\example\Lib\x86\..\Common\LfdType.h``` |
+        | 드라이브 내 상대 경로 | ```{경로명}``` | ```Documents\desktop.ini``` <br/> ```..\..\..\..\Dir1\..\..\..\Users``` |
+        | Win32 장치 경로 | ```\\.\{장치 경로명}``` | ```\\.\NULL``` <br/> ```\\.\CON``` <br/> ```\\.\PRN``` <br/> ```\\.\AUX``` <br/> ```\\.\COM1``` <br/> ```\\.\COM2``` <br/> ```\\.\COM3``` <br/> ```\\.\COM4``` <br/> ```\\.\LPT1``` <br/> ```\\.\LPT2``` <br/> ```\\.\LPT3``` <br/> ```\\.\LPT4``` <br/> ```\\.\PIPE\{파이프 명}``` (Windows NT Pipe 객체(IPC)) |
+        | UNC 경로 | ```\\{서버}\{공유명}[\{경로}]``` <br/> ```\\?\UNC\{서버}\{공유명}[\{경로}]``` | ```\\smb.example.com\share``` <br/> = ```\\?\UNC\smb.example.com\share``` <br/> ```\\?\localhost\c$\Windows``` <br/> = ```\\?\UNC\localhost\c$\Windows``` |
+* 윈도우에서 제공하는 다양한 파일 경로 유형들의 사용
+    - 윈도우 애플리케이션에서 특정 장치에 접근해야 할 때 주로 사용함
+    - 개발 목적 외에도 웹 애플리케이션의 타 디렉터리의 접근을 허용하지 않을 때 이를 우회하기 위한 목적으로 사용할 수 있음
+
+<br/>
+
+### DOC 8.3 파일명 
+* DOS 8.3 파일명(8.3 Filename) = 짧은 파일명(Short Filename, SFN)
+    - DOS 운영 체제의 파일명 → 8 바이트, 확장자 3 바이트를 포함해 최대 11 바이트 버퍼를 사용함
+* 긴 파일명(Long Filename, LFN)
+    - 윈도우 3.5부터 짧은 파일명의 제약을 없앤 긴 파일명을 지원함
+    - 짧은 파일명을 호환하기 위해 긴 파일명에 **8.3 파일명 별칭**을 부여함
+        - 예시
+            | 긴 파일명 | 8.3 파일명 별칭 |
+            |---|---|
+            | webshell.phtml | WEBSHE1.PHT |
+            | .htaccess | HTACCE~1 |
+            | Web.config | WEB~1.CON |
+        - 별칭이 붙는다는 특징을 이용해 확장자를 검사하는 애플리케이션의 로직을 우회하고 공격할 수 있음
+        - 별칭의 생성을 막는 방법 - ```fsutil.exe 8dot3name``` 명령어를 이용
+            - DOS 8.3 별칭에 의존하는 일부 프로그램에서 호환성 문제가 발생할 수 있기 때문에 사용하는 데 주의가 필요함
+            - 📚 [fsuitl 사용법](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-8dot3name)
+                ```windows
+                fsutil 8dot3name [query] [<volumnepath>]
+                ```
+                + 지정한 디스크 볼륨에 대한 8.3 별칭 비활성화 동작을 쿼리함
+* 윈도우의 별칭 부여 규칙
+    1. 파일명은 대문자로만 이루어져야 함
+        - 소문자는 모두 대문자로 자동 치환됨
+    2. 스페이스, ASCII 제어 문자(```STX```, ```ESC``` 등) 및 ASCII 외 문자(확장 문자 집합이 활성회된 경우는 제외)는 모두 제거됨
+    3. '+'와 같은 특수 문자는 밑줄('_') 문자로 치환됨
+    4. 파일명과 확장자는 각각 8바이트와 3바이트 이하의 문자열로 이루어져야 하며, 각 요소 모두 '.' 문자를 포함할 수 없음
+        - 고정 버퍼를 초과하는 파일의 변환
+            | 긴 파일명 | 생성된 8.3 파일명 별칭 |
+            |---|----|
+            | Dreamhack.jpg | DREAMH~1.jpg |
+            | Dreamhack.html | DREAMH~1.HTM |
+    5. 첫 6바이트가 중복되는 파일이 생성되면 두 번째로 생성되는 파일의 ```~``` 문자 뒤의 숫자가 1 증가한 값으로 생성됨
+        - 예시 (```DREAMH~1.jpg```가 생성되어 있는 경우)
+            | 긴 파일명 | 생성된 8.3 파일명 별칭 |
+            |---|----|
+            | Dreamhill.jpg | DREAMH~2.jpg |
+    6. 서로 동일한 6자리의 짧은 이름을 가진 네 개의 파일이나 폴더가 있을 때 파일명에 ```DRA4FE~1JPG```와 같은 해시값이 포함됨
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [Background: File Vulnerabilities for Windows](https://dreamhack.io/lecture/courses/295)
