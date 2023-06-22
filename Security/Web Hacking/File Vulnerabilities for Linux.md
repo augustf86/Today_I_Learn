@@ -215,3 +215,47 @@
 <br/><br/>
 
 ## 파일 다운로드 공격
+* 개인 정보를 포함한 민감한 정보를 수집하는 데에 이용할 수 있음
+    - 민감한 정보의 예시 - 데이터베이스, 운영 체제 계정 정보, 방화벽 규칙 정보, 소스 코드 등
+* 모든 공격은 **서비스를 운용하는 운영 체제의 정보**를 알아내는 것으로 시작 → 파일 다운로드 취약점이 발생했을 경우 해당 취약점을 이용해 OS의 정보를 수집함
+
+<br/>
+
+### 파일 다운로드 취약점이 발생했을 때 공격에 유용하게 쓰일 수 있는 파일 목록
+* 일반 권한으로 접근할 수 있는 시스템 가상 파일 및 심볼릭 링크
+    | 파일 | 설명 |
+    |---|------|
+    | /proc/cpuinfo | 시스템 CPU 정보를 조회할 수 있음 |
+    | /proc/uptime | 시스템의 구동 시간을 조회할 수 있음 |
+    | /proc/version | 시스템 커널 버전 정보를 조회할 수 있음 |
+    | /proc/self/net/arp <br/> /proc/net/arp | 내부망에 연결된 호스트들의 정보를 조회할 수 있음 <br/> &nbsp;&nbsp; - 각 IP 주소별 MAC 주소를 출력함 |
+    | /proc/self/net/route <br/> /proc/net/route | 게이트웨이 등 기본 라우팅 테이블을 조회할 수 있음 |
+    | /proc/self/net/tcp <br/> /proc/net/tcp | 현재 시스템 상에 존재하는 TCP 연결 정보를 조회할 수 있음 |
+    | /proc/self/fd/\<FD\> <br/> /dev/fd/\<FD\> | 파일 디스크럽터 ```<FD>```가 가리키는 파일을 나타내는 심볼릭 링크(Symbolic link) <br/> &nbsp;&nbsp; - 현재 열린 파일을 조회하고 읽거나 쓸 수 있음 |
+    | /proc/self/cmdline <br/> /proc/self/environ | 각각 현재 프로세스의 명령줄(cmdline) 및 환경 변수(environ)를 가져옴 <br/> &nbsp;&nbsp; - Docker 등을 사용하는 경우 암호키나 비밀번호(secret)를 환경 변수로 저장하는 경우가 많음 <br/> &nbsp;&nbsp;&nbsp;&nbsp; → 환경 변수를 유출하면 민감 정보를 획득할 수 있음 |
+    | /proc/self/exe | 현재 프로세스의 실행 파일을 가리키는 심볼릭 링크 |
+    | /proc/self/cmd | 현재 디렉터리(current working directory)를 가리키는 심볼릭 링크 |
+    | /proc/self/maps | 현재 프로세스의 메모리 매핑과 사용 중인 동적 라이브러리의 파일명을 불러옴 |
+
+* 일반 권한으로 접근할 수 있는 설정 파일
+    | 파일 | 설명 |
+    |---|------|
+    | ~/.bash_history <br/> ~/.zsh_history <br/> ~/.python_history | 사용자가 입력한 쉘 명령 및 인터프리터 명령 기록을 저장함 |
+    | ~/.ssh/id_rsa <br/> ~/.ssh/id_ed25519 | 사용자의 SSH 비밀키가 위치함 |
+    | ~/.gnupg | GNU Privacy Guard 설정 파일 및 비밀키 등이 위치함 |
+    | ~/.netrc | FTP 서버 연결 비밀번호 등을 설정하는 파일 |
+    | ~/.viminfo | Vim 에디터로 편집한 파일 목록 등이 저장됨 |
+    - ⚠️ 프로필, SSH 키 등은 **관리자가 로그온하는 계정과 웹 서버의 계정이 같을 때** 사용할 수 있음
+
+* 서버에서 사용자의 접속 기록 등을 저장하는 로그 파일
+    | 파일 및 디렉터리 | 설명 |
+    |---|------|
+    | /var/log/apache2 <br/> /var/log/httpd | Apache Web Server의 로그가 저장됨 <br/> &nbsp;&nbsp; - 웹 서비스의 접속 기록은 ```access.log```에 저장됨 <br/> &nbsp;&nbsp; - 웹 서비스의 에러 기록은 ```error.log```에 저장됨 |
+    | /var/log/nginx | Nginx 웹 서버의 로그가 저장됨 |
+    | /var/log/php-fpm | FastCGI 기반 PHP 로그가 저장됨 |
+    | /var/log/journal | systemd 기반 시스템의 로그가 저장되는 디렉터리 |
+    | /var/log/wtmp <br/> /var/log/btmp <br/> /var/log/lastlog | 사용자 접속 기록이 저장됨 <br/> &nbsp;&nbsp; - wtmp: 성공한 로그인/로그아웃 정보를 담고 있는 로그파일(last 명령어 사용) <br/> &nbsp;&nbsp; - btmp: 실패한 로그인 정보를 담고 있는 로그파일(lastb 명령어 사용) <br/> &nbsp;&nbsp; - lastlog: 마지막으로 성공한 로그인 정보를 담고 있는 로그파일(lastlog 명령어 사용) |
+
+<br/><br/><br/><br/>
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Server Side] 📌 [Background: File Vulnerabilities for Linux](https://dreamhack.io/lecture/courses/282)
