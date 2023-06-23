@@ -58,9 +58,9 @@ DBMS에서 제공하는 특별한 함수 또는 기능 등을 이용해 **파일
 <br/>
 
 ### Out of DBMS: MSSQL
-* ```xp_cmdshell`` 기능을 이용해 OS 명령어를 실행할 수 있음
+* ```xp_cmdshell``` 기능을 이용해 OS 명령어를 실행할 수 있음
     - SQL Server 2005 버전 이후부터는 기본적으로 **비활성화**되어 있어 임의로 활성화하지 않는 이상 해당 기능을 이용한 공격은 불가능함 → 해당 기능이 활성화되어 있는지 확인해야 함
-    - ```xp_cmdshell`` 기능의 활성화 여부를 판단하는 쿼리
+    - ```xp_cmdshell``` 기능의 활성화 여부를 판단하는 쿼리
         ```sql
         SELECT * FROM sys.configurations WHERE name = 'xp_cmdshell'
         -- 결과로 1이 반환되면 활성화, 0이 반환되면 비활성화된 상태임을 의미함
