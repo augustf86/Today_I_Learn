@@ -57,6 +57,7 @@
   | NoSQL-CouchDB | NoSQL Injection (CouchDB) | [NoSQL-CouchDB.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/NoSQL-CouchDB.md) |
   | phpMyRedis | NoSQL Injection (Redis) | [phpMyRedis.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/phpMyRedis.md) |
   | Command Injection Advanced | Command Injection (PHP) | [Command Injection Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Command%20Injection%20Advanced.md)|
+  | File Vulnerability Advanced for linux | File Download Vulnerability <br/> (Path Traversal) | [File Vulnerability Advanced for linux.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/File%20Vulnerability%20Advanced%20for%20linux.md) |
   - 🚩 웹 해킹 워 게임 문제 사이트: [Dreamhack Wargame/Web](https://dreamhack.io/wargame/challenges?page=1&category=web)
 
 <br/>
