@@ -94,3 +94,91 @@
 <br/><br/>
 
 ## 잘못된 방식의 XSS 필터링
+### ⚠️ **WARNING**: 아래에 소개하는 필터링은 모두 **잘못된 방식의 필터링**이므로 실제로 사용하지 않기를 권장함
+* XSS 취약점을 근본적으로 제거하기 위해서는 태그 삽입이 되지 않도록 처음부터 원인을 제거하는 것이 중요함
+
+<br/>
+
+### 잘못된 방식의 XSS 필터링 1: 문자열 치환
+* 단순히 치환 혹은 제거하는 방식의 필터링을 사용할 경우 필터링되는 키워드 사이에 새로운 필터링 키워드를 삽입하는 방식으로 우회하는 것이 가능함
+    - 중간에 삽입된 키워드가 제거되면서 다시 원본 키워드를 만들어내는 방식으로 우회할 수 있음
+        + 예시: ```script``` 키워드 필터링 시 ```scrscriptipt```와 같이 제거되는 키워드를 중간에 삽입
+    - 필터링 자체가 무력화될 뿐더러 웹 응용 방화벽(Web Application Firewall)에서 아래와 같은 공격 페이로드를 탐지하지 못하는 등의 부작용이 발생하게 됨
+        ```javascript
+        (x => x.replace(/onerror/g, ''))('<img oneonerrorrror=promonerrorpt(1)>')
+        // 결과: <img onerror=prompt(1)>
+        ```
+* 대안: 문자열에 변화가 없을 때까지 지속적으로 치환하는 방식을 사용함
+    ```javascript
+    function replaceIterate(text) {
+        while (true) {
+            var newText = text.replace(/script|onerror/gi, '');
+            if (newText === text) {
+                break;
+            }
+            text = newText;
+        }
+        return text;
+    }
+    ```
+    - 특정 키워드가 최종 마크업에 등장하지 않도록 하는데에는 효과적일 수 있음
+    - 미처 고려하지 못한 구문의 존재, WAF 방어 무력화 등의 문제점은 기존 문자열 치환 방식과 동일함
+
+<br/>
+
+### 잘못된 방식의 XSS 필터링 2: 활성 하이퍼링크
+* HTML 마크업에서 사용될 수 있는 URL들은 활성 콘텐츠를 포함할 수 있음
+    - ```javascript:``` 스키카: URL 로그 시 자바스크립트 코드를 실행할 수 있도록 함
+        + URL을 속성 값으로 받는 ```<a>``` 태그나 ```<iframe>``` 태그 등에 사용할 수 있음
+        + 이러한 이유로 ```javascript:``` 스키마를 사용하지 못하도록 필터링 하는 경우가 존재함
+* ```javascript:``` 필터링 우회 방안
+    - 정규화(Normalization)
+        + 브라우저들이 URL를 사용할 때 거치는 과정 중 하나
+            - 동일한 리소스를 나타내는 서로 다른 URL들이 통일된 형태로 변환하는 과정
+            - ```\x01```, ```\0x04```, ```\t```와 같은 특수 문자들이 제거되고, 스키마의 대소문자가 통일됨
+        + 정규화를 이용한 우회 예시 (특수 문자 포함)
+            ```html
+            <a href="\1\4jAVasC\triPT:alert(document.domain)">Click me!</a>
+            <!-- 정규화 결과: <a href="javascript:alert(document.domain)">Click me!</a> -->
+
+            <iframe src="\1\4jAVasC\triPT:alert(document.domain)">
+            <!-- 정규화 결과: <iframe src="javascript:alert(document.domain)" -->
+            ```
+    - HTML Entity Encoding
+        + HTML 태그의 속성 내에서 사용 가능함
+            - Entity Code: HTML 문서에서 특수 문자를 입력하기 위해 사용하는 코드
+                + 특수 문자는 엔티티 코드로 작성하는 것이 좋음
+        + HTML Entity Encoding을 이용한 필터링 우회 예시
+            ```html
+            <a href="\1&#4;J&#97;v&#x61;sCr\tip&tab;&colon;alert(document.domain);">Click me!</a>
+            <!-- <a href="javascript:alert(document.domain);">Click me!</a>와 동일 -->
+
+            <iframe src="\1&#4;J&#97;v&#x61;sCr\tip&tab;&colon;alert(document.domain);">
+            <!-- <iframe src="javascript:alert(document.domain);">와 동일 -->
+            ```
+            - ```javascript:``` 스키마나 이 외의 XSS 키워드를 인코딩하여 필터링을 우회할 수 있음
+* 자바스크립트의 ```URL``` 객체
+    - 📚 [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) Docs
+        + URL 인터페이스는 URL의 구문을 분석﹒구성﹒정규화 및 인코딩하는 데 사용함
+        + 📚 [URL: URL() constructor](https://developer.mozilla.org/en-US/docs/Web/API/URL/URL) Docs
+            - ```URL()``` 생성자: 매개변수로 정의된 URL을 나타내는 새로 생성된 ```URL``` 객체를 반환함
+                ```javascript
+                new URL(url) // url: 절대/상대 URL (상대 URL일 경우에 base를 필요로 함)
+                new URL(url, base) // base: (optional) 상대 URL일 경우 사용할 기본 URL을 나타내는 문자열
+                ```
+                + 유효한 URL이 아닐 경우 Javascript TypeError 예외가 발생함
+    - **URL을 직접 정규화**하고, ```protocol```, ```hostname``` 등 URL의 각종 정보를 추출할 수 있음
+        +  이를 이용해 XSS 필터링 우회 공격 구문 작성 시 직접 URL을 정규화해보며 테스트하는 것이 가능함
+            ```javascript
+            function normalization(url) {
+                return new URL(url, document.baseURI);
+            }
+
+            normalization('\4\4jAva\tScRIpT:alert(1)') // "javascript:alert"
+            normalization('\4\4jAva\tScRIpT:alert(1)').protocol // "javascript:"
+            normalization('\4\4jAva\tScRIpT:alert(1)').pathname // "alert(1)"
+            ```
+
+<br/>
+
+### 잘못된 방식의 XSS 필터링 3: 태그와 속성 기반 필터링
