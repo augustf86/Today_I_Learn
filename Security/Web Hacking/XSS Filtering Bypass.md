@@ -32,3 +32,65 @@
 <br/>
 
 ### XSS 필터링이 취해야 하는 방식
+* 보안을 위해 XSS 필터링은 **보수적인 방식**(**Allowlist 필터링**)을 취해야 함
+    - HTML에서 자바스크립트 코드를 실행하거나 페이지에 변형을 가하는 방법은 여러 가지가 있음 → **XSS 필터링은 이를 모두 막아 웹 페이지의 보안을 유지해야 함**
+    - HTML 표준과 브라우저의 기능은 나날이 변화하고 발전하고 있으며, 안전하지 않은 코드를 실행할 수 있는 방법의 수가 계속 늘어나고 있음 → **안전하다고 알려진 마크업만 허용**하는 방식을 취해야 함
+    - 일부 문자열만 바탕로 필터링할 경우 발생할 수 있는 문제점
+        | 문제점 | 설명 |
+        |---|------|
+        | 허위양성(False Positive) | 어떤 조건이 실제로 성립되지 않았으나 성립되는 것으로 거짓 판별됨 |
+        | 허위음성(False Negative) | 어떤 조건이 실제로 성립되었으나 성립되지 않은 것으로 거짓 판별됨 |
+        + 허위양성 및 허위음성의 발생으로 필터링 자체가 제대로 이루어지지 못해 취약점이 발생할 수 있음
+
+* **Allowlist VS Blocklist**
+    | 용어 | 설명 |
+    |---|------|
+    | Allowlist | 지정된 장치 또는 서비스에 대한 접근이 허용된 사람 또는 항목의 목록 <br/> &nbsp;&nbsp; → Allowlist 필터링은 목록에 포함된 항목만 허용하는 방식 |
+    | Blocklist | 지정된 장치 또는 서비스에 대한 접근이 차단된 사람 또는 항목의 목록 <br/> &nbsp;&nbsp; → Blocklist 필터링은 목록에 포함된 항목만 차단하는 방식 |
+    - 기존에는 Whitelist와 Blacklist라는 용어를 사용했으나 현재는 Allowlist와 Blocklist로 대체되는 추세임
+    - 출처: https://fractionalciso.com/allowlist-and-blocklist-are-better-terms-for-everyone-lets-use-them/
+
+
+<br/>
+
+### 자바스크립트 코드를 실행할 수 있는 **이벤트 핸들러 속성**
+* 자바스크립트 코드를 실행할 수 있는 HTML 태그는 ```<script>``` 이외에도 상당수 존재함
+    - **보통 태그의 속성 값으로 스크립트를 포함할 수 있는 경우**가 다수 존재함
+        + 대표적인 예시: 이벤트 핸들러를 지정하는 ```on```으로 시작하는 속성들
+* 이벤트 핸들러: 특정 요소에서 발생하는 이벤트를 처리하기 위해 존재하는 콜백(callback) 형태의 핸들러 함수
+    - 이벤트 핸들러 내에 XSS 공격 코드를 삽입 → 해당 이벤트가 발생했을 때 삽입해둔 XSS 공격 코드가 실행됨
+    - 태그의 속성 값으로 주로 들어가며, 그 종류 및 각 이벤트 발생 원리가 매우 다양함
+        + 참고: [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/Events)
+    - 자주 사용되는 이벤트 핸들러 속성
+        | 이벤트 핸들러 속성 | 설명 |
+        |---|------|
+        | ```onload``` | 해당 태그가 요청하는 데이터를 로드한 후에 실행 <br/> &nbsp;&nbsp; - 로드에 실패 시 실행되지 않음 |
+        | ```onerror``` | 해당 태그가 요청하는 데이터를 로드하는데 실패할 경우 실행 <br/> &nbsp;&nbsp; - 로드에 성공 시 실행되지 않음 |
+        | ```onfocus``` | ```input``` 태그에 커서를 클릭하여 포커스가 되면 실행되는 이벤트 핸들러 <br/> &nbsp;&nbsp; - 1> 공격 상황에서 ```input``` 태그의 ```autofocus``` 속성을 이용해 자동으로 포커스시킴 <br/> &nbsp;&nbsp; - 2> URL의 hash 부분에 ```input``` 태그의 ```id``` 속성 값을 입력하여 자동으로 포커스되도록 함 |
+        + 예시
+            - ```onload``` 이벤트 핸들러 예시
+                ```html
+                <!-- img 태그로 유효한 이미지 로드 후 onload 핸들러가 실행됨 -->
+                <img src="http://sample.com/valid.jpg" onload="alert(document.domain)">
+
+                <!-- img 태그로 유효한 이미지 로드에 실패하므로 onload 핸들러를 실행하지 않음-->
+                <img src="about:invalid" onload="alert(document.domain)">
+                ```
+            - ```onerror``` 이벤트 핸들러 예시
+                ```html
+                <!-- --img 태그로 유효한 이미지 로드에 성공하였으므로 onerror 핸들러를 실행하지 않음 -->
+                <img src="valid.jpg" onerror="alert(document.domain)">
+
+                <!-- img 태그로 유효한 이미지 로드에 실패하였으므로 onerror 핸들러가 실행됨 -->
+                <img src="about:invalid" onerror="alert(document.domain)">
+                ```
+            - ```onfocus``` 이벤트 핸들러 예시
+                ```html
+                <!-- autofocus 속성으로 인해 페이지가 로드된 후 바로 input 태그에 포커스함 → 포커스된 직후 onfocus 핸들러가 실행됨 -->
+                <input type="text" id="inputID" onfocus="alert(document.domain)" autofocus>
+                <!-- URL의 hash 부분에 input 태그의 id 속성값을 입력할 경우 http://sample.com/#inputID 형식으로 입력함 -->
+                ```
+
+<br/><br/>
+
+## 잘못된 방식의 XSS 필터링
