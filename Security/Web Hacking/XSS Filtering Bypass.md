@@ -255,3 +255,9 @@
 <br/>
 
 ### 잘못된 방식의 XSS 필터링 4: 자바스크립트 함수 및 키워드 필터링
+
+
+<br/><br/><br/><br/>
+
+### 🔖 출처
+* [드림핵 Web Hacking Advanced - Client Side] 📌 [Exploit Tech: XSS Filtering Bypass - 1](https://dreamhack.io/lecture/courses/318)
