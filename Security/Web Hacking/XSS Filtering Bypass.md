@@ -246,7 +246,7 @@
                     <iframe src="javascript:alert(parent.document.domain)">
                     <iframe srcdoc="<&#x69;mg src=1 &#x6f;nerror=alert(parent.document.domain)>">
                     ```
-                    + 공격에 사용한 ```<ifrmae>``` 태그의 속성 (📚 [```<iframe``` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) 참고)
+                    + 공격에 사용한 ```<ifrmae>``` 태그의 속성 (📚 [```<iframe>``` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) 참고)
                         | 속성 | 설명 |
                         |---|------|
                         | ```src``` | 포함될 페이지의 URL를 인자로 받음 <br/> &nbsp;&nbsp; - 활성 하이퍼링크를 이용해 자바스크립트 코드를 삽입하는 것이 가능함 (```javascript:``` 스키마 사용 가능) |
