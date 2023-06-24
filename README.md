@@ -10,7 +10,7 @@
   - [SQL](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/SQL.md)
 * Client Side Web Hacking
   -  [Cross-Site-Scriptig (XSS)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Cross-Site-Scripting(XSS).md)
-    + [XSS Filtering Bypass](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/XSS%20Filtering%20Bypass.md)
+      + [XSS Filtering Bypass](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/XSS%20Filtering%20Bypass.md)
   -  [Cross Site Request Forgery(CSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Cross%20Site%20Request%20Forgery(CSRF).md)
 * Server Side Web Hacking
   - [SQL Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/SQL%20Injection.md)
