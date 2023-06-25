@@ -444,3 +444,4 @@
 
 ### 🔖 출처
 * [드림핵 Web Hacking Advanced - Client Side] 📌 [Exploit Tech: XSS Filtering Bypass - 1](https://dreamhack.io/lecture/courses/318)
+* [드림핵 Web Hacking Advanced - Client Side] 📌 [Exploit Tech: XSS Filtering Bypass - 2](https://dreamhack.io/lecture/courses/320)
