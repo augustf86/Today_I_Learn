@@ -255,6 +255,134 @@
 <br/>
 
 ### 잘못된 방식의 XSS 필터링 4: 자바스크립트 함수 및 키워드 필터링
+* 자바스크립트는 **Unicode escape sequence**와 **Computed member access**를 지원함 → 이를 통해 필터링을 우회할 수 있음
+    - Unicode escape sequence: 문자열에서 유니코드 문자를 코드포인트로 나타낼 수 있느 표기법
+        + EX: ```"\uAC00" == "가"```
+        + Unicode escape sequence를 이용한 특정 키워드 필터링 우회 방법
+            - 필터링된 키워드의 일부 문자를 코드포인트로 변경하여 표기함으로써 우회할 수 있음
+                ```javascript
+                var foo = "\u0063ookie"; // cookie (소문자 c를 코드포인트 \u0063으로 나타냄)
+                var bar = "cooki\x65"; // cookie (소문자 e를 코드포인트 \x65로 나타냄)
+                \u0061lert(document.cookie); // alert(document.cookie); (소문자 a를 코드포인트 \u0061로 나타냄)
+                ```
+    - Computed member access: 객체의 특정 속성에 접근할 때 속성 이름을 동적으로 계산하는 기능
+        + EX: ```document["coo"+"kie"] == document["cookie"] == document.cookie```
+            - 세 표현 모두 동일하게 DOM에 저장된 쿠키 문자열인 ```document.cookie``` 속성을 의미함
+        + Computed member access를 이용한 특정 키워드 필터링 우회 방법
+            - 필터링된 속성 값을 문자열을 이용해 접근하고 문자열을 자르거나 변형하는 등의 우회가 가능함
+                ```javascript
+                // document["cook"+"ie"] == document.cookie
+                alert(document["\u0063ook" + "ie"]); // alert(document.cookie); (Unicode escape sequence: 소문자 c를 코드포인트 \u0063으로 나타냄)
+
+                // window['alert'](document["cook"+"ie"]) == window.alert(document.cookie)
+                window['al\x65rt'](document["\u0063ook"+"ie"]); // alert(document.cookie); (Unicode escape sequence: 소문자 e를 코드포인트 \x65로, 소문자 c를 코드포인트 \u0063으로 나타냄)
+                ```
+
+* XSS 공격 구문의 자바스크립트 키워드를 필터링한 경우에는 우회할 수 있는 방법이 굉장히 다양함
+    - XSS 공격에 흔히 사용되는 구문과 필터링 우회를 위해 사용될 수 있는 대체 예시
+        | 구문 | 대체 구문 |
+        |----|-----|
+        | ```alert```, ```XMLHttpRequest``` 등 <br/>문서 최상위 객체 | ```window['al'+'ert']```, ```window['XMLHtt`+`pRequest`]``` 등 이름 끊어서 쓰기 |
+        | ```window``` | ```self```, ```this``` |
+        | ```eval(code)``` | ```Function(code)()``` |
+        | ```Function``` | ```isNaN['constr'+'uctor']``` 등 함수의 ```constructor``` 속성 접근 |
+    - 자바스크립트의 언어적 특성을 활용하면 6개의 문자(```[```, ```]```, ```(```, ```)```, ```!```, ```+```)만으로 모든 동작을 수행할 수 있음
+        + 장점과 단점
+            | 장점 | 단점 |
+            |---|---|
+            | ```cookie```와 같이 기존 XSS 필터링에서 주로<br/> 탐지하는 단어들을 언급하지 않아도 됨 <br/> &nbsp;&nbsp; → 상당수의 웹 사이트를 공격하는 데 활용됨 | XSS 공격 구문의 길이가 늘어남 |
+
+* 필터링 혹은 인코딩/디코딩 등의 이유로 특정 문자(```()```, ```[]```, ```"```, ```'``` 등)를 사용하지 못하는 경우 대체할 수 있는 방법들을 통해 우회하여 공격할 수 있음
+    - **문자열 선언**: 문자열을 사용할 때 필요한 따옴표(```"```, ```'```)가 필터링되어 있는 경우
+        + [우회 방법 1] 탬플릿 리터럴(Template Literals)를 사용하는 방법
+            - **탬플릿 리터럴**: 내장된 표현식을 허용하는 문자열 리터럴 → 여러 줄로 이뤄진 문자열과 문자를 보관하기 위한 기능으로 이용함
+                + 백틱(`)을 이용해 선언할 수 있고, 내장된 ```${}``` 표현식을 이용해 다른 변수나 식을 사용할 수 있음
+                    ```javascript
+                    var foo = "Hello";
+                    var bar = "World";
+
+                    var baz = `${foo},
+                    ${bar} ${1+1}.`; // baz = "Hello,\nWorld 2."
+                    ```
+        + [우회 방법 2] RegExp 객체를 사용하는 방법
+            - ```/문자열/``` 형태로 RegExp 객체를 생성하고 객체의 패턴 부분(```/문자열/.source```)를 가져옴으로써 문자열을 만들 수 있음
+                ```javascript
+                var foo = /Hello World!/.source; // foo = "Hello World!"
+                var bar = /test !/ + []; // bar = "/test !/"
+                ```
+        + [우회 방법 3] ```String.fromCharCode``` 함수를 사용하는 방법
+            - ```String.fromCharCode``` 함수(📚 [String.fromCharCode() docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode) 참고)
+                ```javascript
+                String.fromCharCode(num1, num2, /* ..., */ numN)
+                ```
+                + 지정된 UTF-16 코드 단위 시퀀스(유니코드의 범위 중 파라미터로 전달된 일련의 숫자들)에서 생성된 문자열을 반환함
+            - ```String.fromCharCode``` 함수를 이용한 문자열 생성 예시
+                ```javascript
+                var foo = String.fromCharCode(72, 101, 108, 108, 111); // foo = "Hello"
+                ```
+        + [우회 방법 4] 기본 내장 함수나 객체의 문자를 사용하는 방법
+            - 내장 함수나 객체를 ```toString``` 함수를 이용해 문자열로 변경하게 되면 함수나 객체의 형태가 문자열로 변환됨 → 이를 이용해 원하는 문자열을 만드는데 필요한 문자들을 내장 함수/객체로부터 한 글자씩 가져와 문자열을 만들 수 있음
+                ```javascript
+                var baz = history.toString()[8] + // history.toString()[8] → "[object History]" 문자열의 인덱스 8에 위치한 문자인 "H"를 가져옴
+                (history+[])[9] + // (history+[])[9] → "[object History]" 문자열의 인덱스 9에 위치한 문자인 "i"를 가져옴
+                (URL+0)[12] + // (URL+0)[12] → "function URL() { [native code] }" 문자열의 인덱스 12에 위치한 문자인 "("를 가져옴
+                (URL+0)[13];  // (URL+0)[13] → "function URL() { [native code] }" 문자열의 인덱스 13에 위치한 문자인 ")"를 가져옴
+                // ⇒ var baz = "Hi()";와 동일
+                ```
+                + [📚 ```Object.prototype.toString()``` docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString), [📚 ```Function.prototype.toString()``` docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString) 참고
+                    | 함수 | 설명 |
+                    |---|------|
+                    | ```Object.prototype.toString()``` | 객체를 나타내는 문자열을 반환하는 함수 (형식: ```객체명.toString()```)
+                    | ```Function.prototype.toString()``` | 지정된 함수의 소스 코드를 나타내는 문자열을 반환하는 함수 (형식: ```함수명.toString()```) |
+                + 함수나 객체와 ```+```, ```-```와 같은 산술 연산을 수행하게 되면 연산을 위해 객체 내부적으로 ```toString``` 함수를 호출해 문자열로 변환한 후에 연산을 수행함
+                    - ```history.toString()```과 ```history+[]```는 동일하게 ```"[objecct History]``` 문자열을 반환함
+                    - ```URL.toString()```과 ```URL+0```은 동일하게 ```function URL() { [native code] }``` 문자열을 반환함
+        + [우회 방법 5] 숫자 객체의 진법 변환을 사용하는 방법
+            - E4X 연산자(```..```)와 ```toString()``` 함수를 이용하여 10진수 숫자를 36진수로 변경하여 아스키 영어 소문자 범위를 모두 생성할 수 있음
+                + [📚 ```Number.prototype.toString()``` docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString) 참고
+                    ```javascript
+                    toString() // radix의 기본값인 10을 사용함
+                    toString(radix) // radix: 숫자 값을 나타내는 데 사용할 기준을 지정하는 2에서 36 범위의 정수 (default: 10)
+                    ```
+                    - 지정된 숫자값을 나타내는 문자열을 반환함
+                + E4X 연산자의 경우 주로 점 두 개(```.```)를 쓰거나, 소수점으로 인식되지 않도록 공백과 점을 조합해 사용(``` .```)할 수 있음
+            - 진수 변환을 이용해 문자열을 생성하는 예시
+                ```javascript
+                var foo = 29234652..toString(36); // foo = "Hello"
+                var bar = 29234652 .toString(36); // bar = "hello"
+                ```
+    - **함수 호출**: 자바스크립트의 함수를 호출하기 위한 소괄호(Parentheses, ```()```)와 Tagged Templates(백틱, `) 문자가 모두 필터링되어 있는 경우
+        + [우회 방법 1] ```javascript:``` 스미카를 이용해 현재 ```location``` 객체를 변조하는 방법
+            - ```javascript:``` 스키마를 이용하면 URL을 이용해 자바스크립트 코드를 실행시킬 수 있음 → 이 점을 이용하여 ```location``` 객체에 ```javascript:``` 스키마를 이용하여 자바스크립트 코드를 실행시킬 수 있음
+                ```javascript
+                // Unicode escape sequence: 문자 (를 \x28(\u0028, \050)로, 문자 )를 \x29(\u0029, \051)로 나타냄
+                location="javascript:alert\x28document.domain\x29;";
+                location.href="javascript:alert\u0028document.domain\u0029;";
+                location['href']="javascript:alert\050document.domain\051;";
+                ```
+        + [우회 방법 2] ```Symbol.hasInstance```을 이용한 ```instanceof``` 연산자 오버라이딩을 통해 함수를 호출하는 방법
+            + 문자열 이외에도 ECMAScript 6에서 추가된 Symbol 또한 속성 명칭으로 사용할 수 있음
+            + ```instanceof``` 연산자를 사용할 때 ```Symbol.hasInstance``` well-known symbol에 함수가 존재할 경우 이를 인스턴스 체크 대신 호출하여 ```instanceof``` 연산자의 결과 값으로 사용할 수 있음
+                ```javascript
+                "alert\x28document.domain\x29" instanceof{[Symbol.hasInstance]:eval};
+                Array.prototpye[Symbol.hasInstance]=eval;"alert\x28document.domain\x29" instanceof[];
+                ```
+            + 참고: [📚 ```Symbol.hasinstance``` docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/hasInstance)
+        + [우회 방법 3] ```document.body.innerHTML```에 코드를 추가하여 자바스크립트 코드를 실행하는 방법
+            + 자바스크립트에서 ```document.body.innerHTML```에 코드를 추가하여 문서 내에 새로운 HTML 코드를 추가하는 것이 가능함 → 이를 이용해 자바스크립트 코드를 실행할 수 있음
+                ```javascript
+                // <img> 태그를 추가함 (onerror 이벤트 핸들러를 이용해 자바스크립트 코드를 실행시키고 있음)
+                document.body.innerHTML += "<img src=x: onerror=alert&#40;1&#41;>";
+
+                // <body> 태그를 추가함 (onload 이벤트 핸들러를 이용해 자바스크립트 코드를 실행시키고 있음)
+                document.body.innerHTML += "<body src-=x: onload=alert&#40;1&#41;>";
+                ```
+            + ⚠️ **주의**: ```innerHTML```로 코드를 삽입할 때 보안 상의 이유로 ```<script>``` 태그는 실행되지 않음 → **이벤트 핸들러 속성을 이용해 자바스크립트 코드를 실행해야 함**
+
+
+<br/>
+
+### 잘못된 방식의 XSS 필터링 5: 디코딩 전 필터링
 
 
 <br/><br/><br/><br/>
