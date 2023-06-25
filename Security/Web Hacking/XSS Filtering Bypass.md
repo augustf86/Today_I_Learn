@@ -383,6 +383,41 @@
 <br/>
 
 ### 잘못된 방식의 XSS 필터링 5: 디코딩 전 필터링
+* 📌 **입력 검증은 디코딩 등의 모든 전처리 작업을 마치고 수행해야 함** *(= 검증이 끝난 데이터를 디코딩하여 사용해서는 안 됨)*
+    - 애플리케이션이 웹 방화벽이 검증한 데이터를 받아 작업을 수행할 때 전달받은 데이터를 다시 디코딩해서 사용할 경우 공격자가 **더블 인코딩(Double Encoding)**으로 웹 방화벽의 검증을 쉽게 우회할 수 있음
+        + 예사: 공격자(Attacker)가 게시글에 공격 코드 ```<script>...```를 포함해서 게시판에 올리고, 희생자(Victim)가 해당 글을 읽는 시나리오
+            1. 공격자가 더블 URL 인코딩한 공격 코드 ```%253Cscript%2532...```를 포함하여 게시글 업로드를 요청함
+            2. 웹 방화벽이 해당 데이터를 디코딩 후 검증함
+                - 디코딩한 결과: ```%3Cscript%3E...``` → 안전하다고 판단해 차단하지 않고 애플리케이션에 전달함
+            3. [**검증 후 디코딩 발생 시점**] 애플리케이션이 해당 데이터를 다시 디코딩하여 ```<script>...```를 게시판 DB에 저장함
+            4. 희생자가 해당 게시글을 조회하면 XSS가 발생 → 악성 자바스크립트 코드가 실행됨
+    - 웹 방화벽은 물론 애플리케이션 내부의 검증 로직 이후에도 디코딩해서는 안 됨
+        + 예시: php 애플리케이션 코드에 더블 디코딩(Double Decoding) 취약점이 존재하여 더블 URL 인코딩으로 검증을 우회함
+            ```php
+            <?php
+                $query = $_GET["query"];
+                if (stripos($query, "<script>") != FALSE) { // stripos(): 대상 문자열을 앞에서부터 검색해 찾고자 하는 문자열이 몇 번째 위치에 있는지 반환함
+                    header("HTTP/1.1 403 Forbidden");
+                    die("XSS attempt detected: " . htmlspeicalchars($query, ENT_QUOTES|ENT_HTML5, "UTF-8")); # htmlspecialchars(): 특수 문자를 엔티티로 변환
+                }
+                // ...
+                $searchQuery = urlencoded($_GET["query"]);
+            ?>
+            <h1>Search results for: <?php echo $searchQuery; ?></h1>
+            ```
+
+* 더블 인코딩(Double Encoding)과 더블 디코딩(Double Decoding)
+    - 📚 [더블 인코딩(Double Encoding)](https://owasp.org/www-community/Double_Encoding)
+        + 보안 제어를 우회하거나 응용 프로그램에서 예기치 않은 동작을 유발하기 위해 사용자 요청 매개 변수를 16진수 형식(hexadecimal format)으로 **두 번 인코딩**하는 것
+        + 사용자 입력을 한 번 디코딩(Decoding)하는 보안 필터링을 우회할 수 있음
+            - 두 번째 디코딩 과정은 애플리케이션 내에서 인코딩된 데이터를 적절하게 처리하지만, **보안 검사가 없기** 때문에 해당 데이터가 백엔드 플랫폼 또는 모듈에 그대로 넘겨지게 됨
+            - 공격자는 웹 애플리케이션에서 사용 중인 인증 스키마(authentication schema) 및 보안 필터(security filters)를 우회하기 위해 경로 이름 또는 쿼리 문자열에 더블 인코딩을 삽입할 수 있음
+    - 📚 [더블 디코딩(Double Decoding)](https://cwe.mitre.org/data/definitions/174.html) *- CWE-174 참고*
+        + 동일한 입력을 두 번 디코딩(decoding)하여 디코딩 작업 사이에 발생하는 보호 메커니즘의 효율성을 제한하는 것
+
+<br/>
+
+### 잘못된 방식의 XSS 필터링 6: 길이 제한
 
 
 <br/><br/><br/><br/>
