@@ -43,7 +43,7 @@ XSS나 데이터를 삽입하는 류의 공격이 발생하였을 때 피해를 
             Content-Security-Policy: default-src 'self' https://example.test.com
             ```
     - 방법 2: **```meta``` 태그의 엘리먼트**로 정의
-        + ```<meta>``` 태그의 ```http-equiv``` 속성의 값을 ```"Content-Security-Policy```로 하고, ```content``` 속성의 값이 정책 지시문을 작성하여 CSP 구문을 추가할 수 있음
+        + ```<meta>``` 태그의 ```http-equiv``` 속성의 값을 ```"Content-Security-Policy"```로 하고, ```content``` 속성의 값에 정책 지시문을 작성하여 CSP 구문을 추가할 수 있음
         + 예시 (CSP 구문 예시를 ```<meta>``` 태그를 이용해 추가)
             ```html
             <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://example.test.com">
