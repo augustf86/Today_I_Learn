@@ -56,6 +56,49 @@ XSS나 데이터를 삽입하는 류의 공격이 발생하였을 때 피해를 
 
 ## Content Security Policy 기본 정책
 
+### 인라인 코드(Inline Code)
+📌 CSP는 **인라인 코드를 유해하다**고 간주함 → CSP를 사용할 때에는 기본적으로 인라인 코드를 사용할 수 없음
+* CSP는 인라인 코드 형태를 지양하고, **```src``` 속성에 코드 경로를 정의하는 방식**을 권장함
+    | CSP | 예시 |
+    |---|------|
+    | 지양 (인라인 코드 형태) | ```<script>alert(1);</script>``` <br/> &nbsp;&nbsp; → ```<script>``` 태그 내엔 코드를 직접 삽입하는 형태(인라인 코드) |
+    | 권장 (```src``` 속성으로 코드 로드) | ```<script src="alert.js"></script>``` <br/> &nbsp;&nbsp; → ```<script>``` 태그의 ```src``` 속성으로 코드 경로를 정의함 |
+    - CSP가 인라인 코드로 간주하는 것들 (허용하지 않음)
+        | 인라인 코드으로 간주하고 허용하지 않는 것들 | 예시 (*CSP 적용 시 사용 불가*) |
+        |---|-----|
+        | ```<script>``` 태그 내에 코드를 삽입하는 것 | ```<script>alert(1);<script>``` |
+        | ```on*``` 이벤트 핸들러 속성 | ```<img src="valid.jpg" onload="alert(1)">``` |
+        | ```javascript:``` URL 스키마 | ```<a href="javascript:alert(1)">Click me</a>``` |
+* CSP는 ```CSS``` 또한 인라인 코드를 허용하지 않음
+    - ```style``` 속성과 ```style``` 태그 모두 외부 스타일시트로 통합하는 것을 권장함 <br/> &nbsp;&nbsp; = 인라인 스타일(Inline style)과 내부 스타일 시트(Internal style sheet) 사용은 지양하고, 외부 스타일 시트(External style sheet)의 사용을 권장함
+        | CSS 적용 방법 | 설명 |
+        |---|------|
+        | 인라인 스타일<br/>(Inline style) | HTML 요소 내부에 ```style``` 속성을 사용하여 CSS 스타일을 적용하는 방법 (인라인 코드) <br/> &nbsp;&nbsp; - 해당 요소에만 스타일을 적용할 수 있음 <br/> &nbsp;&nbsp; - 예시: ```<p style="color:blue text-decoration:underline"></p>``` |
+        | 내부 스타일 시트<br/>(Internal style sheet) | HTML 문서 내의 ```<head>``` 태그에 ```<style>``` 태그를 사용하여 CSS 스타일을 적용하는 방법 <br/> &nbsp;&nbsp; - 해당 HTML 문서에만 스탕리을 적용할 수 있음 <br/> &nbsp;&nbsp; - 예시: ```<style>p {color: blue; text-decoration: underline;}</style>``` |
+        | 외부 스타일 시트<br/>(External style sheet) | ```.css``` 확장자로 저장된 스타일 시트 파일을 ```<head>``` 태그에 ```<link>``` 태그를 사용하여 외부 스타일 시트를 포함시켜 CSS 스타일을 적용하는 방법 <br/> &nbsp;&nbsp; - 웹 사이트 전체의 스탕리을 하나의 파일에서 변경할 수 있도록 해줌 <br/> &nbsp;&nbsp; - 예시: ```<head><link rel="stylesheet" href="/css/externalSheet.css"></head>``` |
+
+<br/>
+
+### Eval
+📌 CSP는 기본적으로 **문자열 텍스트를 실행 가능한 자바스크립트 코드 형태로 변환하는 메커니즘을 유해하다**고 간주함
+* **문자열로부터 코드를 실행**하는 경우 의도와는 다르게 XSS 공격을 통해 삽입된 공격 코드로 변조되어 실행될 가능성이 존재함 → CSP는 이를 권장하지 않음
+    - ```eval```, ```new Function()```, ```setTimeout([string], ...)```, ```setInterval([string], ...)```과 같이 문자열 형태로 입력을 받는 함수의 실행은 모두 차단됨
+        | 함수 | 설명 | Docs |
+        |---|------|---|
+        | ```eval(script)``` | 문자열로 표현된 자바스크립트 코드를 실행하고 그 결과 값을 반환함 | 📚 [eval() docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval) |
+        | ```Function()``` constructor | Function 객체를 만듦 <br/> &nbsp;&nbsp; - 인자(들)과 함수 정의(제일 마지막에 위치)를 모두 문자열로 표현하여 넘겨줌 <br/> &nbsp;&nbsp;&nbsp;&nbsp;(functionbody에 문자열로 표현된 자바스크립트 코드가 들어감) | 📚 [Function() constructor docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) |
+        | ```setTimeout(code, delay)``` | 타이머가 완료되면 함수 또는 지정된 코드를 실행하는 타이머를 설정함 <br/> &nbsp;&nbsp; - ```code```: 타이머가 완료되면 실행할 문자열로 표현된 자바스크립트 코드 <br/> &nbsp;&nbsp; - ```delay```: (Optional) 코드를 실행하기 전에 타이머가 대기해야 하는 시간(millisecs) | 📚 [setTimeout() docs](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout) |
+        | ```setInterval(code, delay)``` | 주어진 시간 간격마다 함수 또는 코드를 반복적으로 실행함 <br/> &nbsp;&nbsp; - ```code```: 정해진 시간 간격마다 실행할 문자열로 표현된 자바스크립트 코드 <br/> &nbsp;&nbsp; - ```delay```: 지정된 시간 간격(millisecs)(default: 0) | 📚 [setInterval() docs](https://developer.mozilla.org/en-US/docs/Web/API/setInterval) |
+
+    - **예외** > 해당 함수에 문자열 입력이 아닌 **인라인 함수의 형태로 파라미터가 전달될 때에는 차단되지 않음**
+        | 차단 | 허용 |
+        |---|---|
+        | ```setTimeout("alert(1)", ...)``` | ```setTimeout(function(){ alert(1) }, ...)``` |
+
+<br/><br/>
+
+## Policy Directive
+
 
 <br/><br/><br/><br/>
 ### 🔖 출처
