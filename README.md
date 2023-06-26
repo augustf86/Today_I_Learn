@@ -61,6 +61,7 @@
   | File Vulnerability Advanced for linux | File Download Vulnerability <br/> (Path Traversal) | [File Vulnerability Advanced for linux.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/File%20Vulnerability%20Advanced%20for%20linux.md) |
   | Apache htaccess | File Upload Vulnerability | [Apache htaccess.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Apache%20htaccess.md) |
   | XSS Filtering Bypass | XSS 필터링(문자열 치환) 우회 | [XSS Filtering Bypass.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/XSS%20Filtering%20Bypass.md) |
+  | XSS Filtering Bypass Advanced | XSS 필터링 우회 | [XSS Filtering Bypass Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/XSS%20Filtering%20Bypass%20Advanced.md) |
   - 🚩 웹 해킹 워 게임 문제 사이트: [Dreamhack Wargame/Web](https://dreamhack.io/wargame/challenges?page=1&category=web)
 
 <br/>
