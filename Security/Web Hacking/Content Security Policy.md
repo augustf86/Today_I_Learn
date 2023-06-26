@@ -85,10 +85,10 @@ XSS나 데이터를 삽입하는 류의 공격이 발생하였을 때 피해를 
     - ```eval```, ```new Function()```, ```setTimeout([string], ...)```, ```setInterval([string], ...)```과 같이 문자열 형태로 입력을 받는 함수의 실행은 모두 차단됨
         | 함수 | 설명 | Docs |
         |---|------|---|
-        | ```eval(script)``` | 문자열로 표현된 자바스크립트 코드를 실행하고 그 결과 값을 반환함 | 📚 [eval() docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval) |
-        | ```Function()``` constructor | Function 객체를 만듦 <br/> &nbsp;&nbsp; - 인자(들)과 함수 정의(제일 마지막에 위치)를 모두 문자열로 표현하여 넘겨줌 <br/> &nbsp;&nbsp;&nbsp;&nbsp;(functionbody에 문자열로 표현된 자바스크립트 코드가 들어감) | 📚 [Function() constructor docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) |
-        | ```setTimeout(code, delay)``` | 타이머가 완료되면 함수 또는 지정된 코드를 실행하는 타이머를 설정함 <br/> &nbsp;&nbsp; - ```code```: 타이머가 완료되면 실행할 문자열로 표현된 자바스크립트 코드 <br/> &nbsp;&nbsp; - ```delay```: (Optional) 코드를 실행하기 전에 타이머가 대기해야 하는 시간(millisecs) | 📚 [setTimeout() docs](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout) |
-        | ```setInterval(code, delay)``` | 주어진 시간 간격마다 함수 또는 코드를 반복적으로 실행함 <br/> &nbsp;&nbsp; - ```code```: 정해진 시간 간격마다 실행할 문자열로 표현된 자바스크립트 코드 <br/> &nbsp;&nbsp; - ```delay```: 지정된 시간 간격(millisecs)(default: 0) | 📚 [setInterval() docs](https://developer.mozilla.org/en-US/docs/Web/API/setInterval) |
+        | ```eval(script)``` | 문자열로 표현된 자바스크립트 코드를 실행하고 그 결과 값을 반환함 | 📚 [eval()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval) |
+        | ```Function()``` constructor | Function 객체를 만듦 <br/> &nbsp;&nbsp; - 인자(들)과 함수 정의(제일 마지막에 위치)를 모두 문자열로 표현하여 넘겨줌 <br/> &nbsp;&nbsp;&nbsp;&nbsp;(functionbody에 문자열로 표현된 자바스크립트 코드가 들어감) | 📚 [Function() constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) |
+        | ```setTimeout(code, delay)``` | 타이머가 완료되면 함수 또는 지정된 코드를 실행하는 타이머를 설정함 <br/> &nbsp;&nbsp; - ```code```: 타이머가 완료되면 실행할 문자열로 표현된 자바스크립트 코드 <br/> &nbsp;&nbsp; - ```delay```: (Optional) 코드를 실행하기 전에 타이머가 대기해야 하는 시간(millisecs) | 📚 [setTimeout()](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout) |
+        | ```setInterval(code, delay)``` | 주어진 시간 간격마다 함수 또는 코드를 반복적으로 실행함 <br/> &nbsp;&nbsp; - ```code```: 정해진 시간 간격마다 실행할 문자열로 표현된 자바스크립트 코드 <br/> &nbsp;&nbsp; - ```delay```: 지정된 시간 간격(millisecs)(default: 0) | 📚 [setInterval()](https://developer.mozilla.org/en-US/docs/Web/API/setInterval) |
 
     - **예외** > 해당 함수에 문자열 입력이 아닌 **인라인 함수의 형태로 파라미터가 전달될 때에는 차단되지 않음**
         | 차단 | 허용 |
