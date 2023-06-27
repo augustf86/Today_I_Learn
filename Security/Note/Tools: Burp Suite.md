@@ -1,6 +1,24 @@
 # Tools: Burp Suite
 
-## Burp Suite 설치
+## Burp Suite 다운로드
+1. JRE 다운로드 및 설치
+    - Burp Suite은 기본적으로 Java를 기반으로 만들어졌기 때문에 Java 실행 환경이 구축되어 있어야 실행할 수 있음
+        + Java 실행 환경 구축을 위해선 오라클 홈페이지에서 JRE를 다운로드하여 설치함
+
+2. Burp Suite Community Edition을 검색하여 https://portswigger.net/burp/communitydownload 사이트에 접속함
+    - DOWNLOAD 버튼 대신에 [Go straight to downloads] 버튼을 클릭하여 자신의 운영체제에 맞는 것을 다운로드함
+      <img width="2560" alt="Burp Suite Download" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b793e190-933b-4cfd-9735-27a31fad770d">
+
+3. 설치된 Burp Suite Community Edition을 실행함
+    - 실행 시 Project와 Configuration은 변경하지 않고 Next와 Start Burp 버튼을 차례대로 클릭함
+      <img width="2560" alt="Burp Suite 실행" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a3165c71-f97c-4131-99de-74dc30072a9f">
+    - 실행 후 첫 화면은 다음과 같음
+          <img width="2560" alt="Burp Suite 실행 후 화면" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f0444375-a0ce-4351-9e73-3ba71ebaab52">
+
+<br/><br/>
+
+## Burp Suite: Proxy 탭
+
 
 <br/><br/>
 
