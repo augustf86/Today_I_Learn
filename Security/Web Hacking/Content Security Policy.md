@@ -98,6 +98,46 @@ XSS나 데이터를 삽입하는 류의 공격이 발생하였을 때 피해를 
 <br/><br/>
 
 ## Policy Directive
+* ```<Policy-directive>```(정책 지시문)의 형태
+    ```
+    <directive> <value>
+    ```
+    | 요소 | 설명 |
+    |---|------|
+    | ```<directive>``` | 지시문 → 컨텐츠 내에서 로드하는 리소스를 세분화해 어떤 리소스에 대한 출처를 제어할지 결정함 |
+    | ```<value>``` | ```<directive>```에서 정의한 리소스의 출처 <br/> &nbsp;&nbsp; - 여러 개의 출처가 정의될 수 있음 <br/> &nbsp;&nbsp; - 출처는 공백을 통해 구분됨 |
+
+<br/>
+
+* 자주 사용되는 지시문(```<directive>```)의 종류
+    | 지시문 | 설명 |
+    |---|------|
+    | default-src | ```-src```로 끝나는 모든 리소스의 기본 동작을 제어함 <br/> &nbsp;&nbsp; - CSP 구문 내에서 지정하지 않은 지시문이 존재한다면 ```default-src```의 정의를 따라감 |
+    | img-src | 이미지를 로드할 수 있는 출처를 제어함 |
+    | script-src | 스크립트 태그 관련 권한과 출처를 제어함 |
+    | style-src | 스타일시트 관련 권한과 출처를 제어함 |
+    | child-src | 페이지 내에 삽입된 프레임 컨텐츠(```<ifrmae>``` 등)에 대한 출처를 제어함 |
+    | base-uri | 페이지의 ```<base>``` 태그에 나타날 수 있는 URL을 제어함 |
+
+<br/>
+
+* ```<value>``` 부분으로 올 수 있는 출처의 종류
+    | 출처 | 설명 |
+    |---|------|
+    | ```*://example.com``` | 출처의 scheme은 와일드카드(```*```)을 이용해 표현할 수 있음 |
+    | ```https://*.example.com``` | 출처의 호스트 서브도메인은 와일드카드(```*```)를 이용해 표현할 수 있음 <br/> &nbsp;&nbsp; - ⚠️ 주의: 와일드카드는 **호스트의 중간에 들어갈 수 없음** <br/> &nbsp;&nbsp;&nbsp;&nbsp; (i.e. ```https://www.*.com```, ```https://*.example.*```) <br/> &nbsp;&nbsp; - 서브도메인을 와일드카드로 표현하는 경우 서브도메인이 붙어있지 않은 도메인은 포함되지 않음 <br/> &nbsp;&nbsp;&nbsp;&nbsp; (i.e. ```https://*.example.com```으로 출처를 표기하면 ```https://example.com```은 포함되지 않음) |
+    | ```https://example.com:*``` | 출처의 포트는 와일드카드(```*```)를 이용해 표현할 수 있음 |
+    | ```none``` | 모든 출처를 허용하지 않음 |
+    | ```self``` | 페이지의 현재 출처(Origin) 내에서 로드하는 리소스만 허용함 |
+    | ```unsafe-inline``` | 예외적으로 인라인 코드의 사용을 허용함 |
+    | ```unsafe-eval``` | 예외적으로 ```eval```과 같은 텍스트-자바스크립트 변환 메커니즘의 사용을 허용함 |
+    | ```nonce-<base64-value>``` | ```nonce``` 속성을 설정하여 예외적으로 인라인 코드를 사용함 <br/> &nbsp;&nbsp; - ⚠️ ```<base64-value>```는 반드시 **요청마다 다른 난수 값**으로 설정해야 함 <br/> &nbsp;&nbsp; - 해당 출처를 설정하면 ```unsafe-inline```은 무시됨 |
+    | ```<hash-algorithm>-<base64-value>``` | ```script``` 혹은 ```style``` 태그 내 코드의 해시를 표현함 <br/> &nbsp;&nbsp; - 해당 출처를 설정하면 ```unsafe-inline```은 무시됨 |
+    - 일반적으로 ```<value>``` 부분에는 URL을 전달받으나 와일드카드(```*```)의 사용, 특수한 목적의 출처도 존재함
+
+<br/><br/>
+
+## CSP Examples
 
 
 <br/><br/><br/><br/>
