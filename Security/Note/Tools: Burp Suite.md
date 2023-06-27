@@ -20,6 +20,7 @@
 ## Burp Suite: Proxy 탭
 * 웹 브라우저와 웹 서버 간의 HTTP 패킷(Request, Response)를 확인할 수 있음
     - [Intercept]에서 [Open Browser] 버튼을 누르고 임의의 웹 사이트에 접속하면 클라이언트의 Request 패킷과 서버의 Response 패킷을 볼 수 있음
+    - 웹 프록시는 웹 해킹의 가장 기본이며, Burp Suite과 같은 웹 프록시 툴을 이용해 여러 웹 사이트를 살펴보면 HTTP 패킷에 어떤 내용이 있는지 알 수 있음
 
 <br/>
 
@@ -32,8 +33,11 @@
 2. 본인 컴퓨터의 시스템 설정에서 현재 접속 중인 네트워크의 프록시 설정함
     - 프록시를 통해 패킷을 전달할 수 있도록 하기 위해 설정함
     - macOS 기준
+      <img width="2560" alt="Proxy 네트워크 설정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/c94d9a3c-3e51-4694-a7d2-f9c9f046121e">
 
-
+3. [Proxy]의 [Intercept]에서 [Open Browser] 버튼을 클릭한 후 임의의 웹 사이트(```www.hanb.co.kr```)에 접속함
+    - [Proxy]의 [Intercept] 화면을 보면 클라이언트의 Request 패킷을 볼 수 있음
+      <img width="2560" alt="Proxy Request" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/94248dbc-6398-4162-aa09-a28ed5e776d5">
 
 <br/><br/>
 
