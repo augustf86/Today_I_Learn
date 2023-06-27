@@ -192,6 +192,42 @@ XSS나 데이터를 삽입하는 류의 공격이 발생하였을 때 피해를 
 
 <br/>
 
+* ```Content-Security-Policy: script-src 'unsafe-eval'```
+    - 자바스크립트 코드(```script-src```) 내의 ```eval```과 같은 텍스트-자바스크립트 변환 메커니즘의 사용을 허용함(```unsafe-eval```)
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | script-src <br/> (스크립트 태그 관련 권한과 출처를 제어) | 'unsafe-eval' <br/> (예외적으로 ```eval```과 같은 텍스트-자바스크립트 변환 메커니즘의 사용을 허용함) |
+
+<br/>
+
+* ```Content-Security-Policy: script-src 'unsafe-inline'```
+    - 스크립트 코드(```script-src```) 내 인라인 코드의 사용을 허용함(```'unsafe-inline```)
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | script-src <br/> (스크립트 태그 관련 권한과 출처를 제어) | 'unsafe-inline' <br/> (예외적으로 인라인 코드의 사용을 허용함) |
+
+<br/>
+
+* ```Content-Security-Policy: script-src 'nonce-YTQyYWZkODYtYWYyNy00ZGQzLTg2YjMtNzJhY2ZmOWY5OGNj'```
+    - 스크립트 태그(```script-src```)의 ```nonce``` 속성에 ```YTQ...WY5OGNj``` 값이 존재하지 않으면(```nonce-<base64-value>```) 스크립트 로드에 실패함
+        + 이 경우 ```unsafe-inline```은 무시됨
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | script-src <br/> (스크립트 태그 관련 권한과 출처를 제어) | 'nonce-YTQ...WY5OGNj' <br/> (```nonce``` 속성을 설정하여 동일한 난수값이 존재한다면 예외적으로 인라인 코드의 사용을 허용함) |
+
+<br/>
+
+* ```Content-Security-Policy: script-src 'sha256-5jFwrAK0UV47oFbVg/iCCBbxD8X1w+QvoOUepu4C2YA='```
+    - 스크립트 태그(```script-src```) 내의 코드 혹은 ```src``` 속성으로 저장된 파일의 sha256(```<hash-algorithm>```) 해시를 base64로 인코딩한 결과가 ```5jF...4C2YA=```와 다르다면(```<hash-algorithm>-<base64-value>```) 스크립트 로드에 실패함
+        + 이 경우 ```unsafe-inline```은 무시됨
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | script-src <br/> (스크립트 태그 관련 권한과 출처를 제어) | 'sha256-5jF...4C2YA=' <br/> (sha256으로 해시한 후 base64로 인코딩한 결과가 정책 지시문의 명시된 값과 동일하다면<br/> 예외적으로 인라인 코드의 사용을 허용함) |
+
 
 <br/><br/><br/><br/>
 ### 🔖 출처
