@@ -138,6 +138,59 @@ XSS나 데이터를 삽입하는 류의 공격이 발생하였을 때 피해를 
 <br/><br/>
 
 ## CSP Examples
+각 CSP 지시문과 출처 값에 따른 설명 (⚠️ 설명을 위해 제작한 CSP 지시문으로, 실제 애플리케이션에 그대로 사용해선 안됨)
+* ```Content-Security-Policy: default-src 'self'```
+    - 모든 리소스의 출처(```default-src```)를 현재 페이지와 같은 출처(```self```)로 제한함
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | default-src <br/> (```-src```로 끝나는 모든 리소스의 기본 동작을 제어) | 'self' <br/> (페이지의 현재 출처(Origin) 내에서 로드하는 리소스만 허용함) |
+
+<br/>
+
+* ```Content-Security-Policy: default-src 'self' https://googleapis.com https://*.googleapis.com```
+    - 모든 리소스의 출처(```default-src```)를 현재 페이지와 같은 출처(```'self'```)와 ```https://googleapis.com```, ```https://*.googleapis.com```으로 제한함
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | default-src <br/> (```-src```로 끝나는 모든 리소스의 기본 동작을 제어) | 'self' <br/> (페이지의 현재 출처(Origin) 내에서 로드하는 리소스만 허용함) |
+        | | ```https://googleapis.com``` <br/> (해당 URL에서 로드하는 리소스를 허용함) |
+        | | ```https://*.googleapis.com``` <br/> (출처의 호스트 서브도메인을 와일드카드로 표현하고 있음) |
+
+<br/>
+
+* ```Content-Security-Policy: default-src 'self'; img-src *; script-src static.dreamhack.io```
+    - 모든 리소스의 출처(```default-src```)를 현재 페이지와 같은 출처(```'self'```)로 제한
+    - 이미지의 출처(```img-src```)는 모든 호스트(```*```)를 허용함
+    - 스크립트 태그의 출처(```script-src```)는 ```static.dreamhack.io```로 제한함 |
+    - 📌 Policy Directive의 구성
+        | directive | value |
+        |---|---|
+        | default-src <br/> (```-src```로 끝나는 모든 리소스의 기본 동작을 제어) | 'self' <br/> (페이지의 현재 출처(Origin) 내에서 로드하는 리소스만 허용함) |
+        | image-src <br/> (이미지를 로드할 수 있는 출처를 제어) | * = 와일드카드 <br/> (모든 출처를 허용함) |
+        | script-src <br/> (스크립트 태그 관련 권한과 출처를 제어) | ```static.dreamhack.io``` <br/> (해당 도메인의 출처에서 로드하는 리소스만 허용함) |
+        - 각각의 ```<directive> <value>```는 세미콜론(```;```)으로 구분됨
+
+<br/>
+
+* ```Content-Security-Policy: child-src 'self' frame.dreamhack.io```
+    - 페이지 내에 삽입된 프레임 컨텐츠 URL(```child-src```)는 현재 페이지와 같은 출처(```self```)와 ```frame.dreamhack.io``` 내에서만 로드할 수 있음
+    - 📌 Policy Directive의 구성
+        | directive | value |
+        |---|---|
+        | child-src <br/> (페이지 내에 삽입된 프레임 컨텐츠에 대한 출처를 제어) | 'self' <br/> (페이지의 현재 출처(Origin) 내에서 로드하는 리소스만 허용함) |
+        | | ```frame.dreamhack.io``` <br/> (해당 도메인 출처에서 로드하는 리소스만 허용함) |
+
+<br/>
+
+* ```Content-Security-Policy: base-uri 'none'```
+    - ```<base>``` 태그의 URL(```base-uri```)은 어느 것도 허용하지 않음(```'none'```)
+    - 📌 Policy Directive 구성
+        | directive | value |
+        |---|---|
+        | base-uri <br/> (페이지의 ```<base>``` 태그에서 나타날 수 있는 URL을 제어함) | 'none' <br/> (모든 출처를 허용하지 않음) |
+
+<br/>
 
 
 <br/><br/><br/><br/>
