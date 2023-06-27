@@ -18,6 +18,21 @@
 <br/><br/>
 
 ## Burp Suite: Proxy 탭
+* 웹 브라우저와 웹 서버 간의 HTTP 패킷(Request, Response)를 확인할 수 있음
+    - [Intercept]에서 [Open Browser] 버튼을 누르고 임의의 웹 사이트에 접속하면 클라이언트의 Request 패킷과 서버의 Response 패킷을 볼 수 있음
+
+<br/>
+
+### Proxy의 Intercept 기능 사용법
+1. [Proxy]의 [Intercept]에서 \<Intercept is on\>으로 되어 있는지 확인하고 [⚙️ Proxy Settings]에서 다음의 두 항목이 체크되어 있는지 확인함
+   <img width="2560" alt="Proxy 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4fecc795-439d-4c46-9bf6-2f5d7bd68147">
+    - \<Intercept is off\>로 되어 있는 경우 클릭하여 \<Intercept is on\>으로 변경함
+    - Request/Response Interception rules에서 'Intercept requests/responses based on the following rules:' 항목에 체크함
+
+2. 본인 컴퓨터의 시스템 설정에서 현재 접속 중인 네트워크의 프록시 설정함
+    - 프록시를 통해 패킷을 전달할 수 있도록 하기 위해 설정함
+    - macOS 기준
+
 
 
 <br/><br/>
