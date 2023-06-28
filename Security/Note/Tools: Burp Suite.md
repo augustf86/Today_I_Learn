@@ -76,5 +76,24 @@
 
 <br/><br/>
 
-## Burp Suite: Intruder 기능
+## Burp Suite: Intruder 탭
+* 변숫값을 전달받아 처리하는 웹 페이지에 전달되는 변숫값을 자동으로 생성하여 전달하도록 규칙을 만들어 해당 페이지를 탐색할 수 있음 (공격 자동화)
+    - Intruder 기능을 이용하기 위한 방법
+        | No | 설명 |
+        |---|------|
+        | 방법 1 | 해당 사이트의 URL과 HTTP 헤더를 직접 조사해서 입력하는 방법 |
+        | 방법 2 | [Target] 탭에서 해당 URL을 클릭하여 Intruder 기능으로 보내는 것 → *방법 1보다 편리하기 때문에 많이 사용함* |
+    - Intruder 탭 화면
+      <img width="2560" alt="Intruder1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/7f0176ea-9acf-440b-af3f-a26dcfafb828">
+      <img width="2560" alt="Intruder2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/491b6ffe-3612-49f5-9ad8-de35a9cf0402">
+        | 하위 탭 이름 | 설명 |
+        |---|------|
+        | Positions | 어떤 변숫값을 조작할 것인지 정하는 화면 |
+        | Payloads | 변숫값의 종류와 범위를 선택할 수 있는 화면 |
+        | Resource Pool | 동시에 요청할 수 있는 개수를 조절하여 리소스 할당량을 공유하고 관리하는 화면 |
+        | Options | Intruder 기능의 설정을 변경할 수 있는 화면 |
+
+<br/>
+
+### Intruder 기능 사용법
 
