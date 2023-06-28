@@ -67,6 +67,11 @@
 
 <br/>
 
+* WebGoat
+  - [Practice: WebGoat](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Practice%3A%20WebGoat.md)
+
+<br/>
+
 ## 📖 NOTE
 ### Web Hacking
 * [웹 해킹 과정](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/웹%20해킹%20과정.md)
