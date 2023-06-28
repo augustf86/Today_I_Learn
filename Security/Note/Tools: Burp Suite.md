@@ -78,6 +78,7 @@
 
 ## Burp Suite: Intruder 탭
 * 변숫값을 전달받아 처리하는 웹 페이지에 전달되는 변숫값을 자동으로 생성하여 전달하도록 규칙을 만들어 해당 페이지를 탐색할 수 있음 (공격 자동화)
+    - Intruder 기능으로 짧은 시간 안에 페이지의 결괏값을 분석할 수 있음
     - Intruder 기능을 이용하기 위한 방법
         | No | 설명 |
         |---|------|
@@ -96,4 +97,24 @@
 <br/>
 
 ### Intruder 기능 사용법
+1. 임의의 웹 사이트(한빛출판네트워크 홈페이지의 EVENT 탭)에 접속한 후 Burp Suite의 [Target] 탭에서 해당 디렉토리 내의 항목을 선택한 후 마우스 오른쪽 버튼을 클릭하여 [Send to Intruder] 메뉴를 클릭함
+   <img width="2560" alt="Intruder 기능 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/7f183a92-43ff-4375-bdbb-3078409d38e2">
+    - 실습에서는 [https://www.hanbit.co.kr] - [event] - [current] - [current_event_view.html] - [hde_idx=162&page=0] 항목을 선택함
+    - [Send to Intruder] 실행 결과로 해당 요청 내용을 Intruder로 전달함
+
+2. [Intruder] 탭의 [Positions]에서 전달된 요청 사항 중 규칙에 의해 자동으로 값을 조절하고 싶은 부분을 선택하여 \<Add $\> 버튼으로 묶음
+   <img width="2560" alt="Intruder 기능 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9c09b75c-f45a-4108-80c2-c31ee420ec89">
+    - $으로 묶인 변숫값: 공격자가 규칙에 의해 자동으로 해당 값을 조작할 수 있는 부분
+
+3. [Intruder] 탭의 [Payloads]에서 페이로드를 설정한 후 \<Send attack\> 버튼을 클릭함
+   <img width="2560" alt="Intruder 기능 3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/47582127-7b27-4735-8c40-19cbc092418f">
+    - 변숫값을 162에서 185까지 자동으로 증가시키면서 해당 페이지의 내용을 가져오는 실습을 진행함
+
+4. 경고창이 뜨면 \<OK\> 버튼을 누르면 Intruder attack 결과를 볼 수 있음
+   <img width="2560" alt="Intruder 기능 4" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f8ea4ffd-c8ae-4ecb-9689-135d8a679e3a">
+    - 주의 깊게 살펴봐야 할 부분: Status code, Length
+
+<br/><br/>
+
+## Burp Suite: Repeater 탭
 
