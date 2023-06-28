@@ -117,4 +117,23 @@
 <br/><br/>
 
 ## Burp Suite: Repeater 탭
+* 특정 요청을 다시 전송할 수 있음 (매우 간단하지만 웹 애플리케이션을 해킹할 때 유용한 경우가 많음)
+    - Repeater 기능을 실행하기 위한 방법
+        | No | 설명 |
+        |---|------|
+        | 방법 1 | 특정 패킷을 직접 작성함 |
+        | 방법 2| [Target]과 [Proxy] 탭에서 해당 패킷을 Repeater로 전송함 |
+
+<br/>
+
+### Repeater 기능 사용법
+1. [Target] 탭에서 특정 페이지를 선택한 후 마우스 오른쪽 버튼을 클릭하여 [Send to Repeater] 메뉴를 클릭함
+       <img width="2560" alt="Repeater1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/648264eb-2be7-4d42-8569-f97d07eb3ae9">
+    - [Send to Repeater] 실행 결과 해당 요청을 Repeater로 전달함
+
+2. [Repeater] 탭의 Request 항목을 보면 [Target] 탭에서 전달한 요청이 존재함
+   <img width="2560" alt="Repeater2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f716bafb-22e1-4ba7-97d8-674edbba5fb9">
+   <img width="2560" alt="Repeater3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/1fa9974d-981d-46a6-bfee-6cb47acccd15">
+    - 재요청 전에 Reqeust를 이용자가 조작할 수 있음
+    - 해당 요청을 다시 전달하기 위해 \<Send\>를 클릭하면 Response 항목에서 결과를 볼 수 있음
 
