@@ -106,7 +106,7 @@
         | 측정 기준 | 설명 |
         |---|------|
         | FRR(False Rejection Rate) <br/> = Type 1 Error | 권한이 있는 사람이 인증을 시도했을 때 실패하는 비율 = 본인의 정보를 타인의 것으로 판단할 확률(오거부율, 본인거부율) <br/> &nbsp;&nbsp; - 인증 시스템이 지나치게 높은 정확도를 요구하거나, 탐지하는 생체 특성이 건강/환경 등 외부 요인에 의해 쉽게 변할 수 있는 경우 FRR이 높아짐 <br/> &nbsp;&nbsp; - 정확도가 높아짐에 따라 오류율이 올라감 |
-        | FAR(False Acceptance Rate) <br/> = Type 2 Error | 권한이 없는 사람이 인증을 시도했을 때 성공하는 비율 = 타인의 정보를 본인의 것으로 판단한 확룰(오인식률, 타인수락율) <br/> &nbsp;&nbsp; - ⚠️ **FRR이 높은 것보다 FAR이 높은 것이 더 심각한 문제가 됨 <br/> &nbsp;&nbsp;&nbsp;&nbsp; (FRR이 높으면 실패한 인증을 재시도하면 되지만, FAR이 높으면 침입을 허용하기 때문) <br/> &nbsp;&nbsp; - 정확도가 높아짐에 따라 오류율이 내려감 |
+        | FAR(False Acceptance Rate) <br/> = Type 2 Error | 권한이 없는 사람이 인증을 시도했을 때 성공하는 비율 = 타인의 정보를 본인의 것으로 판단한 확룰(오인식률, 타인수락율) <br/> &nbsp;&nbsp; - ⚠️ **FRR이 높은 것보다 FAR이 높은 것이 더 심각한 문제가 됨** <br/> &nbsp;&nbsp;&nbsp;&nbsp; (FRR이 높으면 실패한 인증을 재시도하면 되지만, FAR이 높으면 침입을 허용하기 때문) <br/> &nbsp;&nbsp; - 정확도가 높아짐에 따라 오류율이 내려감 |
         | EER(Equal Error Rate) <br/> = CER(Crossover Error Rate) | FRR과 FAR이 그리는 곡선의 교차점 = FAR과 FRR이 같아지는 지점 (동일오류율) <br/> &nbsp;&nbsp; - 일반적으로 생체 인증 장비의 정확도를 설정할 때엔 EER에 맞춤 <br/> &nbsp;&nbsp; - 좋은 생체 인증 방식은 FAR과 FRR이 만나는 지점인 EER이 낮은 것임 |
       <img width="2560" alt="ERR" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9f32f495-621c-429c-8614-7155d7f8418f">
 
