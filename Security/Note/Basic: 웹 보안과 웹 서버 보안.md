@@ -152,12 +152,15 @@
             | 사용 목적 | **정보의 기밀성**에 따라 상하 관계가 구별된 정보를 보호하기 위해 사용함 <br/> &nbsp;&nbsp; ⇒ 📌 **정보의 기밀성에 따른 차단에 주목적이 있음** |
             | 문서에 대한 <br/>읽기 권한 | - 상위 문서 읽기 금지(No read up): 낮은 수준의 보안 권한을 가진 사람이 높은 보안 수준의 문서를 읽을 수 없음 <br/> - 하위 문서 읽기 허용(Read down): 자신의 권한보다 낮은 수준의 문서는 읽을 수 있음 |
             | 문서에 대한 <br/>쓰기 권한 | - 상위 문서 쓰기 허용(Write up): 자신의 권한보다 높은 보안 수준의 문서에는 쓰기가 가능함 <br/> - 하위 문서 쓰기 금지(No write down): 자신의 권한보다 낮은 보안 수준의 문서에는 쓰기 권한이 없음 <br/> &nbsp;&nbsp; → 📌 *property(start property) |
+          <img width="2560" alt="Bell-LaPadula" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3b105d25-ccab-4fb4-9c5e-d7b0dec5308d">
+              
         + Biba 모델
             | | 설명 |
             |---|------|
             | 사용 목적 | 기밀성보다 좀 더 신뢰할 수 있는 정보, 즉 **정보의 무결성**을 높이는 것이 목적인 경우에 사용함 <br/> &nbsp;&nbsp; ⇒ 📌 **정보 전체의 신뢰도 향상에 주목적이 있음** |
             | 문서에 대한 <br/>읽기 권한 | - 상위 문서 읽기 허용(Read Up): 자신의 무결성 수준보다 높은 무결성 수준의 문서를 읽을 수 있음 <br/> - 하위 문서 읽기 금지(No read down): 자신의 무결성 수준보다 낮은 무결성 수준의 문서는 읽을 수 없음 |
             | 문서에 대한 <br/>쓰기 권한 | - 상위 문서 쓰기 금지(No write up): 낮은 무결성 수준의 정보를 더 높은 무결성 수준의 문서에 쓸 수 없음 <br/> - 하위 문서 쓰기 허용(Write down): 높은 무결성 수준의 정보를 더 낮은 무결성 수준의 문서에 쓸 수 있음 |
+          <img width="2560" alt="Biba" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/49e32f60-a8dc-4e85-99c1-9fd6eb52fecf">
         + 그 외에도 Chinese-Wall 모델, Harrison Ruzo-Ulman 모델, Clark & Wilson 모델 등이 있음
 
 <br/>
@@ -205,6 +208,7 @@
 <br/><br/>
 
 ## 입력값 검증
+
 
 <br/><br/><br/><br/>
 ### 🔖 출처
