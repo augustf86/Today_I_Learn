@@ -35,6 +35,7 @@
     - 패스워드 관리 방법 
         + 방법 1: 패스워드 변형
             - 가장 기초적인 문자 치환형 변환 방식인 ROT13 방식(*13글자씩 밀어서 암호로 만드는 방식*)을 이용한 패스워드 변형 실습
+              <img width="2560" alt="패스워드 변형" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d47e27d6-ff40-46d8-8ff5-e94a25efeca9">
             - 혹시 노출되더라도 인코딩/디코딩에 대해 모르는 일반인의 경우 유출된 계정을 쉽게 도용할 수 없음
         + 방법 2: 패스워드 보관 파일의 암호화
             - 패스워드 보관을 위해 엑셀 파일을 사용할 경우 해당 엑셀 파일의 시트 이름 부분을 마우스 오른쪽 버튼을 클릭하고 [숨기기(H)] 메뉴를 클릭하여 해당 시트가 보이지 않게 만들 수 있음
@@ -107,11 +108,12 @@
         | FRR(False Rejection Rate) <br/> = Type 1 Error | 권한이 있는 사람이 인증을 시도했을 때 실패하는 비율 = 본인의 정보를 타인의 것으로 판단할 확률(오거부율, 본인거부율) <br/> &nbsp;&nbsp; - 인증 시스템이 지나치게 높은 정확도를 요구하거나, 탐지하는 생체 특성이 건강/환경 등 외부 요인에 의해 쉽게 변할 수 있는 경우 FRR이 높아짐 <br/> &nbsp;&nbsp; - 정확도가 높아짐에 따라 오류율이 올라감 |
         | FAR(False Acceptance Rate) <br/> = Type 2 Error | 권한이 없는 사람이 인증을 시도했을 때 성공하는 비율 = 타인의 정보를 본인의 것으로 판단한 확룰(오인식률, 타인수락율) <br/> &nbsp;&nbsp; - ⚠️ **FRR이 높은 것보다 FAR이 높은 것이 더 심각한 문제가 됨 <br/> &nbsp;&nbsp;&nbsp;&nbsp; (FRR이 높으면 실패한 인증을 재시도하면 되지만, FAR이 높으면 침입을 허용하기 때문) <br/> &nbsp;&nbsp; - 정확도가 높아짐에 따라 오류율이 내려감 |
         | EER(Equal Error Rate) <br/> = CER(Crossover Error Rate) | FRR과 FAR이 그리는 곡선의 교차점 = FAR과 FRR이 같아지는 지점 (동일오류율) <br/> &nbsp;&nbsp; - 일반적으로 생체 인증 장비의 정확도를 설정할 때엔 EER에 맞춤 <br/> &nbsp;&nbsp; - 좋은 생체 인증 방식은 FAR과 FRR이 만나는 지점인 EER이 낮은 것임 |
+      <img width="2560" alt="ERR" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9f32f495-621c-429c-8614-7155d7f8418f">
+
 
 <br/><br/>
 
 ## 접근 통제
-
 
 <br/><br/><br/><br/>
 ### 🔖 출처
