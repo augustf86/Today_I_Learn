@@ -76,7 +76,7 @@
 ### Web Hacking
 * [웹 해킹 과정](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/웹%20해킹%20과정.md)
 * [OWASP TOP 10 2021](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/OWASP%20TOP%2010%202021.md)
-* [Basic: 웹 보안과 웹 서버 보안](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Basic:%20웹%20보안과%20웹%20서버%20보안.md)
+* [Basic: 웹 보안](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Basic%3A%20웹%20보안.md)
   - [인증과 접근 통제](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/인증과%20접근%20통제.md)
 * [Tools: Burp Suite](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Tools:%20Burp%20Suite.md)
 
