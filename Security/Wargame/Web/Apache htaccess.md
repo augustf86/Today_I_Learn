@@ -57,14 +57,21 @@ php, php3, php4 등의 확장자를 필터링하고 있지만 .htaccess 파일�
 
 ### 익스플로잇
 1. 아래의 내용이 들어간 .htaccess 파일을 만들고 이를 업로드함
-    ```Apache
-    <Files "exploit.test">
-        SetHandler application/x-httpd-php
-    </Files>
-    ```
+   <img width="2560" alt="exploit1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/717f3198-852c-406b-9172-7e3a57267145">
+
+    - ```.htaccess``` 파일 내용
+      ```Apache
+      <Files "exploit.test">
+          SetHandler application/x-httpd-php
+      </Files>
+      ```
     - exploit.test라는 이름을 가진 파일에 대한 요청이 들어오면 ```SetHandler```에 의해 명시된 핸들러가 실행되므로 PHP 스크립트로 해석하여 이를 실행함
 
+<br/>
+
 2. 아래와 같이 exploit.test 파일을 만들고 이 웹 셸을 업로드함
+   <img width="2560" alt="exploit2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/069d3c14-2fa5-4350-992c-687f54a98ab7">
+
     ```php
     // exploit.test
     <?php
@@ -73,9 +80,12 @@ php, php3, php4 등의 확장자를 필터링하고 있지만 .htaccess 파일�
     ```
     + 업로드된 웹 셸 파일은 ```/upload/exploit.test```에 존재함
 
+<br/>
+
 3. ```upload/exploit.test```의 cmd 파라미터 값으로 플래그를 획득하기 위한 명령어를 입력함
+   <img width="2560" alt="exploit3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/08d05a62-81c5-41bf-b00e-b319c7a883fa">
+
     - ```cmd``` 파라미터의 값으로 ```ls -al /```을 입력한 후 요청을 보내 플래그 파일의 위치를 찾음
         +  ```/flag```에 플래그 파일이 존재하며, 실행 권한만 존재하기 때문에 플래그 파일을 실행해야 플래그를 획득할 수 있음을 알 수 있음
     - 플래그 파일의 실행을 위해 ```cmd``` 파라미터의 값으로 ```/flag```를 입력한 후 요청을 보내면 플래그 파일이 실행되어 플래그를 획득할 수 있음
-
 
