@@ -1,7 +1,7 @@
 # Today I Learn
 
 ## Security
-### Web Hacking
+### 🌐 Web Hacking
 * Background
   - [Web, HTTP/HTTPS, Web Browser](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Web.md)
   - [Cookie & Session](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Cookie%20%26%20Session.md)
@@ -71,7 +71,12 @@
 * WebGoat
   - [Practice: WebGoat](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Practice%3A%20WebGoat.md)
 
-<br/>
+<br/><br/>
+
+### 🔐 Cryptography
+
+
+<br/><br/>
 
 ## 📖 NOTE
 ### Web Hacking
