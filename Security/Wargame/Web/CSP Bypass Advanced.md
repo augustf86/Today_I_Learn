@@ -1,5 +1,6 @@
 # [Dreamhack Wargame] CSP Bypass Advanced
 ### [🚩CSP Bypass Advanced](https://dreamhack.io/wargame/challenges/436/)
+<img width="1067" alt="CSP Bypass Advanced_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d839d3a0-65a3-469f-8256-532fb736fc5c">
 
 <br/><br/>
 
