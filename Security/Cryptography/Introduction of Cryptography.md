@@ -33,7 +33,7 @@
 ## Background: 합동식
 * 합동식: 두 정수 a, b를 각각 정수 m으로 나눴을 때 나머지가 같은지를 판별하는 식
     <br/><br/>
-
+    <img width="2560" alt="합동식" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/92f8506a-d80e-48ad-9bdc-a6e4bfb672cf"><br/><br/>
     - **a와 b 각각을 m으로 나눈 나머지가 같을 때**, 수학적으로 a와 b가 **mod m에 대해 합동(congruent)**이라고 표현함
         + a, b가 mod m에 대해 합동일 경우 a, b 각각에 정수 x를 더하거나 빼거나 곱해도 여전히 합동임 (나눗셈은 성립하지 않음)
 
@@ -41,6 +41,8 @@
 
 * 합동식에서 곱셈의 역원
       <br/><br/>
+      <img width="2560" alt="역원" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/8727973f-4a03-478d-a8e2-b9ae9986d0df">
+
 
 <br/><br/><br/><br/>
 ### 🔖 출처
