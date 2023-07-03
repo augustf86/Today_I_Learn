@@ -79,7 +79,9 @@
 * [Introduction of Cryptography](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/Introduction%20of%20Cryptography.md)
 * 암호의 종류
   - [고전 암호](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/고전%20암호.md)
-  - [현대 암호]()
+  - [현대 암호](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/현대%20암호.md)
+* 블록 암호(Block Cipher)
+* 스트림 암호(Stream Cipher)
 
 
 <br/><br/>
