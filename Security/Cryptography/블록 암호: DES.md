@@ -6,11 +6,15 @@
         + ⚠️ 현대에는 DES에 대한 공격 기법이 많이 연구되어 더 이상 블록 암호의 표준으로 사용하지 않음
 * 8바이트(64비트)를 한 블록으로 하는 블록 암호
     - DES의 전체 구조
+      <br/><br/>
+      <img width="2560" alt="DES 전체 구조" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/5e8320bb-34f7-4799-b834-3b011effcfa6"><br/>
+
 
 <br/><br/>
 
 ## DES의 원리
 * 곱 암호(Product Cipher): 치환이나 순열 같은 단순한 연산들로 한 라운드를 구성하고, 각 라운드를 여러 번 반복하여 암호학적 안전성을 확보하는 암호
+  <br/><br/><img width="2560" alt="product cipher" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/57075222-2200-4855-a7c8-2a64fad4a5cd"><br/><br/>
     - DES가 현대 암호 시스템의 두 가지 성질을 만족하기 위해 사용하는 연산들
         | 성질 | DES 연산 |
         |---|---|
@@ -25,6 +29,8 @@
 * 페이스텔(Feistel) 구조
     - DES에서 라운드 함수를 적용하는 전체 과정은 페이스텔 구조를 이루고 있음
         + DES의 페이스텔 구조
+          <br/><br/>
+          <img width="2560" alt="fiestel" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/7d3f4703-5699-4285-ba03-38ab4cebfa31"><br/><br/>
             | 순서 | 설명 |
             |:---:|------|
             | 1 | 입력으로 들어온 블록을 동일한 길이의 왼쪽 블록 L과 오른쪽 블록 R으로 나눔 |
