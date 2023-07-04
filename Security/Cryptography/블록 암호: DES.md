@@ -69,8 +69,9 @@
     |:---:|------|
     | 입력 | 오른쪽 블록 R만 입력됨 → 입력의 길이 = 32비트 |
     | 구성 요소 | 확장 순열(Expansion P-Box), 라운드 키 결합(XOR), 치환 테이블(S-Box), 고정 순열(Straight P-Box) |
+  <br/>
+  <img width="2560" alt="DES 라운드 함수" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/936703db-8b2e-4081-9fc9-46d2622ea627"><br/><br/>
 
-<br/>
 
 * 라운드 함수 F의 과정 1: **확장 순열**(Expansion P-Box)
     - 32비트 입력을 비트 단위로 전치하는 동시에, 전체 길이릴 **48비트**로 확장함
@@ -98,6 +99,8 @@
 
 ### STEP 2+: 각 라운드에 사용되는 키 생성 함수(Key Scheduling)
 * 64비트의 입력을 받아 각 라운드에 필요한 48비트 라운드 키를 생성하는 함수
+  <br/><br/>
+  <img width="2560" alt="DES 키 생성 함수" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4b3467a2-d221-46e4-9e81-25f6eac4c310"><br/><br/>
 * 구성 요소
     - **패리티 비트 제거**(Parity Bit Drop): 입력에서 패리티 비트(8비트)를 제거하고, 남은 56비트에 순열을 적용하는 과정
         + DES의 비밀키에서 각 바이트의 가장 오른쪽 비트 = 자신이 속한 바이트의 나머지 7비트에 대한 **홀수 패리티 비트**(Odd Parity Bit)
