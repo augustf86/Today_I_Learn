@@ -48,12 +48,14 @@
 
 ## AES 라운드 함수
 ### SubBytes
+<img width="2560" alt="SubBytes" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e68f62f5-55a1-4432-b03d-ebc72e292fa7"><br/>
 * State의 각 바이트를 S-Box를 참조하여 치환하는 함수
     - 바이트의 상위 4비트가 행을, 하위 4비트가 열을 결정함
 
 <br/>
 
 ### ShiftRows
+<img width="2560" alt="ShiftRows" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/89533e86-753e-45c6-8fa9-f653a9849885"><br/>
 * State의 각 행을 구성하는 바이트들을 쉬프트하는 함수
     - 4개의 라운드 함수 중에서 유일하게 **순열**의 역할을 수행함
     - 수행 과정
