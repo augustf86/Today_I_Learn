@@ -11,6 +11,7 @@
 
 ## AES의 구조
 ### SPN(Substitution Permutation Network)
+<img width="2560" alt="SPN" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9a25d3fa-4493-44f5-94e5-7903f3a56733"><br/>
 * AES에서 사용하는 암호 구조
     - 곱 암호의 일종
     - S-Box를 사용하는 치환(Substitution)과 P-Box를 사용하는 순열(Permutation)을 여러 라운드에 걸쳐 반복함
@@ -23,7 +24,7 @@
 <br/>
 
 ### AES 전체 구조
-* 라운드마다 127비트 크기의 블록을 암호화하는 블록 암호
+* 라운드마다 128비트 크기의 블록을 암호화하는 블록 암호
     - 키의 길이와 라운드 수
         | 명칭 | 키 길이 | 라운드 수 |
         |:---:|:---:|:----:|
@@ -32,6 +33,8 @@
         | AES-256 | 256비트 | 14회 |
         + 키의 길이를 선택할 수 있고, 라운드 수는 키의 길이에 따라 결정됨
 * AES 암호화 과정
+  <br/><br/>
+  <img width="2560" alt="AES 구조" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/711bb033-f8cd-40f1-9283-bb431a3ca827"><br/><br/>
     | STEP | 설명 |
     |:---:|------|
     | 01 | 각 블록을 4행 4열의 상태 배열(State)로 재구성함 <br/> &nbsp;&nbsp; - State의 각 칸에는 8비트(1바이트)가 저장됨 |
