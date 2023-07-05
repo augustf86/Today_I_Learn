@@ -67,12 +67,14 @@
 <br/>
 
 ### MixColumns
+<img width="2560" alt="MixColumns" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9b406676-b1e3-454c-ad43-e7851e28ca68"><br/>
 * 열 단위로 치환을 수행하는 함수
     - 치환은 갈루아 필드 내에서의 행렬 연산으로 구해짐 (자세한 내용은 생략)
 
 <br/>
 
 ### AddRoundKey
+<img width="2560" alt="AddRoundKey" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f2f8f1ab-7b26-4884-9b2a-4efb37c6b156"><br/>
 * 키 생성 함수(Key Schedule)로 생성된 라운드 키의 state를 각 바이트별로 XOR하는 함수
     - 복호화할 때는 XOR의 성질을 이용하여 동일한 키를 state에 XOR함
 
