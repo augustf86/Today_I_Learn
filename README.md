@@ -84,6 +84,7 @@
   - 블록 암호(Block Cipher)
     + [블록 암호: DES](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/블록%20암호:%20DES.md)
     + [블록 암호: AES](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/블록%20암호:%20AES.md)
+    + [블록 암호: 운영 모드](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/블록%20암호%3A%20운영%20모드.md)
   - 스트림 암호(Stream Cipher)
 
 
