@@ -68,7 +68,7 @@
     | 공격자가 Token 값을 예측할 수 있는 경우와 방어법 | 
     |---|
     | 현재 시간 등 공격자가 추측 가능한 데이터를 기반으로 Token을 생성하는 경우 <br/> → 공격자가 예측할 수 없는 값을 이용해 Token을 생성해야 함 |
-    | 암호학적으로 안전하지 않은 의사 난수 생성기(Pseudorandom Number Generator, PRNG)를 사용해 Token을 생성하는 경우 <br/> → 충분한 안전성이 보장된 난수 생성기(Cryptographically-Secure Pseudorandom Number Generator, CSPRNG)를 사용하여 Token을 생성해야 함 |
+    | 암호학적으로 안전하지 않은 의사 난수 생성기(Pseudorandom Number Generator, PRNG)를 사용해 Token을 생성하는 경우 <br/> → 충분한 안전성이 보장된 난수 생성기(Cryptographically-Secure Pseudorandom Number Generator, CSPRNG)를 <br/> &nbsp;&nbsp;&nbsp;&nbsp; 사용하여 Token을 생성해야 함 |
 
 <br/>
 
