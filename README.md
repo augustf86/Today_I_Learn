@@ -15,6 +15,7 @@
       + [CSP Bypass](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/CSP%20Bypass.md)
   -  [Cross Site Request Forgery(CSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Cross%20Site%20Request%20Forgery(CSRF).md)
       + [CSRF Token 오용](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/CSRF%20Token%20오용.md)
+      + [CORS Vulnerability](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/CORS%20Vulnerability.md)
 * Server Side Web Hacking
   - [SQL Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/SQL%20Injection.md)
     + [Blind SQL Injection (Advanced)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Blind%20SQL%20Injection%20(Advanced).md)
