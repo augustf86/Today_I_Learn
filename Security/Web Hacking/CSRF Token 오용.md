@@ -57,6 +57,25 @@
 <br/><br/>
 
 ## CSRF Token 사용 시 주의 사항 및 오용 시 발생할 수 있는 문제점
+### 짧은 CSRF Token
+* 📌 CSRF Token은 외부자가 예측할 수 없도록 설계되어야 함
+    - Token을 모르는 공격자가 무차별 대입 공격(Brute-force attack)으로 Token을 획득할 수 없도록 **Token의 길이가 충분히 길어야 함**
+
+<br/>
+
+### 예측 가능한 CSRF Token (PRNG 등)
+* ⚠️ Token의 길이가 충분히 길어도 **Token의 값이 예측 가능**하다면 공격자는 Token을 추론하여 올바른 CSRF Token을 생성해낼 수 있음
+    | 공격자가 Token 값을 예측할 수 있는 경우와 방어법 | 
+    |---|
+    | 현재 시간 등 공격자가 추측 가능한 데이터를 기반으로 Token을 생성하는 경우 <br/> → 공격자가 예측할 수 없는 값을 이용해 Token을 생성해야 함 |
+    | 암호학적으로 안전하지 않은 의사 난수 생성기(Pseudorandom Number Generator, PRNG)를 사용해 Token을 생성하는 경우 <br/> → 충분한 안전성이 보장된 난수 생성기(Cryptographically-Secure Pseudorandom Number Generator, CSPRNG)를 사용하여 Token을 생성해야 함 |
+
+<br/>
+
+### CSRF Token 유출
+* CSRF Token이 제공하는 보안의 전제 = *"공격자가 Token을 알지 못함"* → ⚠️ Token이 **기타 다른 경로로 제3자에게 노출되지 않도록** 주의해야 함
+    - Token이 다른 경로로 노출되는 예시: CSRF Token이 URL의 쿼리 파라미터로 넘겨지는 경우
+        + 이후 다른 링크를 방문하였을 때 ```Referer``` 헤더에 Token이 그대로 노출됨 → 공격자는 이를 이용해 역으로 Token을 획득할 수 있음
 
 
 <br/><br/><br/><br/>
