@@ -168,3 +168,26 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ## 문제 풀이
+### 취약점 분석
+* vuln 페이지에서 ```frame```, ```script```, ```on``` 외의 꺽쇠(```<```, ```>```)를 포함한 다른 키워드나 태그는 필터링하고 있지 않음 → XSS 공격은 수행할 수 없지만, CSRF 공격은 수행할 수 있음
+    - 웹 서비스는 CSRF Token을 사용해 CSRF 공격을 방어하고 있음 → **Token 없이 CSRF를 수행하게 되면 실패하게 됨**
+        + CSRF Token 값이 ```username```과 이용자의 IP 주소를 이어붙인 후 md5 해시를 구한 값으로 생성됨 <br/> &nbsp;&nbsp; = ⚠️ 완전히 랜덤하게 생성되지 않음 → ```admin```의 Token 값을 예측할 수 있음
+        + CSRF Token 값 → ```username```과 이용자의 IP 주소를 이어붙인 후 md5 해시를 구한 값으로 생성됨 (⚠️ 완전히 랜덤하게 생성되지 않음)
+            | 구성 요소 | 공격에 사용하는 값 |
+            |:---:|:---:|
+            | 이용자의 아이디(```username```) |```admin``` |
+            | IP 주소 | ```127.0.0.1``` → ```admin```은 로컬호스트에서 접속함 |
+            + 이를 이용해 공격자는 admin의 CSRF Token 값을 예측할 수 있음
+                ```python
+                # admin의 CSRF Token 계산 코드
+                from hashlib import md5
+
+                username = b"admin"
+                ip_addr =b"127.0.0.1"
+                csrf_token = md5(username + ip_addr).hexdigest()
+                print(csrf_token) # 7505b9c72ab4aa94b1a4ed7b207b67fb 출력
+                ```
+
+<br/><br/>
+
+### 익스플로잇
