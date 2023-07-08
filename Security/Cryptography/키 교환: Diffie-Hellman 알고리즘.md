@@ -66,6 +66,25 @@
 <br/>
 
 ### Diffie-Hellman에 대한 중간자 공격(Man In The Middle attack, MITM)
+* 중간자 공격: 네트워크로 통신하는 두 주체가 서로의 신원을 확인하기 어렵다는 네트워크의 특성을 이용한 공격
+    - 네트워크에서 발생하는 공격의 분류
+        | 공격 종류 | 설명 |
+        |---|------|
+        | 수동적 공격 | 공격자가 통신에 개입하지 않음 <br/> &nbsp;&nbsp; → 수동적 공격자는 둘 사이의 통신을 도청하는 것 외에는 할 수 있는 게 없음 |
+        | 능동적 공격 | 공격자가 통신에 직접 개입함 <br/> &nbsp;&nbsp; → 능동적 공격자는 통신을 도청하면서 중간에 데이터를 위﹒변조할 수 있음 |
+        + 중간자 공격(Man In The Middle attack, MITM)은 능동적 공격에 해당함
+
+<br/>
+
+* ⚠️ Diffie-Hellman 키 교환은 아래와 같은 중간자 공격에 취약함
+  <br/><br/>
+  <img width="2560" alt="중간자 공격1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/cb3693dd-eacb-4023-8d54-1c3b54b19f88">
+  <img width="2560" alt="중간자 공격2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e57c185c-043b-4276-8f81-365df011fbcd">
+  <br/><br/>
+    - 중간자 공격을 통해 공격자가 수행할 수 있는 행위
+        + 둘 사이에 오가는 정보를 모두 알 수 있음
+        + 필요하면 둘 사이에 오가는 정보를 변조할 수도 있음
+    - 📌 Diffie-Hellman 키 교환은 **서로의 신원을 확인할 수 있는 추가적인 메커니즘이 동반**되어야 안전하게 이뤄질 수 있음
 
 
 
