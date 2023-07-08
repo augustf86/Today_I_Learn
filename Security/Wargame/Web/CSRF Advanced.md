@@ -191,3 +191,27 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ### 익스플로잇
+CSRF 공격이 가능한 vuln 페이지를 다른 이용자(```admin```)가 방문할 경우 의도하지 않은 페이지로 요청을 전송하는 시나리오를 작성
+* 플래그를 얻기 위해서는 ```admin``` 계정으로 로그인해야 하기 때문에 ```admin```의 비밀번호를 변경함 <br/> &nbsp;&nbsp; → change_password 페이지를 이용하여 ```admin```의 비밀번호를 변경하는 요청을 전송하도록 익스플로잇을 수행해야 함
+* CSRF 취약점 테스트
+    1. ```<img>``` 태그를 사용해 외부 웹 서버(드림핵 툴즈의 Request Bin 기능 사용)로 요청을 보내는 공격 코드를 작성한 후, 취약점이 발생하는 vuln 페이지에 해당 코드를 삽입함
+        ```
+        <img src="https://RANDOMHOST.request.dreamhack.games">
+        ```
+    2. 외부 웹 서버에 요청이 온 것을 확인할 수 있음 *→ ⚠️ 해당 페이지에 CSRF 취약점이 존재함을 의미함*
+
+<br/>
+
+#### 익스플로잇 과정
+1. flag 페이지에서 ```<img src="/change_password?pw=admin1234&csrftoken=7505b9c72ab4aa94b1a4ed7b207b67fb">```를 입력하고 제출 버튼을 누름
+    - 비밀번호 변경은 /change_password 페이지에서 수행하며 다음의 두 개의 GET 파라미터를 전달받음
+        | GET 파라미터 | 입력해야 하는 값 |
+        |:---:|:---:|
+        | ```pw``` | 변경하려는 비밀번호의 값 → ```admin1234```로 설정 |
+        | ```csrftoken``` | 위에서 계산한 admin의 CSRF Token 값 → ```7505b9c72ab4aa94b1a4ed7b207b67fb``` |
+    - "good" 알림창이 출력되고 나면 vuln 페이지로 방문한 계정의 비밀번호가 "admin1234"로 바뀌게 됨
+
+<br/>
+
+2. login 페이지로 이동하여 username에 "admin", password에 "admin1234"를 입력하고 [Login] 버튼을 누르면 admin 계정으로 로그인에 성공함 → index 페이지에 출력된 flag를 획득할 수 있음
+
