@@ -1,5 +1,6 @@
 # [Dreamhack Wargame] CSRF Advanced
 ### [🚩CSRF Advanced](https://dreamhack.io/wargame/challenges/442/)
+<img width="1068" alt="CSRF Advanced_Description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/8cf39278-0b3c-4580-bd0c-46694f9e2a1c">
 
 * **CSRF**(Cross Site Request Forgery): 임의 이용자의 권한으로 임의 주소에 HTTP 요청을 보낼 수 있는 공격
     - CSRF를 막기 위해 웹 서비스는 CSRF Token을 사용하지만, **CSRF Token을 잘못된 방법으로 구현하였을 때 이를 우회할 수 있음**
