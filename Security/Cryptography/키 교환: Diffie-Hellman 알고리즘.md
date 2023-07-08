@@ -56,6 +56,17 @@
 <br/>
 
 ### 키 교환 절차
+* Diffie-Hellman 키 교환에서 통신을 진행하는 가상의 두 인물을 Alice, Bob이라고 가정
+  <br/><br/>
+  <img width="2560" alt="Diffie-Hellman 키 교환 절차" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a4d5d658-9e46-4d79-a45e-96a27550fade">
+  <br/>
+
+* Diffie-Hellman 알고리즘을 이용하면 Alice와 Bob은 모두에게 공개된 통신 채널을 이용하여도 서로 안전하게 키를 교환할 수 있음
+
+<br/>
+
+### Diffie-Hellman에 대한 중간자 공격(Man In The Middle attack, MITM)
+
 
 
 <br/><br/><br/><br/>
