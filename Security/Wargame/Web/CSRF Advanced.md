@@ -194,6 +194,10 @@ app.run(host="0.0.0.0", port=8000)
 CSRF 공격이 가능한 vuln 페이지를 다른 이용자(```admin```)가 방문할 경우 의도하지 않은 페이지로 요청을 전송하는 시나리오를 작성
 * 플래그를 얻기 위해서는 ```admin``` 계정으로 로그인해야 하기 때문에 ```admin```의 비밀번호를 변경함 <br/> &nbsp;&nbsp; → change_password 페이지를 이용하여 ```admin```의 비밀번호를 변경하는 요청을 전송하도록 익스플로잇을 수행해야 함
 * CSRF 취약점 테스트
+  <br/><br/>
+  <img width="2560" alt="CSRF 취약점 확인" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2e159d92-8554-4b7d-adde-bb775d3d1d99">
+  <br/>
+  
     1. ```<img>``` 태그를 사용해 외부 웹 서버(드림핵 툴즈의 Request Bin 기능 사용)로 요청을 보내는 공격 코드를 작성한 후, 취약점이 발생하는 vuln 페이지에 해당 코드를 삽입함
         ```
         <img src="https://RANDOMHOST.request.dreamhack.games">
@@ -204,6 +208,9 @@ CSRF 공격이 가능한 vuln 페이지를 다른 이용자(```admin```)가 방�
 
 #### 익스플로잇 과정
 1. flag 페이지에서 ```<img src="/change_password?pw=admin1234&csrftoken=7505b9c72ab4aa94b1a4ed7b207b67fb">```를 입력하고 제출 버튼을 누름
+   <br/><br/>
+   <img width="2560" alt="익스플로잇1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b8abb376-bd29-4f4c-8026-ca141148b001"><br/>
+
     - 비밀번호 변경은 /change_password 페이지에서 수행하며 다음의 두 개의 GET 파라미터를 전달받음
         | GET 파라미터 | 입력해야 하는 값 |
         |:---:|:---:|
@@ -214,4 +221,6 @@ CSRF 공격이 가능한 vuln 페이지를 다른 이용자(```admin```)가 방�
 <br/>
 
 2. login 페이지로 이동하여 username에 "admin", password에 "admin1234"를 입력하고 [Login] 버튼을 누르면 admin 계정으로 로그인에 성공함 → index 페이지에 출력된 flag를 획득할 수 있음
+   <br/><br/>
+   <img width="2560" alt="익스플로잇2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/001c3da3-b56c-4424-8b67-3d6bd6bb4919"><br/>
 
