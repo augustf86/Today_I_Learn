@@ -26,12 +26,30 @@
         + 최근에는 더욱 뛰어난 성능을 보여주는 **타원 곡선 Diffie-Hellman**(Elliptic-Curve Diffie-Hellman, ECDH) 알고리즘으로 발전함
     - Diffie-Hellman 알고리즘을 이해하기 위해서는 다양한 수학적 배경지식이 필요함
 
+<br/>
+
 ### Background: 수학적 원리
 * 모듈로 연산에서의 거듭제곱
+  <br/><br/>
+  <img width="2560" alt="모듈러 연산에서의 거듭제곱" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9174afee-2ed5-4d3d-b876-93492d1c386a">
+  <br/>
+  
     - Diffie Helmman 키 교환 알고리즘의 연산량을 줄여주는데 이 방법이 사용됨
         + ```2^(2048)```번 가까이 제곱된 어떤 수의 모듈러 값을 구해야 함 → 여기에 위의 방법을 적용하면 2048번 정도만 연산해도 그 값을 구할 수 있음
+
+<br/>
+
 * 페르마의 소정리(Fermat's Little Theorem)
+  <br/><br/>
+  <img width="2554" alt="페르마의 소정리" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/8426199b-5ed7-4c5b-bbca-f8ab96d4e266">
+
+<br/>
+
 * 이산 로그 문제(Discrete Logarithm Problem)
+  <br/><br/>
+  <img width="2560" alt="이산 로그 문제" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/03240b52-f5bd-4b26-8973-fb7ada9b0eac">
+  <br/>
+
     - Diffie Hellman 알고리즘의 안전성은 **이산 로그 문제의 어려움**에 바탕을 두고 있음
         + 키를 모르는 공격자가 키를 구하려면 ```m```이 ```2^2048``` 정도 되는 이산 로그 문제를 풀어야함 → 현재의 연산 능력으로는 불가능하다고 알려져 있음
 
