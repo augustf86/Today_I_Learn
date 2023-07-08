@@ -68,6 +68,7 @@
   | XSS Filtering Bypass Advanced | XSS 필터링 우회 | [XSS Filtering Bypass Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/XSS%20Filtering%20Bypass%20Advanced.md) |
   | CSP Bypass | XSS_CSP 우회 | [CSP Bypass.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/CSP%20Bypass.md) |
   | CSP Bypass Advanced | XSS_CSP 우회 <br/> (```base-uri``` 미지정) | [CSP Bypass Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/CSP%20Bypass%20Advanced.md) |
+  | CSRF Advanced | CSRF <br/> (CSRF Token 오용) | [CSRF Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/CSRF%20Advanced.md) |
   - 🚩 웹 해킹 워 게임 문제 사이트: [Dreamhack Wargame/Web](https://dreamhack.io/wargame/challenges?page=1&category=web)
 
 <br/>
