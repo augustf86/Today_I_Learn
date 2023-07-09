@@ -13,6 +13,7 @@
       + [XSS Filtering Bypass](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/XSS%20Filtering%20Bypass.md)
       + [Content Security Policy](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Content%20Security%20Policy.md)
       + [CSP Bypass](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/CSP%20Bypass.md)
+      + [Client Side Template Injection](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Client%20Side%20Template%20Injection.md)
   -  [Cross Site Request Forgery(CSRF)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Cross%20Site%20Request%20Forgery(CSRF).md)
       + [CSRF Token 오용](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/CSRF%20Token%20오용.md)
       + [CORS Vulnerability](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/CORS%20Vulnerability.md)
