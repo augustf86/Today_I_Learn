@@ -89,6 +89,65 @@
 <br/><br/>
 
 ## AngularJS Template Injection
+### AngularJS
+* Google에서 개발되어 2010년에 출시된 프론트엔드 프레임워크
+    - 타입스크립트 기반의 오픈소스 프레임워크
+    - CLI 도구에서 다양한 기능을 제공함 → 개발을 편리하게 해주는 프레임워크 중 하나
+    - AngularJS에 대한 상세한 정보는 [AngularJs Docs](https://angular.io/docs)에서 확인 가능
+
+<br/>
+
+* AngularJS 예제 코드 (AngularJS 1.8.2 버전)
+    ```html
+    <!doctype html>
+    <html ng-app>
+        <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+        </head>
+        <body>
+            <div>
+                <label>Name:</label>
+                <input type="text" ng-model="yourName" placeholder="Enter a name here">
+                <hr>
+                <h1>Hello {{yourName}}</h1>
+            </div>
+        </body>
+    </html>
+    ```
+    - ```{{ }}```로 감싸진 부분(AngularJS 템플릿) 내에서 문자열을 표시하거나, 자바스크립트 표현식을 실행할 수 있음 <br/> &nbsp;&nbsp; → ⚠️ 이 템플릿 내부에 공격자의 입력이 들어가 **Template Injection 취약점이 발생**한다면 **XSS 공격**으로 이어질 수 있음
+
+<br/>
+
+* 취약한 AngularJS 예제 코드
+    ```html
+    <!doctype html>
+    <html ng-app>
+        <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+        </head>
+        <body>
+            <?php echo htmlspeicalchars($_GET['msg']); ?>
+        </body>
+    </html>
+    ```
+    - 이용자의 입력을 그대로 페이지에 출력하여 AngularJS Template Injection에 취약한 예제 코드
+        + 이용자로부터 입력받은 GET 메소드의 ```msg``` 파라미터를 ```htmlspecialchars``` 함수를 통해 꺽쇠 문자를 모두 인코딩한 후 출력함 → 일반적인 XSS 공격은 불가능힘
+        + 출력되는 값이 AngularJS의 템플릿으로 사용될 수 있음 → ⚠️ *Template Injection이 발생함* 
+
+<br/>
+
+### Angular Template Injection
+* Angular Template Injection 발생 여부를 확인하는 가장 간단한 방법 → 📌 **탬플릿을 이용한 산술 연산의 수행**
+    - ```{{1+1}}```과 같은 산술 연산 형태의 템플릿을 입력했을 때 연살이 실행된 형태인 ```2```가 출력됨 → Template Injection이 발생함!
+
+<br/>
+
+* Template Injection 발생 시 임의 자바스크립트 코드 실행으로 연계하는 방법으로 보통 **생성자**(Constructor)를 이용함
+    - 📌 **Angular 템플릿 컨텍스트 내에서 생성자에 접근하여 임의 코드에 해당하는 함수를 생성하고 이를 호출하는 방식**으로 XSS 공격이 가능함
+    - Angular 템플릿 컨텍스트 내에서 생성자에 접근하는 방법
+        | 대표적인 접근 방법 | 이를 이용한 익스플로잇 코드 예시 |
+        |---|---|
+        | ```{{ constructor.constructor }}```를 이용 | ```{{constructor.constructor("alert(1)")()}}``` |
 
 
 
