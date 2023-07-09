@@ -19,6 +19,73 @@
 <br/><br/>
 
 ## Vue Template Injection
+### Vue (Vue.js)
+* 2014년에 Google의 연구원인 Evan You가 개발한 프론트엔드 프레임워크
+    - 오픈소스 자바스크립트 프레임워크 → 이용자 인터페이스나 Single Page Application을 빌드할 때 사용됨
+    - Vue에 대한 상세한 정보는 [Vue.js 홈페이지](https://vuejs.org/)에서 확인 가능
+
+<br/>
+
+* Vue 예제 코드 (Vue 3 버전)
+    ```html
+    <!-- 참고: Vue.js Basic - Hello World(https://vuejs.org/examples/#hello-world) -->
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <div id="app">{{ message }}</div> <!-- Hello Vue!가 화면에 출력됨-->
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    message: 'Hello Vue!'
+                }
+            }
+        }).mount('#app')
+    </script>
+    ```
+    - ```{{ }}```로 감싸진 부분(뷰 템플릿) 내에서 문자열을 표시하거나 자바스크립트 표현식을 실행할 수 있음 <br/> &nbsp;&nbsp; → ⚠️ 이 템플릿 내부에 공격자의 입력이 들어가 **Template Injection이 발생**한다면 **XSS 공격으로 이어질 수 있음**
+
+<br/>
+
+* 취약한 Vue 예제 코드
+    ```php
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <div id="app">
+        <?php echo htmlspecialchars($_GET['msg']); ?>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    message: 'Hello Vue!'
+                }
+            }
+        }).mount('#app');
+    </script>
+    ```
+    - 이용자의 입력을 그대로 페이지에 출력하여 Vue Template Injection에 취약한 예제 코드
+        + 이용자로부터 입력받은 GET 메소드의 ```msg``` 파라미터를 ```htmlspecialchars``` 함수를 통해 꺽쇠 문자를 모두 인코딩한 후 출력함 → 일반적인 XSS 공격은 불가능힘
+        + 출력되는 값이 Vue의 템플릿으로 사용될 수 있음 → ⚠️ *Template Injection이 발생함*
+
+<br/>
+
+### Vue Template Injection
+* Vue Template Injection 발생 여부를 확인하는 가장 간단한 방법 → 📌 **탬플릿을 이용한 산술 연산의 수행**
+    + ```{{1+1}}```과 같은 산술 연산 형태의 템플릿을 입력했을 때 연살이 실행된 형태인 ```2```가 출력됨 → Template Injection이 발생함!
+
+<br/>
+
+* Template Injection 발생 시 임의 자바스크립트 코드 실행으로 연계하는 방법으로 보통 **생성자**(Constructor)를 이용함
+    - 📌 **Vue 템플릿 컨텍스트 내에서 생성자에 접근하여 임의 코드에 해당하는 함수를 생성하고 이를 호출하는 방식**으로 XSS 공격이 가능함
+    - Vue 템플릿 컨텍스트 내에서 생성자에 접근하는 방법은 다양함
+        | 대표적인 접근 방법 | 이를 이용한 익스플로잇 코드 예시 |
+        |---|---|
+        | ```{{_Vue.h.constructor}}```를 이용 | ```{{_Vue.h.constructor("alert(1)")()}}``` |
+
+<br/><br/>
+
+## AngularJS Template Injection
 
 
 
