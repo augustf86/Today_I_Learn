@@ -71,6 +71,9 @@
 <br/>
 
 ### Vue Template Injection
+<img width="2560" alt="Vue Template Injection" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d02d073f-4f85-4bef-8bfe-67e34946ae22">
+<br/><br/>
+
 * Vue Template Injection 발생 여부를 확인하는 가장 간단한 방법 → 📌 **탬플릿을 이용한 산술 연산의 수행**
     + ```{{1+1}}```과 같은 산술 연산 형태의 템플릿을 입력했을 때 연살이 실행된 형태인 ```2```가 출력됨 → Template Injection이 발생함!
 
