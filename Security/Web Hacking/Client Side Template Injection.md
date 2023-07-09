@@ -137,6 +137,9 @@
 <br/>
 
 ### Angular Template Injection
+<img width="2560" alt="AngularJS Template Injection" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/c296bb33-121a-417d-a94d-bd3d02275b5c">
+<br/><br/>
+
 * Angular Template Injection 발생 여부를 확인하는 가장 간단한 방법 → 📌 **탬플릿을 이용한 산술 연산의 수행**
     - ```{{1+1}}```과 같은 산술 연산 형태의 템플릿을 입력했을 때 연살이 실행된 형태인 ```2```가 출력됨 → Template Injection이 발생함!
 
