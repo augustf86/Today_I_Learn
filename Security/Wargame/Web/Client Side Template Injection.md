@@ -1,5 +1,7 @@
 # [Dreamhack Wargame] Client Side Template Injection
 ### [🚩Client Side Template Injection](https://dreamhack.io/wargame/challenges/437/)
+<img width="1072" alt="Client Side Template Injection_Description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ce6079d3-5346-4172-8906-7ffff5260783">
+<br/>
 
 * **XSS 취약점은 발생하지만 실질적인 공격으로 연계하기 까다로울 때** Client Side Template Injection을 활용하여 공격함
 
@@ -114,6 +116,10 @@ app.run(host="0.0.0.0", port=8000)
     | ```script-src``` | ```'nonce-{nonce}' 'unsafe-eval' ``` <br/>```https://ajax.googleapis.com``` | 스크립트 태그의 출처는 ```https://ajax.googleapis.com```만 허용하고, <br/> ```nonce``` 속성을 필요로 하며 스크립트 내에서 ```eval```를 통핸 코드 실행이 가능함 |
     | ```object-src``` | ```'none``` | ```<object>```, ```<embeded>``` 태그의 출처로 어느 것도 허용하지 않음 | 
     - 공격자는 ```nonce``` 값을 알지 못하기 때문에 XSS 취약점이 존재해도 일반적인 방법으로는 공격을 수행할 수 없음
+      <br/><br/>
+      <img width="2560" alt="일반적인 XSS 공격 불가" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a1db0a2e-f24b-4a2b-aebc-a98809716b2e">
+
+
 
 <br/><br/>
 
