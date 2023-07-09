@@ -118,3 +118,18 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ## 문제 풀이
+### 취약점 분석
+vuln 페이지에서 전달한 템플릿 변수를 기록할 때 HTML 엔티티 코드로 변환해 XSS 취약점이 발생하지 않는 ```render_template``` 함수를 이용하지 않고 ```return```을 이용하여 이용자의 입력값을 페이지에 그대로 출력하기 때문에 XSS 취약점이 발생함
+* CSP 정책으로 인해 곧바로 스크립트를 수행하는 것은 불가능함 → 📌 스크립트를 실행하기 위해서는 ```script-src``` 지시문의 출처를 확인해봐야 함
+    - CSP 정책에서 허용하고 있는 스크립트 태그의 출처는 ```httsp://ajax.googleapis.com```
+        + 해당 출처 내에 JSONP callback이 존재하거나 활용할만한 스크립트가 존재한다면 이를 공격에 이용할 수 있음
+        + ```https://ajax.googleapis.com``` 출처 = AngularJS 파일을 서빙할 때도 사용되는 서버 <br/> &nbsp;&nbsp; → ⚠️ AngularJS 파일을 script 태그의 src로 사용한 후 Client Side Injection을 수행할 수 있음
+* 공격에 사용할 수 있는 속성
+    | 속성 | 설명 |
+    |---|------|
+    | location.href | 전체 URL를 반환하거나, URL을 업데이트할 수 있는 속성값 |
+    | document.cookie | 해당 페이지에서 사용하는 쿠키를 읽고 쓰는 속성값 |
+
+<br/><br/>
+
+### 익스플로잇
