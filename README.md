@@ -96,6 +96,14 @@
   - [Diffie-Hellman 알고리즘](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/키%20교환:%20Diffie-Hellman%20알고리즘.md)
 * 공개키 암호 시스템(Public Key Cryptosystem)
 
+<br/>
+
+* Wargame
+  | Wargame 문제 | 분류 | 📌 풀이 |
+  |------|----|----|
+  | Textbook-DH | Diffie-Hellman 중간자 공격 | [Textbook-DH.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-DH.md) |
+  - 🚩 암호학 워 게임 문제 사이트: [Dreamhack Wargame/crypto](https://dreamhack.io/wargame/challenges?tag=crypto&page=1&category=crypto)
+
 
 <br/><br/>
 
