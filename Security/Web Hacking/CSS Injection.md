@@ -75,6 +75,9 @@
     ```
     + 이러한 CSS 가젯들 중 하나를 사용해 페이지 내에서 외부 서버로 요청을 보낼 수 있음
     + 실습 과정
+      <br/><br/>
+      <img width="2560" alt="IP Ping Back" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f02c7c41-868f-43ff-8de6-189058cfcde2"><br/>
+
         | 순서 | 설명 |
         |:---:|------|
         | 01 | 요청을 받을 외부 웹 서버를 준비함 (여기서는 드림핵 툴즈의 Request Bin 기능을 이용함) |
