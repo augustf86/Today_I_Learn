@@ -89,6 +89,30 @@
 <br/><br/>
 
 ## CSS Injection: 데이터 탈취 (입력 박스 내용 탈취)
+* 예시: [CSS Injection: 기초]에서 사용한 예시와 동일함
+
+<br/>
+
+* CSS Attribute Selector(특성 선택자)를 통한 입력 박스(```Input```)의 값(```Value```)를 탈취하는 방법
+    - CSS Attribute Selector [참고: 📚 [Attribute Selector docs](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors)]
+        + Element의 Attribute를 Selection할 수 있는 기능을 제공함
+        + 특성 선택자의 구문
+            | 구문 | 설명 |
+            |---|------|
+            | ```[attr]``` | ```attr```이라는 이름의 특성을 가진 요소를 선택함 |
+            | ```[attr=value]``` | ```attr```이라는 이름의 특성값이 정확히 ```value```인 요소를 선택함 |
+            | ```[attr~=value]``` | ```attr```이라는 이름의 특성값이 정확히 ```value```인 요소를 선택함 <br/> &nbsp;&nbsp; - ```attr``` 특성은 공백으로 구분한 여러 개의 값을 가지고 있을 수 있음 |
+            | ```[attr^=value]``` | ```attr```이라는 특성값을 가지고 있으며, 접두사로 ```value```가 값에 포함되어 있으면 이 요소를 선택함 |
+            | ```[attr$=value]``` | ```attr```이라는 특성값을 가지고 있으며, 접미사로 ```value```가 값에 포함되어 있으면 이 요소를 선택함 |
+    - ⚠️ ```[attr^=value]``` 구문을 입력하여 입력 박스의 내용을 탈취할 수 있음
+        + 입력 박스의 내용을 탈취하는 과정
+            | 순서 | 설명 |
+            |:---:|------|
+            | 01 | ```[attr^=value]``` 구문을 이용해 가장 첫 한 글자를 먼저 탈취함 |
+            | 02 | 1번에서 탈취한 글자를 접두사로 그 다음 한 글자를 탈취함 |
+            | 03 | 1번과 2번 과정을 반복함 |
+        + 실습 예시
+            - 개발자 도구의 Network 탭을 확인하여 탈취에 성공했는지 알 수 있음 (성공 시 지정한 URL로 요청을 전송함)
 
 
 <br/><br/><br/><br/>
