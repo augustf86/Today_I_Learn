@@ -46,6 +46,9 @@
 | ```background-color```로 배경 색상 변경 | ```theme``` 값으로 배경 색상을 지정 |
 | ```background-color```가 아닌 ```h1```의 글자 색 변경 | ⚠️ **CSS Injection**: ```}``` 문자를 이용해 기존 속성을 탈출한 다음 ```h1```의 속성을 지정 <br/> &nbsp;&nbsp; → ``` 배경색; } h1 { color: 글자색; }```를 입력하여 ```h1```의 글자를 원하는 색으로 변경 가능 |
 
+<img width="2560" alt="색상 변경" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/59053d17-d078-4963-8f27-30633f3e7656">
+<br/>
+
 <br/>
 
 ### 웹 페이지 내 데이터 탈취: IP Ping Back
