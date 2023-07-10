@@ -25,6 +25,30 @@
 <br/><br/>
 
 ## CSS Injection: 기초
+* 예시: 이용자로부터 ```theme``` 값을 입력 받아 ```<style>``` 태그 내에 출력하는 웹 어플리케이션
+    ```javascript
+    <style>
+        body { background-color: ${theme}; }
+    </style>
+    <h1>Hello, it's dreame. Interesting with CSS Injection?</h1>
+
+    if '<' in theme:
+        exit(0)
+    ```
+    - ```theme``` 값 내에 ```<```를 입력할 수 없어 정의된 ```<style>``` 태그르 벗어나는 것은 불가능함
+    - CSS 속성만 출력할 수 있음
+
+<br/>
+
+### 임의 영역의 UI 변경: 색상 변경
+| 예시 | 설명 |
+|---|------|
+| ```background-color```로 배경 색상 변경 | ```theme``` 값으로 배경 색상을 지정 |
+| ```background-color```가 아닌 ```h1```의 글자 색 변경 | ⚠️ **CSS Injection**: ```}``` 문자를 이용해 기존 속성을 탈출한 다음 ```h1```의 속성을 지정 <br/> &nbsp;&nbsp; → ``` 배경색; } h1 { color: 글자색; }```를 입력하여 ```h1```의 글자를 원하는 색으로 변경 가능 |
+
+<br/>
+
+### 웹 페이지 내 데이터 탈취: IP Ping Back
 
 
 <br/><br/><br/><br/>
