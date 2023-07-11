@@ -56,8 +56,11 @@
 ### 작은 $e$ 설정 시 가능한 공격
 * RSA 암호 알고리즘 구현 시 **빠른 암호화**를 위해 **공개 지수 $e$를 작게 설정**하기도 함 <br/> &nbsp;&nbsp; → ⚠️ $e$를 너무 작게 설정하면 Coppersmith 공격과 Hastad's Broadcast 공격 등에 취약해질 수 있음
 * 공격의 종류
-    - Coppersmith 공격
-    - Hastad's Braodcast 공격
+    - Coppersmith 공격과 Hastad's Braodcast 공격
+      <br/><br/>
+      <img width="2560" alt="작은 e 사용 시 가능한 공격" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d69950b8-0251-4b66-a4ff-3cb604907ea5">
+      <img width="2560" alt="중국인의 나머지 정리" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/43f3dcdc-a0c0-4973-bc05-b702392cfd31">
+      <br/><br/>
     - 이 외에도 Coppersmith의 짧은 패드 공격(Short Pad Attack) 등에 취약함
 * 📌 공개 지수를 너무 작은 값으로 설정하면 위와 같은 취약점이 발생하고, 너무 큰 값으로 설정하면 RSA 알고리즘의 효율성이 떨어지게 됨 <br/> &nbsp;&nbsp; → *일반적으로 공개 지수로 $2^{16} + 1 = 65537$을 사용함*
 
