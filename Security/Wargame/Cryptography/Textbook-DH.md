@@ -72,7 +72,7 @@ print(f"Bob: {bob.encrypt(flag[len(flag) // 2:])}")
 Diffie-Hellman 알고리즘을 이용하여 Alice와 Bob이 키를 교환하고 있음 → ⚠️ Diffie-Hellman 키 교환을 수행하는 중에 **서로의 신원을 확인하는 과정이 없어 중간자 공격(Man In The Middle Attack)에 취약함**
 * 문제의 코에서 ```"Lets inturrupt !"``` 다음에 이어지는 ```>> ``` 뒤에 사용자의 입력을 받아 Alice와 Bob이 계산한 A(```g^a mod p```)와 B(```g^b mod p```)를 대신하고 있음
     - 공격자는 ```Prime: ``` 뒤에 출력되는 소수 p를 탈취하고, A와 B를 원하는 값으로 대신하여 통신에서 사용되는 AES 키를 계산해낼 수 있음
-        - ```>> ``` 뒤에 ```1```를 입력하면 ```1^a mod p```, ```1^b mod p```가 됨 → ```a```, ```b```의 값에 상관없이 결과는 ```1```이 됨 <br/> &nbsp;&nbsp; ⇒ 따라서 AES 키는 ```hashlib.md5(str("1").encode()).digiest()```가 됨
+        - ```>> ``` 뒤에 ```1```를 입력하면 ```1^a mod p```, ```1^b mod p```가 됨 → ```a```, ```b```의 값에 상관없이 결과는 ```1```이 됨 (```1 mod p)``` <br/> &nbsp;&nbsp; ⇒ 따라서 AES 키는 ```hashlib.md5(str("1").encode()).digiest()```가 됨
     - 계산한 AES 키로 암호화된 플래그들을 복호화하여 합치면 플래그를 획득할 수 있음
 
 <br/><br/>
