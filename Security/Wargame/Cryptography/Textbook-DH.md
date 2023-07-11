@@ -78,3 +78,48 @@ Diffie-Hellman 알고리즘을 이용하여 Alice와 Bob이 키를 교환하고 
 <br/><br/>
 
 ### 익스플로잇
+* 위의 코드를 참고하여 다음과 같은 코드(textbook_dh_exploit.py)를 작성하고 실행함
+    ```python
+    #!/usr/bin/python3
+    from pwn import * # pip install pwntools
+
+    # pip install pycryptodomex 
+    from Cryptodome.Util.number import getPrime
+    from Cryptodome.Util.Padding import pad, unpad
+    from Cryptodome.Cipher import AES
+    import hashlib
+    import random
+    
+    p = remote("host3.dreamhack.games", 16080) # url, port 정보는 드림핵 워게임 사이트의 접속 정보 확인
+
+    # Alice와 Bob이 공유하는 소수 p를 가져옴
+    p.recvuntil("Prime: ")
+    prime = int(p.recvline(), 16)
+
+    # challenge.py 코드에서 "Alice sends her key to Bob. Key: " 다음에 나오는 ">> " 뒤에 1을 입력함
+    p.recvline()
+    p.sendlineafter(">> ", "1") # Alice가 1^a mod p(= 1)를 계산하게 됨
+
+    # challenge.py 코드에서 "Bob sends his key to Alice. Key: " 다음에 나오는 ">> " 뒤에 1을 입력함
+    p.recvline()
+    p.sendlineafter(">> ", "1") # Bob이 1^b mod p(= 1)를 계산하게 됨
+
+
+    aes_key = hashlib.md5(str("1").encode()).digest() # AES의 키로 사용되는 md5(Key)의 값을 계산함
+    cipher = AES.new(aes_key, AES.MODE_ECB)
+
+    flag = '' # flag를 저장할 변수
+    
+    # "Alice:" 뒤에 전송되는 암호화된 플래그의 앞부분를 가져와 계산한 키를 가지고 이를 복호화함
+    p.recvuntil("Alice: ")
+    encrypt_msg = p.recvline()[:-1]
+    flag = (unpad(cipher.decrypt(bytes.fromhex(encrypt_msg.decode())), 16)) 
+
+    # "Bob: " 뒤에 전송되는 암호화된 플래그의 뒷부분을 가져와 계산한 키를 가지고 이를 복호화함
+    p.recvuntil("Bob: ")
+    encrypt_msg = p.recvline()[:-1]
+    flag += (unpad(cipher.decrypt(bytes.fromhex(encrypt_msg.decode())), 16))
+
+    print("FLAG: {}".format(flag)) # 복호화 결과를 합쳐서 출력함
+    ```
+
