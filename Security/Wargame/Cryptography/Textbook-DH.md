@@ -122,4 +122,7 @@ Diffie-Hellman 알고리즘을 이용하여 Alice와 Bob이 키를 교환하고 
 
     print("FLAG: {}".format(flag)) # 복호화 결과를 합쳐서 출력함
     ```
+    <br/>
+    <img width="2560" alt="dh_exploit result" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f18ff37c-5211-4c98-8f0d-d4e862a2575a">
+
 
