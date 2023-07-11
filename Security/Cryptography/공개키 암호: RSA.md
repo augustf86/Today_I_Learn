@@ -68,12 +68,18 @@
 
 ### 공통 $n$ 사용 시 가능한 공격
 * Common Modulus Attack
+  <br/><br/>
+  <img width="2560" alt="공통 n 사용 시 가능한 공격" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/5e6d904c-60b4-447d-9d7d-2a7d880bda7f">
+  <br/><br/>
 * 📌 수신자들이 같은 $n$을 사용하면 쉽게 공격받을 수 있음 → 수신자들이 $n$을 무작위 값으로 생성하여 사용해야 함
 
 <br/>
 
 ### 작은 $d$ 사용 시 가능한 공격
 * 비밀 지수 $d$가 작으면 가능한 공격들
+  <br/><br/>
+  <img width="2560" alt="작은 d 사용 시 가능한 공격" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b2ef1b9a-8f48-49d5-ad6c-c33826e4ecfc">
+  <br/><br/>
 * 📌 수신자들이 비밀 지수 $d$를 작게 설정하면 여러 공격에 취약함 → 비밀 저수를 설정할 때는 $n$보다 적당히 큰 수가 되도록 해줘야 함
 
 
