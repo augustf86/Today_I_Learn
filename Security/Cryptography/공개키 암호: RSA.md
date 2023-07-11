@@ -21,6 +21,7 @@
 <br/>
 
 ### RSA Background: 오일러 정리
+<img width="2555" alt="오일러 정리" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e4e2aec0-254f-484a-9cce-24760a4d15e0"><br/>
 
 <br/>
 
@@ -31,6 +32,8 @@
     | 대칭키 암호 알고리즘 | 임의의 난수를 선택하기만 하면 키 생성 가능 |
     | 공개키 암호 알고리즘(RSA) | 인수분해를 어렵게 만들기 위해 복잡한 연산을 거쳐 키를 생성해야 함 |
 * RSA의 키 생성 과정
+  <br/><br/>
+  <img width="2560" alt="RSA 키 생성 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e99fd886-a0fa-481a-8938-e06b6522c72f"><br/>
     - 키 생성 과정의 결괏값들
         | 결과 | 설명 |
         |:---:|------|
@@ -41,6 +44,7 @@
 <br/>
 
 ### RSA 암﹒복호화
+<img width="2560" alt="RSA 암호화, 복호화" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/caa5c4d1-606f-481c-83cd-28480b00b59f"><br/>
 
 <br/><br/>
 
