@@ -126,6 +126,9 @@
 ### HMAC
 * 해시 함수를 기반으로 하는 MAC
     - HMAC 함수 설명 예시
+      <br/><br/>
+      <img width="2553" alt="HMAC" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e0e35d7c-a7b4-422e-a142-1ae72abdb00d">
+      <br/><br/>
         + ⚠️ 실제 표준으로 정의된 HMAC은 키의 길이, 블록의 길이를 인자로 하는 복잡한 함수로, 위의 예시는 이를 다소 간소화한 것임
     - Python에서 제공하는 ```hmac``` 모듈
         ```python
