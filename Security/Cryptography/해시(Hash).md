@@ -61,6 +61,52 @@
 <br/><br/>
 
 ## 해시 함수의 종류
+### MD5
+* Ronald Lorin Rivest가 1991년에 만들어낸 해시 함수
+    - ⚠️ 현 시점에서는 **다양한 취약점이 발견**되어 더는 안전한 해시 함수로 여겨지지 않음
+    - 몇몇 구형의 시스템에서는 아직 MD5가 사용되고 있음
+* 임의 입력으로부터 128비트(= 16바이트)의 값을 생성하는 함수
+    - 임의 길이의 입력을 블록 암호와 비슷하게 512비트 단위로 쪼갠 후 연산을 거쳐 값을 생성함
+    - Python에서 제공하는 ```hashlib``` 모듈에 구현된 MD5 해시 함수
+        ```python
+        #!/usr/bin/env python3
+        # Name: md5.py (MD5 예시)
+
+        import hashlib
+        print(hashlib.md5(b'dreamhack').hexdigiest())
+        print(hashlib.md5(b'dreamhacc').hexdigiest())
+
+        # MD5 hash of file
+        with open('/path/to/file', 'rb') as f:
+            print(hashlib.md5(f.read()).hexdigiest())
+        ```
+
+<br/>
+
+### SHA256
+* 미국 표준 기술 연구소(NIST)에서 만들어낸 해시 함수
+    - 현재까지 취약점이 발견되지 않아 해시가 필요한 대부분의 곳에서 사용되고 있음
+    - SHA256 이전에 존재하던 SHA0, SHA1는 모두 취약점이 발견됨 → ⚠️ 현재는 사용하지 않을 것이 권장됨
+* 임의 입력으로부터 256비트(= 32바이트)의 출력을 내는 함수
+    - MD5에 비해 길이가 2배로 늘어남 → **충돌 저항성이 크게 증가함**
+        + SAH256이 만들어진 이후로 수많은 데이터들의 해시값이 생성되었지만 지금까지 충돌이 발생한 사례는 알려지지 않고 있음
+    - Python에서 제공하는 ```hashlib``` 모듈에 구현된 SHA256 해시 함수
+        ```python
+        #!/usr/bin/env python3
+        # Name: sha256.py (SAH256 해시)
+
+        import hashlib
+        print(hashlib.sha256(b'dreamhack').hexdigiest())
+        print(hashlib.sha256(b'dreamhacc').hexdigiest())
+
+        # SHA256 hash of file
+        with open('/path/to/file', 'rb') as f:
+            print(hashlib.sha256(f.read()).hexdigiest())
+        ```
+
+<br/><br/>
+
+## MAC (메세지 인증 코드, Message Authentication Code)
 
 
 <br/><br/><br/><br/>
