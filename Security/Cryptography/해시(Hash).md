@@ -20,6 +20,9 @@
 
 ### 일방향 함수(One-way Function)
 * 임의의 인자에 대한 함수 값은 쉽게 계산할 수 있지만, 함수 값으로부터 함수의 인자를 알아내기 어려운 함수
+  <br/><br/>
+  <img width="2560" alt="일방향 함수" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/c19f5978-83b7-4841-adac-a5633209c5cb">
+
 
 <br/>
 
