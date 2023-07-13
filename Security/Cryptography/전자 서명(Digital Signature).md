@@ -95,6 +95,8 @@
 <br/>
 
 ### ElGamal 서명 생성 및 서명 검증 과정
+<img width="2560" alt="ElGamal 전자 서명 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/fb437747-6fc8-4aca-9e80-ebe6eaadc207"><br/>
+
 
 <br/>
 
@@ -104,6 +106,9 @@
     - RSA 서명 기법에 존재하던 문제점이 ElGamal에서는 대부분 해결됨
 * ⚠️ 난수 $k$를 매번 같은 값으로 고정하면 서명키 $x$가 노출될 수 있다고 알려져 있음
     - 공격 방법
+      <br/><br/>
+      <img width="2560" alt="ElGamal 전자 서명 공격" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/c7d5f0db-8cf0-43af-8339-589adb76c670">
+      <br/><br/>
     - 서명키 $x$를 알면 원하는 메시지의 서명값 또한 구할 수 있음 → **매우 위험한 취약점!** <br/> &nbsp;&nbsp; ⇒ 📌 $k$ 값은 고정된 값이 아닌 적절한 난수값으로 정해야 함
 
 <br/><br/>
