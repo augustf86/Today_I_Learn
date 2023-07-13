@@ -25,6 +25,9 @@
 ## 기본 원리
 ### 서명과 검증
 * 전자 서명의 과정
+  <br/><br/>
+  <img width="2560" alt="전자 서명 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f64bedf4-af2c-43a6-95de-4f021ce7e64c">
+  <br/>
     | | 설명 |
     |:---:|------|
     | **서명 작성** <br/> (Signing) | 메시지를 서명키로 암호화하는 과정 <br/> &nbsp;&nbsp; - 서명키(Signing Key) = 서명자 본인만 알고 있어야 하는 비밀키 |
