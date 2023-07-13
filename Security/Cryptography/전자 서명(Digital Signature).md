@@ -62,11 +62,13 @@
         | $d$ | 사용자의 개인키 | 서명키 |
     - RSA 전자 서명의 안전성은 **인수분해 문제의 어려움**에 기반하고 있음
     - RSA 서명 생성 및 검증 과정
+      <br/><br/>
+      <img width="2560" alt="RSA 전자 서명 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2a0a45f9-c37d-4759-a149-626a56580f9e"><br/>
 
 <br/>
 
 ### RSA 전자 서명 공격
-
+<img width="2560" alt="RSA 전자 서명 공격" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/57cfd3ce-f40f-491a-95c3-629c6652b2c0"><br/>
 
 <br/>
 
