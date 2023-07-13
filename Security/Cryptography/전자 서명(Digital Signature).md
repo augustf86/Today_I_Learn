@@ -136,6 +136,9 @@
 <br/>
 
 ### DSA 서명 생성 및 서명 검증 과정
+<img width="2560" alt="DSA 전자 서명 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/fab39aab-d91a-465a-8cee-64d33a6c743a">
+<img width="2560" alt="DSA 전자 서명 검증-증명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/04229ef9-4421-4ef9-90d4-2f245ba407eb"><br/>
+
 
 
 <br/><br/><br/><br/>
