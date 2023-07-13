@@ -63,7 +63,7 @@
     - RSA 전자 서명의 안전성은 **인수분해 문제의 어려움**에 기반하고 있음
     - RSA 서명 생성 및 검증 과정
       <br/><br/>
-      <img width="2560" alt="RSA 전자 서명 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2a0a45f9-c37d-4759-a149-626a56580f9e"><br/>
+      <img width="2560" alt="RSA 전자 서명 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/546ad4eb-4014-4a60-b65c-dba489d46948"><br/>
 
 <br/>
 
