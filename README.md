@@ -96,8 +96,8 @@
   - [Diffie-Hellman 알고리즘](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/키%20교환:%20Diffie-Hellman%20알고리즘.md)
 * 공개키 암호 시스템(Public Key Cryptosystem)
   - [공개키 암호: RSA](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/공개키%20암호:%20RSA.md)
-  - 전자 서명(Digital Signature)
 * [해시(Hash)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/해시(Hash).md)
+* [전자 서명(Digital Signature)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/전자%20서명(Digital%20Signature).md)
 
 <br/>
 
