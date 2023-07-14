@@ -107,6 +107,13 @@
   | Textbook-DH | Diffie-Hellman 중간자 공격 | [Textbook-DH.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-DH.md) |
   - 🚩 암호학 워 게임 문제 사이트: [Dreamhack Wargame/crypto](https://dreamhack.io/wargame/challenges?tag=crypto&page=1&category=crypto)
 
+<br/><br/>
+
+### 🛠️ Reverse Engineering
+* Introduction of Reverse Engineering
+* Background
+  - 바이너리(Binary)
+  - 정적 분석과 동적 분석
 
 <br/><br/>
 
