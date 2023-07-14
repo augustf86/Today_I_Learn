@@ -112,7 +112,7 @@
 ### 🛠️ Reverse Engineering
 * Introduction of Reverse Engineering
 * Background
-  - 바이너리(Binary)
+  - [바이너리(Binary)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Binary.md)
   - 정적 분석과 동적 분석
 
 <br/><br/>
