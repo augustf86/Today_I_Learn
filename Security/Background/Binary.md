@@ -133,13 +133,19 @@
         | 윈도우 | PE 형식 |
     - 목적 파일로 변환되고 나면 어셈블리 코드가 기계어로 번역됨 → 사람이 이를 해석하기 어려워짐
 * 에제 코드 어셈블 결과 (```gcc -c add.S -o add.o```)
+  <br/><br/>
+  <img width="2560" alt="d어셈블" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/16bbe185-ad73-4cb5-9d27-3d0c60a4a9d6"><br/>
 
 <br/>
 
 #### [4] **링크** (Link)
 * 링크(Link): 여러 목적 파일들을 연결하여 실행 가능한 바이너리로 만드는 과정
     - 링크가 필요한 이유
+      <br/><br/>
+      <img width="2560" alt="링크가 필요한 이유" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3dc44edf-afbf-4c51-9433-993560d9e05e"><br/><br/>
 * 예제 코드 링크 결과
+  <br/><br/>
+  <img width="2560" alt="링크" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f9f641f4-e316-4985-a74a-9a443b7dc827">
 
 <br/><br/>
 
