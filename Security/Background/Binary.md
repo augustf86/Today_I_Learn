@@ -88,7 +88,9 @@
         | 2. 매크로 치환 | 매크로: 자주 쓰이는 코드나 상수 값을 단어로 정의한 것 (```#define```으로 정의함) <br/> &nbsp;&nbsp; → 전처리 과정에서 매크로의 이름은 값으로 치환됨 |
         | 3. 파일 병합 | 일반적인 프로그램은 여러 개의 소스(```.c``` 확장자)와 헤더 파일(```.h``` 확장자)로 이루어져 있음 <br/> &nbsp;&nbsp; → 이를 따로 컴파일해 합치기도 하지만, 어떠한 경우는 전처리 단계에서 파일을 합치고 컴파일함 |
 * 예제 코드 전처리 결과 (```gcc -E add.c > add.i```)
-
+  <br/><br/>
+  <img width="2560" alt="전처리" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/64c50d2f-af72-4760-9e59-4b87cac602b4"><br/>
+  
 <br/>
 
 #### [2] **컴파일** (Compile)
@@ -109,15 +111,20 @@
             | ```-Ofast``` | 최고 수준의 최적화를 수행함 <br/> &nbsp;&nbsp; - 컴파일하는 속도가 가장 느림 <br/> &nbsp;&nbsp; - ⚠️ 컴파일된 코드의 C 표준 호환성이 떨어질 수 있으므로 주의해야 함 (**사용을 권장하지 않음**)|
             | ```-Og``` | 디버깅에 혼란을 주는 최적화 기능을 제거함 |
         - EX: opt.c 코드를 ```-O2``` 옵션으로 최적화하여 컴파일
+          <br/><br/>
+          <img width="2560" alt="최적화" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b19926be-fe3a-4eb7-8fba-bc997af45528"><br/><br/>
 * 예제 코드 컴파일 결과 (```gcc -S add.i -o add.S```)
+  <br/><br/>
+  <img width="2560" alt="컴파일" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ca75d509-44df-46b2-ae4c-8c6ae6894a34"><br/>
 
 <br/>
 
 > * 💡 **컴파일 과정 속 컴파일**
 >   - 컴파일(Compile)의 정확한 의미: 어떤 언어로 작성된 **소스 코드(Source Code)를 다른 언어의 목적 코드(Object Code)로 번역**하는 것 <br/> &nbsp;&nbsp; → 소스 코드를 어셈블리어로, 또는 소스 코드를 기계어로 번역하는 것 모두 컴파일이라고 할 수 있음
 
-
 <br/>
+
+#### [3] **어셈블** (Assemble)
 
 <br/><br/><br/><br/>
 ### 🔖 출처
