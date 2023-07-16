@@ -31,6 +31,9 @@
 
 ### 폰 노이만 구조
 연산, 제어, 저장의 3가지 핵심 기능으로 구성된 구조
+<br/><br/>
+<img width="2560" alt="폰 노이만 구조" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/c0f0df69-98d6-4dbf-9fdb-46c8de3d5fa4">
+<br/>
 * 중앙처리장치(Central Processing Unit, CPU)
     - 프로그램의 연산을 처리하고 시스템을 제어하는 컴퓨터의 두뇌
         + 프로세스의 코드를 불러오고, 결과를 저장하는 일련의 모든 과정이 CPU에서 일어남
