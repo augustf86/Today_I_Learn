@@ -105,7 +105,7 @@
   | Wargame 문제 | 분류 | 📌 풀이 |
   |------|----|----|
   | Textbook-DH | Diffie-Hellman 중간자 공격 | [Textbook-DH.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-DH.md) |
-  | Textbook-RSA | | [Textbook-RSA.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-RSA.md) |
+  | Textbook-RSA | RSA 선택 암호문 공격(CCA) | [Textbook-RSA.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-RSA.md) |
   - 🚩 암호학 워 게임 문제 사이트: [Dreamhack Wargame/crypto](https://dreamhack.io/wargame/challenges?tag=crypto&page=1&category=crypto)
 
 <br/><br/>
