@@ -1,6 +1,7 @@
 # Today I Learn
 
 ## Security
+
 ### 🌐 Web Hacking
 * Background
   - [Web, HTTP/HTTPS, Web Browser](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Web.md)
@@ -39,43 +40,6 @@
 
 <br/>
 
-* Wargame
-  | Wargame 문제 | 분류 | 📌 풀이 |
-  |------|----|----|
-  | devtools-sources | 브라우저 개발자 도구 | [devtools-sources.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/devtools-sources.md) |
-  | cookie | 쿠키 | [cookie.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/cookie.md) |
-  | session-basic | 세션 | [session-basic.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/session-basic.md) |
-  | xss-1 | Reflected XSS | [xss-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-1.md) |
-  | xss-2 | Reflected XSS | [xss-2.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-2.md) |
-  | csrf-1 | CSRF | [csrf-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/csrf-1.md) |
-  | csrf-2 | CSRF | [csrf-2.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/csrf-2.md) |
-  | simple_sqli | SQL Injection/Blind SQL Injection | [simple_sqli.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/simple_sqli.md) |
-  | Mango | Blind NoSQL Injection | [Mango.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Mango.md) |
-  | command-injection-1 | Command Injection | [command-injection-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/command-injection-1.md) |
-  | image-storage | File Upload Vulnerability | [image-storage.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/image-storage.md) |
-  | file-download-1 | File Download Vulnerability | [file-download-1.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/file-download-1.md) |
-  | web-ssrf | SSRF | [web-ssrf.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/web-ssrf.md) |
-  | Carve Party | 브라우저 개발자 도구 | [Carve Party.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Carve%20Party.md) |
-  | blind-command | Command Injection | [blind-command.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/blind-command.md) |
-  | blind sql injection advanced | Blind SQL Injection | [blind sql injection advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/blind%20sql%20injection%20advanced.md) |
-  | error based sql injection | SQL Injection | [error based sql injection.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/error%20based%20sql%20injection.md) |
-  | sql injection bypass WAF | SQL Injection | [sql injection bypass WAF.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF.md) |
-  | sql injection bypass WAF Advanced | Blind SQL Injection | [sql injection bypass WAF Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/sql%20injection%20bypass%20WAF%20Advanced.md) |
-  | NoSQL-CouchDB | NoSQL Injection (CouchDB) | [NoSQL-CouchDB.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/NoSQL-CouchDB.md) |
-  | phpMyRedis | NoSQL Injection (Redis) | [phpMyRedis.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/phpMyRedis.md) |
-  | Command Injection Advanced | Command Injection (PHP) | [Command Injection Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Command%20Injection%20Advanced.md)|
-  | File Vulnerability Advanced for linux | File Download Vulnerability <br/> (Path Traversal) | [File Vulnerability Advanced for linux.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/File%20Vulnerability%20Advanced%20for%20linux.md) |
-  | Apache htaccess | File Upload Vulnerability | [Apache htaccess.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Apache%20htaccess.md) |
-  | XSS Filtering Bypass | XSS 필터링(문자열 치환) 우회 | [XSS Filtering Bypass.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/XSS%20Filtering%20Bypass.md) |
-  | XSS Filtering Bypass Advanced | XSS 필터링 우회 | [XSS Filtering Bypass Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/XSS%20Filtering%20Bypass%20Advanced.md) |
-  | CSP Bypass | XSS_CSP 우회 | [CSP Bypass.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/CSP%20Bypass.md) |
-  | CSP Bypass Advanced | XSS_CSP 우회 <br/> (```base-uri``` 미지정) | [CSP Bypass Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/CSP%20Bypass%20Advanced.md) |
-  | CSRF Advanced | CSRF <br/> (CSRF Token 오용) | [CSRF Advanced.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/CSRF%20Advanced.md) |
-  | Client Side Template Injection | AngualrJS Template Injection | [Client Side Template Injection.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Client%20Side%20Template%20Injection.md) |
-  - 🚩 웹 해킹 워 게임 문제 사이트: [Dreamhack Wargame/Web](https://dreamhack.io/wargame/challenges?page=1&category=web)
-
-<br/>
-
 * WebGoat
   - [Practice: WebGoat](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Practice%3A%20WebGoat.md)
 
@@ -99,15 +63,6 @@
 * [해시(Hash)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/해시(Hash).md)
 * [전자 서명(Digital Signature)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Cryptography/전자%20서명(Digital%20Signature).md)
 
-<br/>
-
-* Wargame
-  | Wargame 문제 | 분류 | 📌 풀이 |
-  |------|----|----|
-  | Textbook-DH | Diffie-Hellman 중간자 공격 | [Textbook-DH.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-DH.md) |
-  | Textbook-RSA | RSA 선택 암호문 공격(CCA) | [Textbook-RSA.md](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-RSA.md) |
-  - 🚩 암호학 워 게임 문제 사이트: [Dreamhack Wargame/crypto](https://dreamhack.io/wargame/challenges?tag=crypto&page=1&category=crypto)
-
 <br/><br/>
 
 ### 🛠️ Reverse Engineering
@@ -118,6 +73,17 @@
   - [컴퓨터 구조(Computer Architecture)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Computer%20Architecture.md)
   - [윈도우 메모리 구조(Windows Memory Layout)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Windows%20Memory%20Layout.md)
   - x86 어셈블리 언어(x86 Assembly)
+
+<br/><br/>
+
+## Dreamhack Wargame List
+### Category: Web Hacking
+| 문제 | 분류 | 풀이 |
+|---|------|---|
+
+### Category: Cryptography
+| 문제 | 분류 | 풀이 |
+|---|------|---|
 
 <br/><br/>
 
