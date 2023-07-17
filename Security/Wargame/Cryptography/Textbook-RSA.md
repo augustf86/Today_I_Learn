@@ -90,3 +90,43 @@ while True:
 <br/><br/>
 
 ### 익스플로잇
+* 위의 코드를 참고하여 textbook_rsa_exploit.py를 작성하고 실행함
+    ```python
+    from pwn import *
+    from Crypto.Util.number import bytes_to_long, inverse, long_to_bytes
+
+    p = remote("host3.dreamhack.games", 13633) # url, port 정보는 드림핵 워게임 문제의 접속 정보를 확인
+
+    # GET Info 페이지에서 공개키 n, e와 암호화된 FLAG를 획득함
+    p.sendlineafter("info\n", "3")
+
+    p.recvuntil("N: ")
+    n = int(p.recvline()[:-1])
+
+    p.recvuntil("e: ")
+    e = int(p.recvline()[:-1])
+
+    p.recvuntil("FLAG: ")
+    flag_enc = int(p.recvline()[:-1])
+
+    print("N: " + str(n))
+    print("\ne: " + str(e))
+    print("\nFLAG_enc: " + str(flag_enc))
+
+    # RSA가 가지는 "곱셈에 대한 준동형사상" 성질을 이용하여 선택 암호문 공격을 수행함
+    # 취약점 분석에서 과정의 1번에 해당함
+    exploit = (pow(2, e) * flag_enc) % n
+
+    print("Exploit_flag: " + str(exploit))
+
+    # 취약점 분석에서 과정의 2번에 해당함
+    p.sendlineafter("info\n", "2")
+    p.sendlineafter("(hex): ", hex(exploit)[2:])
+
+    # 취약점 분석에서 과정의 3번에 해당함
+    flag = (int(p.recvline()[:-1])) // 2
+
+    print("Real flag: " + str(long_to_bytes(flag)))
+    ```
+    <br/>
+    <img width="1900" alt="익스플로잇 결과" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/0d767441-d179-4702-8753-60b9c6dee14f">
