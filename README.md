@@ -116,7 +116,8 @@
   - [바이너리(Binary)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Binary.md)
   - [정적 분석과 동적 분석](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/정적%20분석과%20동적%20분석.md)
   - [컴퓨터 구조(Computer Architecture)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Computer%20Architecture.md)
-  - 윈도우 메모리 구조(Windows Memory Layout)
+  - [윈도우 메모리 구조(Windows Memory Layout)](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Background/Windows%20Memory%20Layout.md)
+  - x86 어셈블리 언어(x86 Assembly)
 
 <br/><br/>
 
