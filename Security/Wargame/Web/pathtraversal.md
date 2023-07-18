@@ -108,3 +108,7 @@ get_info 페이지에서 이용자가 입력한 userid 값에 대해 어떠한 �
 
 <br/><br/>
 
+### 익스플로잇
+burp suite의 repeater 탭에서 Request의 userid 값을 ```../flag```로 변경한 후 [Send] 버튼을 클릭함 → 해당 Request에 대한 Response에서 플래그를 획득할 수 있음
+<br/><br/>
+<img width="2560" alt="익스플로잇" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/91924eb1-312e-4639-a82d-c61cfba81825">
