@@ -7,6 +7,9 @@
 ## 문제 풀이
 ### 문제 사이트 분석
 문제 사이트에 접속해보면 이미지들이 빠른 속도로 이동하는 것을 확인할 수 있음
+<br/><br/>
+<img width="1000" alt="문제 사이트 분석" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/79a102e0-ca7f-4834-afca-ae28b12aaea5"><br/>
+
 * 개발자 도구의 Elements 탭에서 javascript 코드를 살펴본 결과 ```anim()``` 함수를 이용해 무작위로 위치를 변경하고 있음을 알 수 있음
     ```html
     <script type="text/javascript">
@@ -43,3 +46,14 @@
 <br/><br/>
 
 ### 익스플로잇
+1. 브라우저 개발자 도구의 Console 탭에서 아래의 자바스크립트 코드를 입력함
+    ```javascript
+    for (var i = 0; i < 20; i++) {
+        anim(img[i], 0, 1); // dis의 인자로 1을 주어 랜덤한 거리를 이동하는 게 아니라 1씩 이동하게 만듦
+    }
+    ```
+
+<br/>
+
+2. 해당 자바스크립트 코드를 실행하면 이미지 파일이 위에서부터 순서대로 한 열에 출력되며 해당 열 전체가 한꺼번에 움직이고 있는 것을 확인할 수 있음 <br/> &nbsp;&nbsp;&nbsp;&nbsp; → 이를 캡쳐하여 문제의 설명에서 나온 조건에 맞게 하나씩 조합하면 FLAG(```DH{...}```)를 획득할 수 있음
+   <br/><br/><img width="1000" alt="플래그 획득" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/534a5809-a17e-432f-9fb1-d729a8632e9e"><br/>
