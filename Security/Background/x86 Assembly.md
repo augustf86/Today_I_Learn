@@ -64,6 +64,35 @@
 <br/><br/>
 
 ## x86-64 어셈블리 명령어(opcode)
+### 데이터 이동 명령어
+어떤 값을 레지스터나 메모리 옮기도록 지시하는 명령어
+* 데이터 이동 명령어의 종류
+    | 명령어 형식 | 설명 |
+    |---|------|
+    | ```mov dst, src``` | src에 들어있는 값을 dst에 대입함 |
+    | ```lea dst, src``` | src의 유효 주소(Effective Address, EA)를 dst에 저장함 |
+* 📝 예제: 데이터 이동
+  <br/><br/>
+  <img width="2560" alt="데이터 이동 명령어 예시" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/5f59deb1-96b6-4fb2-8c73-e1cc458d6b81"><br/>
+
+<br/>
+
+### 산술 연산 명령어
+덧셈, 뺄셈, 곱셈, 나눗셈 연산을 지시하는 명령어
+* 산술 연산 명령어의 종류
+    | 명령어 형식 | 설명 |
+    |---|------|
+    | ```add dst, src``` | dst에 src의 값을 더함 (→ ```dst += src```) |
+    | ```sub dst, src``` | dst에 src의 값을 뺌 (→ ```dst -= src```) |
+    | ```inc op``` | op의 값을 1 증가시킴 (→ ```op += 1```) |
+    | ```dec op``` | op의 값을 1 감소시킴 (→ ```op -= 1```) |
+* 📝 예제: 덧셈과 뺄셈
+  <br/><br/>
+  <img width="2560" alt="산술 연산 명령어 예시" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/638136c2-96da-4158-ad76-fbe88464292b"><br/>
+
+<br/>
+
+### 논리 연산 명령어
 
 <br/><br/><br/><br/>
 ### 🔖 출처
