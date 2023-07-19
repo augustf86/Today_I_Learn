@@ -93,6 +93,25 @@
 <br/>
 
 ### 논리 연산 명령어
+and, or, nor, neg 등의 비트 연산을 지시하는 명령어
+* 논리 연산 명령어의 종류
+    | 명령어 형식 | 설명 |
+    |---|------|
+    | ```and dst, src``` | dst와 src의 비트가 모두 1이면 1, 아니면 0 |
+    | ```or dst, src``` | dst와 src의 비트 중 하나라도 1이면 1, 아니면 0 |
+    | ```xor dst, src``` | dst와 src의 비트가 서로 다르면 1, 같으면 0 |
+    | ```not op``` | op의 비트 전부 반전 |
+    - 논리 연산은 **비트 단위로 이루어 짐**
+* 📝 예제: 논리 연산
+  <br/><br/>
+  <img width="2560" alt="논리 연산 명령어 예시(and, or)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/574f5a0d-0439-4fa0-841f-a2b9cafe741b">
+  <img width="2560" alt="논리 연산 명령어 예시 (xor, not)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f79761db-3933-403f-89ca-0c28d42efc73">
+  <img width="2560" alt="논리 연산 명령어 예시 (xor, not) 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/12ffa383-7c14-411a-966c-4d8b25abb875"><br/>
+
+<br/>
+
+### 비교 명령어
+
 
 <br/><br/><br/><br/>
 ### 🔖 출처
