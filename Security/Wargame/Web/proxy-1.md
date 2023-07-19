@@ -78,3 +78,24 @@ app.run(host='0.0.0.0', port=8000) # 플라스크에서 8000번 포트로 실행
 <br/><br/>
 
 ## 문제 풀이
+### 취약점 분석
+socket 페이지에서 이용자의 입력값에 대한 어떠한 검증도 하지 않고 입력받은 host와 port로 연결을 생성하고 data를 전송함
+* 문제 사이트의 host(```127.0.0.1```)과 port(```8000```)를 입력하고 Data에 Request 패킷을 작성하여 [Send] 버튼을 누르면 Request가 전송되고 그에 대한 응답을 화면에서 확인할 수 있음
+    - /admin에는 POST 메소드만 허용되며, 코드의 5개 조건을 모두 만족해야 FLAG를 획득할 수 있음
+        + 조건에 따른 헤더와 body 값
+            | 조건 | Data 내 포함되어야 하는 값 |
+            |---|------|
+            | 1번 조건 | Host: 127.0.0.1 |
+            | 2번 조건 | User-Agent: Admin Browser |
+            | 3번 조건 | DreamhackUser: admin |
+            | 4번 조건 | Cookie: admin=true |
+            | 5번 조건 | userid=admin <br/> → ⚠️ POST 요청의 Body는 헤더와 빈 줄 하나로 구분됨에 주의 |
+        + ⚠️ POST 메소드로 요청 시 반드시 포함해야 하는 헤더들
+            | 헤더 | 설명 |
+            |---|------|
+            | ```Content-Type``` | POST 요청의 Body 내 데이터에 대한 타입을 해당 헤더의 값으로 명시해주어야 함 <br/> &nbsp;&nbsp; - ```userid=admin```은 ```key1=value1&key2=value2```의 형식임 <br/> &nbsp;&nbsp;&nbsp;&nbsp; → ```application/x-www-form-urlencoded```를 헤더의 값으로 주어야 함 |
+            | ```Content-Length``` | POST 요청의 Body 데이터의 길이를 해당 헤더의 값으로 명시해주어야 함 <br/> &nbsp;&nbsp; - ```userid=admin```의 길이는 ```12```이므로 헤더의 값은 ```12```가 됨 |
+
+<br/><br/>
+
+### 익스플로잇
