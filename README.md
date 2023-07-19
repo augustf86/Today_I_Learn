@@ -112,6 +112,7 @@
 | Client Side Template Injection | AngularJS Template Injection | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Client%20Side%20Template%20Injection.md) |
 | Flying Chars | 브라우저 개발자 도구 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Flying%20Chars.md) |
 | pathtraversal | Path Traversal (입력값 검증 미흡) | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/pathtraversal.md) |
+| proxy-1 | HTTP POST 메소드 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/proxy-1.md) |
 
 ### Category: *Cryptography*
 | 문제 | 분류 | 풀이 |
