@@ -124,7 +124,22 @@ and, or, nor, neg 등의 비트 연산을 지시하는 명령어
 <br/>
 
 ### 분기 명령어
+rip를 이동시켜 실행 흐름을 바꾸는 명령어
+* 분기 명령어의 종류
+    | 명령어 형식 | 설명 |
+    |---|------|
+    | ```jmp addr``` | addr로 rip를 이동시킴 |
+    | ```je addr``` | 직전에 비교한 두 피연산자가 같으면 점프 (jump if equal) |
+    | ```jg addr``` | 직전에 비교한 두 연산자 중 전자가 더 크면 점프 (jump if greater) |
+    - ⚠️ 분기문은 굉장히 많은 경우의 수를 가지고 있음 → 전부 다르기 보다는 실제 코드를 분석하면서 감을 익혀나가는 것이 중요함
+* 📝 예제: 분기
+  <br/><br/>
+  <img width="2560" alt="분기 명령어 예시 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/63bbdb73-6253-4cbb-891e-7285796604a1">
+  <img width="2560" alt="분기 명령어 예시 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/97ff995a-272b-4d93-8f9b-c4603701ff9a"><br/>
 
+<br/>
+
+### 스택 명령어
 
 
 <br/><br/><br/><br/>
