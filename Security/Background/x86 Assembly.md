@@ -211,6 +211,8 @@ rip를 이동시켜 실행 흐름을 바꾸는 명령어
     | connect | 0x2a | int sockfd | struct sockaddr *addr | int addrlen |
     | execve | 0x3b | const char *filename | const char *const *argv | const char *const *envp |
 * 📝 예제: 시스템 콜
+  <br/><br/>
+  <img width="2560" alt="시스템 콜 예제 " src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f5b64a43-384b-4dc4-a22c-0bfa9ccfa0a6"><br/>
 
 <br/>
 
