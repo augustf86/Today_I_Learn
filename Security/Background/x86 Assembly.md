@@ -140,6 +140,20 @@ rip를 이동시켜 실행 흐름을 바꾸는 명령어
 <br/>
 
 ### 스택 명령어
+운영체제의 핵심 자료구조인 스택(Stack)을 조작할 수 있는 명령어
+* 스택 명령어의 종류
+    | 명령어 형식 | 설명 |
+    |---|------|
+    | ```push val``` | val를 스택 최상단에 쌓음 |
+    | ```pop reg``` | 스택 최상단의 값을 꺼내서 reg에 대입 |
+* 📝 예제: 스택
+  <br/><br/>
+  <img width="2560" alt="스택 명령어 예시 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/5d1cfaa4-749a-4e96-84e2-5b8e848efbb3">
+  <img width="2560" alt="스택 명령어 예시 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/80733758-37d2-4c05-b000-ada4d4778aa6"><br/>
+
+<br/>
+
+### 프로시저 명령어
 
 
 <br/><br/><br/><br/>
