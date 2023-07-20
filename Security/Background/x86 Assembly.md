@@ -174,6 +174,10 @@ rip를 이동시켜 실행 흐름을 바꾸는 명령어
     - ❓ **스택프레임**을 사용하는 이유: 아래와 같은 문제를 막고, **함수별로 서로가 사용하는 스택의 영역을 구분**하기 위해 사용함
         - 스택 = 함수별로 자신의 지역변수 또는 연산 과정에서 부차적으로 생겨나는 임시 값들을 저장하는 영역 <br/> &nbsp;&nbsp; → 스택 영역을 아무런 구분 없이 사용할 경우 서로 다른 두 함수가 같은 메모리 영역을 공유하여 정상적인 연산을 수행할 수 없게 됨
 * 📝 예제: 프로시저
+  <br/><br/>
+  <img width="2560" alt="프로시저 예제 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4bae4b32-cba8-4f7d-a84c-cf6e24280820">
+  <img width="2560" alt="프로시저 예제 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ae9840cc-80fb-42e2-a8a7-6746ce08aa1d">
+  <img width="2560" alt="프로시저 예제 3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3678bd28-3d41-4cd3-a061-6a1f4c594734"><br/>
 
 <br/>
 
