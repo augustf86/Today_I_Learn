@@ -78,3 +78,11 @@ if __name__ == '__main__':
 <br/><br/>
 
 ## 문제 풀이
+### 취약점 분석
+제일 아래의 코드를 보면 admin의 Session ID를 1바이트의 hex 값으로 설정하고 있음 (```session_storage[os.urandom(1).hex(1)] = 'admin```)
+* 1바이트의 값의 전체 가짓수는 $2^8 = 256$이므로 해당 값을 무작위 대입하여 admin 계정으로 로그인할 수 있음
+    - 무작위 대입을 위해 **Burp Suite의 Intruder 기능**을 사용함 ← Intruder 기능 사용 방법은 Tools: Burp Suite [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Tools%3A%20Burp%20Suite.md)를 참고
+
+<br/><br/>
+
+### 익스플로잇
