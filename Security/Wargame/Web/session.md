@@ -86,3 +86,18 @@ if __name__ == '__main__':
 <br/><br/>
 
 ### 익스플로잇
+1. Burp Suite의 Target 탭에서 /login 페이지에서 guest 계정으로 로그인한 후 인덱스 페이지로 이동하는 Request를 Intruder로 복사함
+   <br/><br/>
+   <img width="1512" alt="익스플로잇 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/bd7e2137-b350-455a-8513-4c19532822cc"><br/>
+   
+    - 해당 Request의 Cookie 헤더에서 브루트 포싱할 부분인 ```Cookie: sessionid=...```의 value를 ```$```로 묶음
+
+<br/>
+
+2. Payload 타입을 Brute forcer로 설정하고, 브루트 포싱을 수행할 문자의 집합을 hex 값으로 설정한 후 [Start attack]를 클릭함
+   <br/><br/>
+   <img width="1512" alt="익스플로잇2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/491b42e9-6372-4f30-ba07-829d2430e278"><br/>
+   
+    - Response 중에서 Length의 값이 다른 하나를 찾으면 해당 Response에서 플래그를 획득할 수 있음
+
+
