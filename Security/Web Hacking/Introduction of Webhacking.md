@@ -338,3 +338,17 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/><br/>
 
 ### Cookie & Session
+* HTTP → 하나의 Request와 Response의 쌍이 독립적으로 구성되어 통신하는 <U>connectionless, stateless 프로토콜</U>
+    | HTTP 속성 | 설명 |
+    |:---:|------|
+    | ***connectionless*** 속성 | 하나의 요청에 하나의 응답을 한 후 네트워크 연결을 끝맺는 것 <br/> &nbsp;&nbsp; - 새 요청이 있을 때마다 항상 새로운 연결을 맺는다는 것을 의미함 <br/> &nbsp;&nbsp; - 불특정 다수의 사용자에게 서비스되어야 하는 웹의 특성상 계속해서 연결상태를 유지하는 것은 <br/> &nbsp;&nbsp;&nbsp;&nbsp; 서버 부하로 이어질 수 있기 때문에 connectionless 속성을 가지게 됨 |
+    | ***stateless*** 속성 | 네트워크가 연결이 끝맺을 때 상태를 유지하지 않는 것 (통신이 끝난 후 상태 정보를 저장하지 않음) <br/> &nbsp;&nbsp; - 이전 통신에서 사용한 데이터를 다른 통신에서 요구할 수 없음을 의미함 <br/> &nbsp;&nbsp; - HTTP 요청마다 새로운 커넥션을 열기 때문에 사용자 인증을 계속해서 해야 한다는 단점이 있음 |
+    + HTTP의 속성에 따른 단점 해결 방법
+        | HTTP 속성 | 해결 방법 |
+        |:---:|------|
+        | connectionless 속성 | 최근에는 네트워크, 서버 등의 성능 향상으로 HTTP/1.1부터 **Keep-Alive**를 통해서 <U>일정 시간 동안 <br/>사용자와 서버가 계속 연결을 맺고 있는 방식</U>을 사용함 |
+        | stateless 속성 | 상태를 유지하기 위한 **쿠키**(cookie)를 도입함 |
+
+<br/>
+
+* 쿠키(Cookie)
