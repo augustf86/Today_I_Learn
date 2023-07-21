@@ -254,6 +254,9 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/>
 
 * HTTP Request (서버에 대한 요청)
+  <br/><br/>
+  <img width="2559" alt="HTTP Request" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/5a5b5ee4-ba25-4904-9943-1a3fca0afb2b"><br/>
+
     - 구성 요소
         | 구성 | 설명 |
         |:---:|------|
@@ -288,6 +291,9 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/>
 
 * HTTP Response (사용자의 요청에 대한 서버의 응답)
+  <br/><br/>
+  <img width="2560" alt="HTTP Response" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/1785b50e-4e4a-488b-93ae-5502173b1251"><br/>
+
     - 구성 요소
         | 구성 | 설명 |
         |:---:|------|
@@ -319,6 +325,9 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/>
 
 * HTTP와 HTTPS의 비교
+  <br/><br/>
+  <img width="2560" alt="HTTP, HTTPS 비교" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/6a925969-4636-4b49-bc15-fbd1d0e14b12"><br/>
+  
     | | 설명 |
     |:---:|------|
     | HTTP | ***Hyper Text Transfer Protocol*** → 📌 HTTP 사용 시 웹 서버의 URL이 ```http://```로 시작함 <br/> 📌 <U>TCP를 전송 프로토콜로 사용해 통신하며, 기본 포트로 80을 사용함</U> <br/> 네트워크 상에서 모든 데이터를 암호화되지 않은 평문으로 통신을 함 <br/> &nbsp;&nbsp; - 상위 네트워크 장비나 같은 네트워크 상의 MITM 공격 등으로 인해 통신이 노출될 경우 평문 정보가 그대로 노출됨 <br/> &nbsp;&nbsp;&nbsp;&nbsp; → 민감한 정보가 노출되어 심각한 위험을 초래할 수 있음 |
