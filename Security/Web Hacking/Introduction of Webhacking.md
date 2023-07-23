@@ -391,3 +391,27 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/><br/>
 
 ### Domain Name / Host Name
+* URI의 구성 요소 중 Host → **웹 브라우저가 어디에 연결할지** 정함
+    - Domain Name과 IP Address의 값을 가질 수 있음
+        | | 설명 |
+        |:---:|------|
+        | IP Address | 네트워크 상에서 통신이 이루어질 때 장치를 식별하기 위해 사용되는 주소 <br/> &nbsp;&nbsp; - IPv4의 경우 32비트 값을, IPv6의 경우 128비트의 값을 가지며 불규칙한 숫자로 이루어져 있음 |
+        | Domain Name | 도메인의 특성을 담은 이름 |
+    - 📌 사람이 외우기 쉽고 의미를 부여하기 위해 일반적으로 Domain Name을 IP Address 대신 사용함
+
+<br/>
+
+* Domain Name
+    - Domain Name 사용 시 Host 조회 방법
+        | 순서 | 설명 |
+        |:---:|------|
+        | 01 | 브라우저는 입력받은 Domain Name을 DNS(Domain Name Server)에 질의함 |
+        | 02 | DNS는 해당 Domain Name에 대한 IP Address 정보를 브라우저에게 전달함 |
+        | 03 | 브라우저는 전달 받은 IP Address를 사용해 통신함 |
+        + **Domain Name Server** (DNS): Domain Name과 IP Address 정보를 매핑하여 저장함
+    - Domain Name 정보를 확인하는 방법
+        - MacOS, Linux, Windows 모두 ```nslookup``` 명령어를 사용하여 확인할 수 있음
+
+<br/><br/>
+
+### 웹 서버 어플리케이션
