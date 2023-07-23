@@ -415,6 +415,8 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/><br/>
 
 ### 웹 서버 어플리케이션
+<img width="2560" alt="웹 서버 어플리케이션" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/5b65938c-13cb-4887-a799-c4d2e81f02ec"><br/>
+
 * Web Server (웹 서버)
     - 사용자의 HTTP 요청을 해석하여 처리한 후 응답하여 주는 역할을 함
         + 사용자로부터 받는 역할을 자체적으로 처리할지, 들어온 요청에 알맞은 내부 서비스로 연결할지를 정할 수 있음
@@ -442,7 +444,7 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
         | | 설명 |
         |:---:|------|
         | 데이터베이스 | 해당 어플리케이션에서 관리하는 데이터 <br/> &nbsp;&nbsp; - 사용자의 인증, 상품, 문서 등 **중요한 개인 정보가 포함된** 여러 가지 내용이 존재함 → 보안에 각별히 신경써야 함 <br/> &nbsp;&nbsp; - 주로 많은 수의 데이터를 저장하거나 데이터 변경이 자주 일어나는 업무에 사용함 |
-        | DBMS | MySQL, MS-SQL 등과 같이 데이터베이스의 내용을 조회﹒수정﹒삽입하기 위해 DBMS를 사용함 <br/> &nbsp;&nbsp; - RDBMS와 NRDBMS으로 그 종류가 나뉘며, 사용자의 입력값을 필터링 없이 사용할 경우 SQL/NoSQL Injection 공격에 노출됨 |
+        | DBMS | MySQL, MS-SQL 등과 같이 데이터베이스의 내용을 조회﹒수정﹒삽입하기 위해 DBMS를 사용함 <br/> &nbsp;&nbsp; - RDBMS와 NRDBMS으로 그 종류가 나뉘며, 사용자의 입력값을 필터링 없이 사용할 경우 SQL/NoSQL Injection 공격에 <br/> &nbsp;&nbsp;&nbsp;&nbsp; 노출됨 |
 
 <br/><br/><br/>
 
