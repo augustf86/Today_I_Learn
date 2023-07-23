@@ -470,3 +470,17 @@ URI의 구성 요소 중 Scheme(Protocol)에 해당함
 <br/><br/>
 
 ### 웹 해킹 공격 벡터
+* 웹 접속 시 발생하는 과정
+  <br/><br/>
+  <img width="1509" alt="사용자가 웹 사이트 접속 시 발생하는 과정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2cbeb359-fd50-45c1-abf5-d77baa47d23e"><br/>
+    - 사용자의 입력을 받고 웹 사이트와 통신을 하는 **Client Side**
+    - 사용자의 요청을 처리하는 **Server-Side**
+
+<br/>
+
+* 웹 해킹을 수행할 때도 Client-side, Server-side로 공격 대상을 나누어 볼 수 있음
+    | 공격 대상에 따른 공격 분류 | 설명 |
+    |:---:|------|
+    | Client-side <br/> Attack | 서비스 사용자에 대한 공격 <br/> - 웹 서버가 제공해주는 데이터가 공격자에 의해 변조되었을 경우 웹 브라우저에서 랜더되는 과정에서 취약점이 발생하는 경우가 대표적임 <br/> &nbsp;&nbsp; <U>EX: 게시판 서비스</U> <br/> &nbsp;&nbsp;&nbsp;&nbsp; - **사용자의 입력을 특별한 검증 없이 출력**하게 되면 사용자의 입력도 html처럼 취급됨 → 스크립트 또한 삽입할 수 있음 <br/> &nbsp;&nbsp;&nbsp;&nbsp; - 공격자는 스크립트를 삽입하여 다른 사용자의 웹 브라우저에서 원하는 행위를 수행할 수 있음 <br/> - 자세한 사항은 [🔗 Web Hacking: Client-Side Basic]()을 참고 |
+    | Server-side <br/> Attack | 서비스를 운용하는 서버에 대한 공격 <br/> - 운영되는 서비스의 구조와 특징에 따라 위협의 형태가 달라짐 (*= 다양한 공격의 형태가 존재함*) <br/> &nbsp;&nbsp; - 공격자가 공격에 성공하게 되면 서버의 어플리케이션 코드 또는 다른 사용자의 정보 유출, 서버 탈취 등으로 이어질 수 있음 <br/> - 서비스의 형태에 따라 가지게 되는 특별한 공격 방법이 존재할 수도 있음 <br/> &nbsp;&nbsp; <U>EX: 송금 기능을 지원하는 서비스</U> <br/> &nbsp;&nbsp;&nbsp;&nbsp; - 자신이 가진 금액보다 더 큰 금액으로 요청할 때 특별한 검증 절차 없이 기능이 수행된다면 공격자는 금전적인 이득을 취할 수 있음 <br/> - 자세한 내용은 [🔗 Web Hacking: Server-Side Basic]()을 참고 |
+
