@@ -113,14 +113,18 @@ if __name__ == '__main__':
 <br/><br/>
 
 ## 문제 풀이 (익스플로잇)
-1. guest 계정으로 로그인을 수행하여, 크롬 개발자 도구의 Application 탭의 Cookies 항목에 session_id를 생성함
-    <img width="1033" alt="session-basic_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2d53bda3-b6b1-44c7-a229-ff66e179fb72">
+1. login 페이지에서 guest 계정으로 로그인을 수행하여, 크롬 개발자 도구의 Application 탭의 Cookies 항목에 sessionid를 생성함
+   <br/><br/>
+   <img width="1512" alt="session-basic_문제 풀이 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/80a3dcff-7341-4039-b4ad-ac57d6e82d8d">
 
-2. 다음과 같이 주소를 입력하여 /admin 페이지로 이동함
-	- 화면에서 “admin”을 값으로 갖는 session_id 정보를 획득할 수 있음 → 이 값을 복사하여 인덱스 페이지로 이동함
-    <img width="1077" alt="session-basic_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/db6841de-83d5-4452-a86a-f2c5ceffd960">
+<br/>
 
-3. 인덱스 페이지의 Application 탭에서 session_id의 Value를 복사한 값으로 바꾼 후 페이지를 새로고침함
-    <img width="1077" alt="session-basic_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3a820a4d-2016-40f4-9462-d4b56c6a72b0">
-4. admin으로 로그인에 성공하여 flag를 획득할 수 있음
-    <img width="1077" alt="session-basic_4" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/6b90df63-ebed-4f55-8813-00a7efb99869">
+2. /admin 페이지로 이동하여 "admin"을 Value로 하는 sessionid를 찾고 이를 복사하여 이전 페이지(1번의 인덱스 페이지)로 이동함
+   <br/><br/>
+   <img width="1512" alt="session-basic_문제 풀이 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/43ee3c0d-83c9-4bd7-9b4f-b586b913d215">
+
+<br/>
+
+3. 인덱스 페이지의 개발자 도구 화면에서 sessionid의 Value를 2번에서 복사한 admin의 sessionid로 바꾼 후 페이지를 새로고침하면 admin 계정으로 로그인에 성공하여 FLAG를 획득할 수 있음
+   <br/><br/>
+   <img width="1512" alt="session-basic_문제 풀이 3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/fe0a0498-1a97-4509-996b-dece881dcd35">
