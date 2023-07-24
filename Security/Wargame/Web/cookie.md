@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] cookie
-### [🚩 cookie](https://dreamhack.io/wargame/challenges/6/)
-<img width="1072" alt="cookie_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9f6291e6-c928-4f11-a094-390d2725804f">
+* 출처: 🚩 cookie [🔗](https://dreamhack.io/wargame/challenges/6/)
+* Reference: 쿠키(Cookie)
+* 문제 설명
+  <br/><br/>
+  <img width="1072" alt="cookie_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9f6291e6-c928-4f11-a094-390d2725804f">
 
 <br/><br/>
 
-## 문제 파일(app.py)
+## 문제 파일(app.py) 및 취약점 분석
 ```python
 #!/usr/bin/python3
 from flask import Flask, request, render_template, make_response, redirect, url_for
@@ -63,18 +66,13 @@ def login():
 
 app.run(host='0.0.0.0', port=8000)
 ```
+* login 페이지에서 쿠키를 생성할 때 쿠키의 값으로 이용자가 입력한 ```username``` 값을 이용함 <br/> &nbsp;&nbsp; → 인덱스 페이지에서 ```username``` 변수의 값이 이용자가 전송한 요청에 포함된 쿠키에 의해서 결정됨
+    - 클라이언트에 저장되고 클라이언트의 요청에 포함되는 쿠키의 특성 상 <U>이용자가 임의로 쿠키를 조작할 수 있음</U>
+    - 서버는 쿠키에 대한 검증 과정 없이 이용자의 요청에 포함된 쿠키를 신뢰하고 이를 통해 이용자 인증 정보를 식별하고 있음 <br/> &nbsp;&nbsp; ⇒ ***쿠키의 ```username```의 값을 "admin" 문자열로 조작하면 FLAG를 획득할 수 있음***
 
 <br/><br/>
 
-## 문제 풀이
-### 취약점이 존재하는 코드
-인덱스 페이지에서 이용자가 전송한 쿠키의 ```username``` 변수가 요청에 포함된 쿠키에 의해 결정되는 부분을 통해 공격할 수 있음
-* 쿠키는 클라이언트에 보관되고 클라이언트의 요청에 포함되는 정보 → **이용자가 임의로 조작할 수 있음**
-* 서버는 쿠키에 대한 검증 과정 없이 이용자의 요청에 포함된 쿠키를 신뢰하고 이를 통해 이용자 인증 정보를 식별하고 있음 → 쿠키의 ```username``` 값을 “admin” 문자열로 조작하면 공격 가능
-
-<br/>
-
-### 익스플로잇
+## 문제 풀이 (익스플로잇)
 1. 패스워드를 알고 있는 guest 계정으로 먼저 로그인을 진행함<br/>
     <img width="1157" alt="cookie_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3bccf8a9-3694-4a03-8333-14f7cce6a7ca">
     <img width="1157" alt="cookie_1-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e0227816-0e96-4364-b16f-63e212bcfeab">
