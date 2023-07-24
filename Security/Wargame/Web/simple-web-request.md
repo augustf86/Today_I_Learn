@@ -110,3 +110,28 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ## 문제 풀이
+1. step1 페이지에서 param의 입력값으로 ```getget```을, param2의 입력값으로 ```rerequest```를 입력한 후 [제출] 버튼을 클릭함
+   <br/><br/>
+   <img width="1512" alt="simple-web-request_문제 풀이 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/0fb0129e-e5d2-4c08-ab3d-77c8c0ca0165"><br/><br/>
+    - ```step1()``` 함수 부분을 보면 아래와 같은 조건을 만족해야 step2 페이지로 넘어갈 수 있음
+        ```python
+        if prm1 == "getget" and prm2 == "rerequest": # if문 조건을 만족해야 아래의 return문이 실행되어 step2 페이지로 이동함
+            return redirect(url_for("step2", prev_step_num = step1_num))
+        ```
+
+<br/>
+
+2. step2 페이지에서 param의 입력값으로 ```pooost```를, param2의 입력값으로 ```requeeest```를 입력한 후 [제출] 버튼을 클릭함
+   <br/><br/>
+   <img width="1512" alt="simple-web-request_문제 풀이 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/7a398cc6-1fd1-4da5-be06-aaf69674aeae"><br/><br/>
+    - ```flag()``` 함수 부분을 보면 아래와 같은 조건을 만족해야 flag.html에 FLAG를 출력함을 알 수 있음
+        ```python
+        if prm1 == "pooost" and prm2 == "requeeest": # if문의 조건을 만족해야 아래의 return문이 실행되어 flag 페이지에서 flag 획득 가능
+            return render_template("flag.html", flag_txt=FLAG)
+        ```
+
+<br/>
+
+3. step2 페이지에서 flag 페이지로 이동하여 아래와 같이 화면에 출력된 플래그를 획득할 수 있음
+   <br/><br/>
+   <img width="1512" alt="simple-web-request_문제 풀이 3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ec7a03e3-1f54-4565-a7d3-9e5850c94e57"><br/><br/>
