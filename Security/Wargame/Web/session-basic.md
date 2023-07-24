@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] session-basic
-### [🚩session-basic](https://dreamhack.io/wargame/challenges/409/)
-<img width="1071" alt="session-basic_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e4c24a1c-cb52-4677-a79b-c4c2726d4a63">
+* 출처: 🚩 session-basic [🔗](https://dreamhack.io/wargame/challenges/409/)
+* Referece: 세션(session)
+* 문제 설명
+  <br/><br/>
+  <img width="1071" alt="session-basic_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e4c24a1c-cb52-4677-a79b-c4c2726d4a63">
 
 <br/><br/>
 
-## 문제 파일(app.py) 분석
+## 문제 파일(app.py 및 취약점 분석
 ```python
 #!/usr/bin/python3
 from flask import Flask, request, render_template, make_response, redirect, url_for
@@ -98,22 +101,18 @@ if __name__ == '__main__':
     print(session_storage)
     app.run(host='0.0.0.0', port=8000)
 ```
+* ***cookie*** 문제와 ***session-basic*** 문제 비교
+  | 문제 | 비교 설명 |
+  |:---:|------|
+  | 🚩 cookie | 쿠키의 값으로 이용자가 입력한 ```username```을 이용함 <br/> &nbsp;&nbsp; → 인덱스 페이지에서 ```username```변수의 값이 이용자가 전송한 요청에 포함된 쿠키에 의해서 결정됨 <br/> &nbsp;&nbsp; ⇒ 이용자가 전송한 요청에 포함된 쿠키의 값을 "admin" 문자열로 변조해야 함 |
+  | 🚩 session-basic | 쿠키의 값으로 이용자가 입력한 ```username``` 값 대신에 랜덤으로 생성된 ```session_id```를 이용함 <br/> &nbsp;&nbsp; → 인덱스 페이지에서 ```username``` 변수 값이 session_storage 내에서 ```session_id```를 키로 하는 값에 의해 결정됨 <br/> &nbsp;&nbsp; ⇒ admin을 값으로 하는 키 값(admin의 session_id)으로 이용자가 전송한 요청에 포함된 쿠키를 변조해야 함 |
+  - 문제 파일을 살펴보면 <U>사이트에 처음 접속할 때 admin의 session_id를 session_storage에 삽입</U>하고, <U>admin 페이지에 접속하면 session_storage를 출력</U>한다는 것을 확인할 수 있음
+	+ 사이트에 접속한 다음 /admin 페이지로 이동하면 admin 계정의 session_id를 획득할 수 있음
 
 
 <br/><br/>
 
-## 문제 풀이
-### 취약점이 존재하는 코드
-* Cookie 문제와 session-basic 문제의 비교
-	- Cookie 문제에서는 인덱스 페이지에서 이용자가 전송한 쿠키의 ```username``` 변수가 요청에 포함된 쿠키에 의해서 결정되었음
-	- session-basic 문제에서는 쿠키에 ```username``` 대신에 랜덤으로 생성된 ```session_id```가 사용됨
-		+ guest 계정으로 로그인한 후 크롬 개발자 도구의 Application 탭에서 Cookies 목록을 확인하면 session_id가 생성된 것을 확인할 수 있음
-* 문제 파일을 살펴보면 **사이트에 처음 접속할 때 admin의 session_id를 session_storage에 삽입하고, admin 페이지에 접속하면 session_storage를 출력한다는 것을 확인할 수 있음**
-	- admin 페이지로 이동하면 admin 계정의 session_id를 획득할 수 있으므로 이 부분을 통해 공격할 수 있음
-
-<br/>
-
-### 익스플로잇
+## 문제 풀이 (익스플로잇)
 1. guest 계정으로 로그인을 수행하여, 크롬 개발자 도구의 Application 탭의 Cookies 항목에 session_id를 생성함
     <img width="1033" alt="session-basic_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/2d53bda3-b6b1-44c7-a229-ff66e179fb72">
 
