@@ -88,6 +88,7 @@
 | | | Cookie/Session | cookie | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/cookie.md) |
 | | | | session-basic | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/session-basic.md) |
 | | | | session | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/session.md) |
+| | | X (*분류 없음*) | simple-web-request | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/simple-web-request.md) |
 | ***Web Hacking*** | Client-side | XSS (Cross Site Scripting) | xss-1 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-1.md) |
 | | | | xss-2 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/xss-2.md) |
 | | | | XSS Filtering Bypass | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/XSS%20Filtering%20Bypass.md) |
