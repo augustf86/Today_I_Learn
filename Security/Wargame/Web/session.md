@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] session
-### [🚩session](https://dreamhack.io/wargame/challenges/266/)
-<img width="1068" alt="session_문제 설명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/73a862ae-0d30-4175-a9d9-483b68e42e54">
+* 출처: 🚩 session [🔗](https://dreamhack.io/wargame/challenges/266/)
+* Reference: 세션(session)
+* 문제 설명
+  <br/><br/>
+  <img width="1068" alt="session_문제 설명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/73a862ae-0d30-4175-a9d9-483b68e42e54">
 
 <br/><br/>
 
-## 문제 파일(app.py) 분석
+## 문제 파일(app.py) 및 취약점 분석
 ```python
 #!/usr/bin/python3
 from flask import Flask, request, render_template, make_response, redirect, url_for
@@ -74,18 +77,13 @@ if __name__ == '__main__':
     print(session_storage)
     app.run(host='0.0.0.0', port=8000)
 ```
+* 코드 하단을 보면 admin의 Session ID를 1바이트의 hex 값으로 설정하고 있음 (```session_storage[os.urandom(1).hex()] = 'admin')```)
+    - 1바이트의 값의 전체 가짓수는 $2^8 = 256$이므로 256가지의 값을 무작위 대입(Brute Force)하여 admin 계정으로 로그인할 수 있음
+        + 무작위 대입을 위해 **Burp Suite의 Intruder 기능**을 사용함 (Intruder 기능 사용 방법은 Tools: Burp Suite [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Tools%3A%20Burp%20Suite.md)를 참고)
 
 <br/><br/>
 
-## 문제 풀이
-### 취약점 분석
-제일 아래의 코드를 보면 admin의 Session ID를 1바이트의 hex 값으로 설정하고 있음 (```session_storage[os.urandom(1).hex(1)] = 'admin```)
-* 1바이트의 값의 전체 가짓수는 $2^8 = 256$이므로 해당 값을 무작위 대입하여 admin 계정으로 로그인할 수 있음
-    - 무작위 대입을 위해 **Burp Suite의 Intruder 기능**을 사용함 ← Intruder 기능 사용 방법은 Tools: Burp Suite [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Note/Tools%3A%20Burp%20Suite.md)를 참고
-
-<br/><br/>
-
-### 익스플로잇
+## 문제 풀이 (익스플로잇)
 1. Burp Suite의 Target 탭에서 /login 페이지에서 guest 계정으로 로그인한 후 인덱스 페이지로 이동하는 Request를 Intruder로 복사함
    <br/><br/>
    <img width="1512" alt="익스플로잇 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/bd7e2137-b350-455a-8513-4c19532822cc"><br/>
