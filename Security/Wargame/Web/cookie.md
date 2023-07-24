@@ -73,15 +73,12 @@ app.run(host='0.0.0.0', port=8000)
 <br/><br/>
 
 ## 문제 풀이 (익스플로잇)
-1. 패스워드를 알고 있는 guest 계정으로 먼저 로그인을 진행함<br/>
-    <img width="1157" alt="cookie_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3bccf8a9-3694-4a03-8333-14f7cce6a7ca">
-    <img width="1157" alt="cookie_1-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e0227816-0e96-4364-b16f-63e212bcfeab">
+1. 패스워드를 알고 있는 guest 계정으로 로그인한 후 인덱스 페이지에서 크롬 개발자 도구의 Application 탭에서 생성된 쿠키를 확인함
+   <br/><br/>
+   <img width="1512" alt="cookie_문제 풀이 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/28aac732-6b87-4c90-a179-c49afc0f04cb">
 
-2. Option + Command + I를 눌러 크롬 개발자 도구를 열고 Application 탭의 Cookies 목록에서 생성된 쿠키를 확인함<br/>
-    <img width="1157" alt="cookie_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e099ba52-da53-4a15-83ea-970dbcc2c952">
+<br/>
 
-3. 생성된 쿠키의 username의 Value를 “admin”으로 변경한 후 서버에 요청함(새로고침)<br/>
-    <img width="1157" alt="cookie_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/bfbf01eb-67d8-4554-a79c-327fe6e55173">
-
-4. index.html에서 FLAG를 획득할 수 있음<br/>
-    <img width="1157" alt="cookie_4" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/9a6d4f35-e17d-479d-b0a1-cbadb015e367">
+2. Cookies에서 키가 username인 쿠키의 value를 ```admin```으로 변경한 후 페이지를 새로고침하면(서버에 요청하면) admin 계정으로 로그인에 성공하여 FLAG를 획득할 수 있음
+   <br/><br/>
+   <img width="1512" alt="cookie_문제 풀이 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b766165a-24c5-4491-a004-a9041183fc78">
