@@ -7,7 +7,7 @@
 
 <br/><br/>
 
-## 문제 파일(jack-o-lantern.html) 중 <script> 태그 부분 분석
+## 문제 파일(jack-o-lantern.html) 중 <script> 태그 부분 및 취약점 분석
 ```html
 <!-- jack-o-lantern.html의 <script> 태그 부분 (크롬 개발자 도구의 Elements 탭을 통해서도 확인 가능) -->
 <script>
@@ -63,9 +63,9 @@ function make() {
 }
 
 $(function() {
-  $('#jack-target').click(function () {
-    counter += 1;
-    if (counter <= 10000 && counter % 100 == 0) {
+  $('#jack-target').click(function () { # jack-target를 id 값으로 가지는 이미지를 클릭했을 때 수행하는 함수
+    counter += 1; # counter를 1 증가시킴
+    if (counter <= 10000 && counter % 100 == 0) { # counter가 10000 이하이고, 100으로 나누었을 때 나머지가 0인 경우에만 if문 내 실행문 실행
       for (var i = 0; i < pumpkin.length; i++) {
         pumpkin[i] ^= pie;
         pie = ((pie ^ 0xff) + (i * 10)) & 0xff;
@@ -76,19 +76,23 @@ $(function() {
 });
 </script>
 ```
+* 10000번 클릭을 수행하기 위해서는 ```$('#jack-target').click()```을 10000번 반복하여 수행하는 코드를 작성하면 됨
+  - 자바스크립트를 실행하고 그 결과를 확인할 수 있는 Console 기능을 이용하여 아래와 같이 입력하면 플래그를 획득할 수 있음
+    ```javascript
+    for (var i = 0; i <= 10000; i++) { // for문을 이용하여 반복을 수행하고 있음
+      $('#jack-target').click()
+    }
+    ```
 
 <br/><br/>
 
 ## 문제 풀이
-1. 다운로드한 문제 파일(jack-o-lantern.html)를 크롬 브라우저로 열고 개발자 도구의 Console 탭으로 이동함
-    - 10000번을 클릭해야 플래그를 획득하므로 Console 탭에서 자바스크립트 코드를 입력하여 반복문을 수행함
-    - 클릭해야 하는 이미지의 id는 Elements 탭에서 Select 기능을 통해 ```svg>``` 태그의 id 속성('jack-target')에서 확인할 수 있음
-      <img width="1340" alt="carve_party_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/577f5970-e60a-4b8a-a8d6-f60398d49c60">
+1. 다운로드한 문제 파일(jack-o-lantern.html)를 크롬 브라우저를 이용하여 열고 개발자 도구의 Console 탭으로 이동하여 클릭해야 하는 이미지의 id 속성 값을 확인함
+   <br/><br/>
+   <img width="1512" alt="Carve Party_문제 풀이 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/0244275f-d309-4466-b347-cbf38e2b4561">
 
-2. Console 탭에서 아래와 같은 자바스크립트 코드를 입력하면 플래그를 획득할 수 있음
-    ```javascript
-    for (var i = 0; i <= 10000; i++) {
-        $('#jack-target').click()
-    }
-    ```
-  <img width="1555" alt="carve_party_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/6be543a8-f48d-4db9-b1d9-7e0c7a0a578e">
+<br/>
+
+2. 개발자 도구의 Console 탭에서 위의 자바스크립트 코드를 입력하면 10000번 클릭하라는 조건을 만족하여 화면에서 FLAG를 획득할 수 있음
+   <br/><br/>
+   <img width="1512" alt="Carve Party_문제 풀이 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ec963b6f-4223-4fd5-a248-3ae7fedcdce9">
