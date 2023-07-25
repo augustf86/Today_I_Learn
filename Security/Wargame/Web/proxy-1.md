@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] proxy-1
-### [🚩proxy-1](https://dreamhack.io/wargame/challenges/13/)
-<img width="1068" alt="proxy-1_문제 설명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/80cfd06d-55d5-434f-b4a4-bb087de63238">
+* 출처: 🚩 proxy-1 [🔗](https://dreamhack.io/wargame/challenges/13/)
+* Reference: HTTP POST 메소드
+* 문제 설명
+  <br/><br/>
+  <img width="1068" alt="proxy-1_문제 설명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/80cfd06d-55d5-434f-b4a4-bb087de63238">
 
 <br/><br/>
 
-## 문제 파일(app.py) 분석
+## 문제 파일(app.py) 및 취약점 분석
 ```python
 #!/usr/bin/python3
 from flask import Flask, request, render_template, make_response, redirect, url_for
@@ -74,38 +77,34 @@ def admin():
 
 app.run(host='0.0.0.0', port=8000) # 플라스크에서 8000번 포트로 실행 → 사이트의 port에 8000을 입력함
 ```
-
-<br/><br/>
-
-## 문제 풀이
-### 취약점 분석
-socket 페이지에서 이용자의 입력값에 대한 어떠한 검증도 하지 않고 입력받은 host와 port로 연결을 생성하고 data를 전송함
-* 문제 사이트의 host(```127.0.0.1```)과 port(```8000```)를 입력하고 Data에 Request 패킷을 작성하여 [Send] 버튼을 누르면 Request가 전송되고 그에 대한 응답을 화면에서 확인할 수 있음
-    - /admin에는 POST 메소드만 허용되며, 코드의 5개 조건을 모두 만족해야 FLAG를 획득할 수 있음
-        + 조건에 따른 헤더와 body 값
-            | 조건 | Data 내 포함되어야 하는 값 |
-            |---|------|
+* socket 페이지에서 이용자의 입력값에 대해 어떠한 검사도 수행하지 않은 채 입력 받은 host와 port로 연결을 생성하고 data를 전송함
+  - 문제 사이트의 host(```127.0.0.1```)과 port(```8000```)를 입력하고 Data에 Request를 작성하여 [Send] 버튼을 누르면 요청이 전송되어 그에 대한 응답을 화면에서 확인할 수 있음
+    - /admin에는 POST 메소드만 허용되며, 코드에 명시된 5개의 조건을 모두 만족해야 FLAG를 획득할 수 있음
+        + 조건에 따른 header와 body 값
+            | 조건 | Data 내에 포함되어야 하는 값 |
+            |:---:|------|
             | 1번 조건 | Host: 127.0.0.1 |
             | 2번 조건 | User-Agent: Admin Browser |
             | 3번 조건 | DreamhackUser: admin |
             | 4번 조건 | Cookie: admin=true |
-            | 5번 조건 | userid=admin <br/> → ⚠️ POST 요청의 Body는 헤더와 빈 줄 하나로 구분됨에 주의 |
-        + ⚠️ POST 메소드로 요청 시 반드시 포함해야 하는 헤더들
+            | 5번 조건 | userid=admin *→ ⚠️ POST 요청의 Body는 헤더와 빈 줄 하나로 구분됨에 주의* |
+        + 📌 POST 메소드로 요청 시 반드시 포함해야 하는 헤더들
             | 헤더 | 설명 |
-            |---|------|
-            | ```Content-Type``` | POST 요청의 Body 내 데이터에 대한 타입을 해당 헤더의 값으로 명시해주어야 함 <br/> &nbsp;&nbsp; - ```userid=admin```은 ```key1=value1&key2=value2```의 형식임 <br/> &nbsp;&nbsp;&nbsp;&nbsp; → ```application/x-www-form-urlencoded```를 헤더의 값으로 주어야 함 |
-            | ```Content-Length``` | POST 요청의 Body 데이터의 길이를 해당 헤더의 값으로 명시해주어야 함 <br/> &nbsp;&nbsp; - ```userid=admin```의 길이는 ```12```이므로 헤더의 값은 ```12```가 됨 |
+            |:---:|------|
+            | ```Content-Type``` | POST 요청의 Body 내 데이터에 대한 타입을 해당 헤더의 값으로 명시해주어야 함 <br/> → ```userid=admin```은 ```key1=value1&key2=value2```의 형식이므로 <br/> &nbsp;&nbsp; ```application/x-www-form-urlencoded```를 헤더의 값으로 주어야 함 |
+            | ```Content-Length``` | POST 요청의 Body 내 데이터의 길이를 해당 헤더의 값으로 명시해주어야 함 <br/> → ```userid=admin```의 길이는 ```12```이므로 헤더의 값은 ```12```가 됨 |
+
 
 <br/><br/>
 
-### 익스플로잇
+## 문제 풀이 (익스플로잇)
 socket 페이지에서 host, port, Data에 아래와 같이 입력하고 [Send] 버튼을 클릭하면 플래그를 획득할 수 있음
 <br/><br/>
 <img width="2560" alt="proxy-1_익스플로잇" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/ac86df3b-9c03-4c11-9c52-3a83b09851ae"><br/>
 
 * socket 페이지의 각 항목의 입력값
-    | 항목 | 입력값 |
-    |:---:|------|
-    | host | 127.0.0.1 |
-    | port | 8000 |
-    | Data | POST /admin HTTP/1.1 <br/> Host: 127.0.0.1 <br/> User-Agent: Admin Browswer <br/> DremahackUser: admin <br/> Cookie: admin=true <br/> Content-Type: application/x-www-form-urlencoded <br/> Content-Length: 12 <br/><br/> userid=admin |
+    | 항목 | host | port | Data |
+    |:---:|----|----|----|
+    | **사용자 입력값** | 127.0.0.1 | 8000 | POST /admin HTTP/1.1 <br/> Host: 127.0.0.1 <br/> User-Agent: Admin Browser <br/> DreamhackUser: admin <br/> Cookie:admin=true <br/> Content-Type: application/x-www-form-urlencoded <br/> Contnet-Length: 12 <br/><br/> userid=admin |
+
+
