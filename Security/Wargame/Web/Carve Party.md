@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] Carve Party
-### [🚩Carve Party](https://dreamhack.io/wargame/challenges/96/)
+* 출처: 🚩 Carve Party [🔗](https://dreamhack.io/wargame/challenges/96/)
+* Reference: 브라우저 개발자 도구(DevTools) - Elements, Console
+* 문제 설명
+  <br/><br/>
   <img width="1068" alt="carve_party_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/22039356-9f05-4639-b94b-38372c277f2e">
 
 <br/><br/>
 
-## 문제 파일(jack-o-lantern.html의 일부) 분석
+## 문제 파일(jack-o-lantern.html) 중 <script> 태그 부분 분석
 ```html
 <!-- jack-o-lantern.html의 <script> 태그 부분 (크롬 개발자 도구의 Elements 탭을 통해서도 확인 가능) -->
 <script>
