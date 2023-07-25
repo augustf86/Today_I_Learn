@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] devtools-sources
-#### [🚩devtools-sources](https://dreamhack.io/wargame/challenges/267/)
- <img width="1074" alt="description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f27d1f6a-159e-4bbf-aa5e-31236de870a2">
+* 출처: 🚩 devtools-sources [🔗](https://dreamhack.io/wargame/challenges/267/)
+* Reference: 브라우저 개발자 도구(DevTools) - Sources
+* 문제 설명
+  <br/><br/>
+  <img width="1074" alt="description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f27d1f6a-159e-4bbf-aa5e-31236de870a2">
 
-<br/>
+<br/><br/>
 
-## 문제 풀이
+## 문제 풀이 (익스플로잇)
 1. 다운로드한 문제 파일 중 index.html를 더블클릭하여 크롬 브라우저로 연다.<br/>
   <img width="783" alt="download file" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a38ac014-c369-4970-b2cf-fc2aa62a939c">
   <img width="1396" alt="index" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/729bfdbf-4c85-4380-b788-1931ace6d3aa"><br/><br/>
