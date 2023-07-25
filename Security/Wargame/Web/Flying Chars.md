@@ -1,11 +1,13 @@
 # [Dreamhack Wargame] Flying Chars
-### [🚩Flying Chars](https://dreamhack.io/wargame/challenges/850/)
-<img width="1064" alt="Flying Chars_문제 설명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/12cb6cca-280b-4296-bfb8-8c6f4c56e710">
+* 출처: 🚩 Flying Chars [🔗](https://dreamhack.io/wargame/challenges/850/)
+* Reference: 브라우저 개발자 도구(DevTools) - Console
+* 문제 설명
+  <br/><br/>
+  <img width="1064" alt="Flying Chars_문제 설명" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/12cb6cca-280b-4296-bfb8-8c6f4c56e710">
 
 <br/><br/>
 
-## 문제 풀이
-### 문제 사이트 분석
+## 문제 사이트 분석
 문제 사이트에 접속해보면 이미지들이 빠른 속도로 이동하는 것을 확인할 수 있음
 <br/><br/>
 <img width="1000" alt="문제 사이트 분석" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/79a102e0-ca7f-4834-afca-ae28b12aaea5"><br/>
@@ -45,7 +47,7 @@
 
 <br/><br/>
 
-### 익스플로잇
+## 문제 풀이 (익스플로잇)
 1. 브라우저 개발자 도구의 Console 탭에서 아래의 자바스크립트 코드를 입력함
     ```javascript
     for (var i = 0; i < 20; i++) {
