@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] file-download-1
-### [🚩file-download-1](https://dreamhack.io/wargame/challenges/37/)
+* 출처: 🚩 file-download-1 [🔗](https://dreamhack.io/wargame/challenges/37/)
+* Reference: File Vulnerability - File Download Vulnerability (Injection - Path Traversal와 연계)
+* 문제 설명
+  <br/><br/>
   <img width="1069" alt="file-download-1_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/3b9efb40-bfdc-4a94-84e0-a609de15fdf9">
 
 <br/><br/>
 
-## 문제 파일(app.py) 분석
+## 문제 파일(app.py) 및 취약점 분석
 ```python
 #!/usr/bin/env python3
 import os
@@ -75,18 +78,14 @@ if __name__ == '__main__':
 
     APP.run(host='0.0.0.0', port=8000)
 ```
+* ```upload_memo``` 함수의 두 번째 if 조건문의 ```filename.find('..') != -1``` 부분
+    - 입력 받은 ```filename```에 상위 디렉터리로 이동하는 ```..``` 메타 문자가 존재하는지 확인하고 이를 필터링함 → ***Path Traversal***를 방지하고 있음
+* ```read_memo``` 함수에서 인자로 전달 받은 ```name```을 아무런 검사 없이 ```filename```으로 사용함
+    - /uploads 디렉터리에서 Path Traversal를 이용해 웹 서비스에 존재하는 임의의 파일을 다운로드할 수 있음 <br/> &nbsp;&nbsp; → **read 페이지의 URL에서 name 파라미터의 값에 ```..``` 메타 문자를 포함시켜 flag.py로 접근하면 FLAG를 획득할 수 있음**
 
 <br/><br/>
 
-## 문제 풀이
-### 취약점이 존재하는 부분
-* upload_memo 함수를 보면 입력 받은 파일에서 ```..``` 메타 문자가 존재하는지 확인하고 이를 필터링하는 부분이 존재하기 때문에 Path Traversal(File Upload Vulnerability)을 방지하고 있음
-* read_memo 함수에서 전달 받은 filename을 아무런 검사 없이 사용하고 있음 → 해당 페이지에서 Path Traversal(File Download Vulnerability)으로 공격자는 웹 서비스에 존재하는 임의의 파일을 다운로드할 수 있음
-    - read 페이지의 URL에서 name 파라미터의 값에 메타 문자를 포함시켜 flag.py로 접근하면 해당 파일을 읽을 수 있음
-
-<br/><br/>
-
-### 익스플로잇
-file-download-1 문제 사이트의 URL의 인덱스 페이지에서 URL에 ```/read?name=../flag.py```를 덧붙인 다음 새로고침하면 read 페이지에 flag.py의 내용이 출력됨 (flag 획득 가능)
+## 문제 풀이 (익스플로잇)
+file-download-1 문제 사이트의 URL의 인덱스 페이지에서 URL에 ```/read?name=../flag.py```를 덧붙인 다음 새로고침하면 read 페이지에 flag.py의 내용이 출력되어 FLAG를 획득할 수 있음
   <img width="1001" alt="fd_exploit_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4d9d2745-4b99-450d-9d8f-1bca30fc4eb2">
   <img width="1001" alt="fd_exploit_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/986b5788-c24a-49c2-a2b0-d4cd184c8e2b">
