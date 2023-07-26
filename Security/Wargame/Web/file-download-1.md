@@ -87,5 +87,6 @@ if __name__ == '__main__':
 
 ## 문제 풀이 (익스플로잇)
 file-download-1 문제 사이트의 URL의 인덱스 페이지에서 URL에 ```/read?name=../flag.py```를 덧붙인 다음 새로고침하면 read 페이지에 flag.py의 내용이 출력되어 FLAG를 획득할 수 있음
-  <img width="1001" alt="fd_exploit_1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/4d9d2745-4b99-450d-9d8f-1bca30fc4eb2">
-  <img width="1001" alt="fd_exploit_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/986b5788-c24a-49c2-a2b0-d4cd184c8e2b">
+<br/><br/>
+<img width="1512" alt="file-download-1_문제 풀이" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/fc33a4ba-3e19-43f8-9c0c-477c59f985f0">
+
