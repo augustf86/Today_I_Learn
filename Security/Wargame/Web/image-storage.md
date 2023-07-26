@@ -1,10 +1,13 @@
 # [Dreamhack Wargame] image-storage
-### [🚩image-storage](https://dreamhack.io/wargame/challenges/38/)
+* 출처: 🚩 image-storage [🔗](https://dreamhack.io/wargame/challenges/38/)
+* Reference: File Vulnerability - File Upload Vulnerability
+* 문제 설명
+  <br/><br/>
   <img width="1072" alt="image-storage_description" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/da04a0b7-9661-41fd-9262-ce4d918c8b28">
 
 <br/><br/>
 
-## 문제 파일 분석
+## 문제 파일 및 취약점 분석
 ### index.php (인덱스 페이지)
 ```php
 <html>
@@ -78,7 +81,7 @@
 
 <br/>
 
-### upload.php (파일 업로드 페이지)
+### upload.php (파일 업로드 페이지) ***← ⚠️ 취약점 존재***
 ```php
 <?php
   if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Post 메소드로 요청 시
@@ -139,19 +142,14 @@
 </body>
 </html>
 ```
-
-
-<br/><br/>
-
-## 문제 풀이
-### 취약점이 존재하는 코드
-upload.php에서 업로드할 파일에 대해 어떠한 검사도 수행하지 않으므로 **웹 셸 업로드 공격**(File Upload Vulnerability)에 취약함
-* .php 확장자를 가지는 웹 셸 파일을 작성하고 업로드한 다음, 이를 방문하면 서버의 셸을 손쉽게 획득할 수 있음
-    - CGI에 의해 해당 코드가 실행하게 만들 수 있도록 **작성한 php 파일은 GET 요청을 보낼 수 있어야 함**
+* upload.php에서 업로드할 파일에 대해 어떠한 검사도 수행하지 않음 **→ 웹 셸 업로드 공격**에 취약함 (File Upload Vulnerability)
+	- .php 확장자를 가지는 웹 셸 파일을 작성하고 업로드한 후 해당 파일의 경로로 방문하면 서버의 셸을 손쉽게 획득할 수 있음
+		+ ‼️ ***CGI에 의해 해당 코드를 실행하게 만들기 위해선 <U>작성한 php 파일은 GET 요청을 보낼 수 있어야 함***
+  		+ 저장 경로는 업로드가 성공적으로 이뤄진다면 화면에 ```Stored in: /uploads/[filename]``` 형식으로 출력됨
 
 <br/><br/>
 
-### 익스플로잇
+## 문제 풀이 (익스플로잇)
 1. php 웹 셸 파일(image_storage_exploit.php) 파일을 다음과 같이 작성함
     ```php
     <html>
@@ -171,11 +169,14 @@ upload.php에서 업로드할 파일에 대해 어떠한 검사도 수행하지 
     </html>
     ```
 
-2. 작성한 php 웹 셸 코드를 upload 페이지에서 [파일 선택] 버튼을 눌러 업로드함
-  <img width="1176" alt="image-storage_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d051c097-465f-4e63-8f6b-cb5bb53d2ecd"> <br/>
-    - 파일 업로드 성공 시 "Stored in: " 뒤에 해당 파일이 저장된 경로가 화면에 뜸 → 이를 통해 해당 파일에 접근할 수 있음
-      <img width="1176" alt="image-storage_2-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/12793ad0-ae01-4a43-8bad-6931e329adba">
+<br/>
 
-3. 해당 경로로 이동하면 작성한 웹 셸 코드가 실행되며 해당 웹 셸에서 ```cat /flag.txt```를 입력한 후 실행시켜 flag를 획득함
-  <img width="1176" alt="image-storage_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/374267e1-ba98-4920-8278-d9754af04070">
+2. 1번에서 작성한 php 웹 셸 코드를 /upload 페이지에서 [파일 선택] 버튼을 눌러 업로드하면 화면에서 "Stored in: " 뒤에 해당 파일이 저장된 경로를 얻을 수 있음
+  <img width="1176" alt="image-storage_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d051c097-465f-4e63-8f6b-cb5bb53d2ecd"> <br/>
+  <img width="1176" alt="image-storage_2-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/12793ad0-ae01-4a43-8bad-6931e329adba">
+
+<br/>
+
+3. 2번에서 얻은 경로를 통해 해당 파일에 접근하면 업로드한 php 웹 셸 코드가 실행되고, cat 명령어를 통해 텍스트 파일의 내용을 출력하여(```cat /flag.txt```) FLAG를 획득할 수 있음
+  <img width="1176" alt="image-storage_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/374267e1-ba98-4920-8278-d9754af04070"><br/>
   <img width="1176" alt="image-storage_3-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/04e99166-2cf9-43aa-b2b5-754159a7355f">
