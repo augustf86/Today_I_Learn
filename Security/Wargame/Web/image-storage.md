@@ -172,11 +172,11 @@
 <br/>
 
 2. 1번에서 작성한 php 웹 셸 코드를 /upload 페이지에서 [파일 선택] 버튼을 눌러 업로드하면 화면에서 "Stored in: " 뒤에 해당 파일이 저장된 경로를 얻을 수 있음
-  <img width="1176" alt="image-storage_2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/d051c097-465f-4e63-8f6b-cb5bb53d2ecd"> <br/>
-  <img width="1176" alt="image-storage_2-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/12793ad0-ae01-4a43-8bad-6931e329adba">
+   <br/><br/>
+   <img width="1512" alt="image-storage_문제 풀이 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/39077c0f-67c6-4223-b614-eb30888145ea">
 
 <br/>
 
 3. 2번에서 얻은 경로를 통해 해당 파일에 접근하면 업로드한 php 웹 셸 코드가 실행되고, cat 명령어를 통해 텍스트 파일의 내용을 출력하여(```cat /flag.txt```) FLAG를 획득할 수 있음
-  <img width="1176" alt="image-storage_3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/374267e1-ba98-4920-8278-d9754af04070"><br/>
-  <img width="1176" alt="image-storage_3-1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/04e99166-2cf9-43aa-b2b5-754159a7355f">
+   <br/><br/>
+   <img width="1512" alt="image-storage_문제 풀이 3" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/f5079724-8347-4029-9844-1566fa6f9761">
