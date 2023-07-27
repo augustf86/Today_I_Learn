@@ -51,3 +51,6 @@ app.run(host="0.0.0.0", port=8000)
 <br/><br/>
 
 ## 문제 풀이(익스플로잇)
+믄제 사이트에서 ```drabcdee1am@awer.w```를 입력한 후 [submit] 버튼을 누르면 버튼 하단에서 FLAG를 획득할 수 있음
+<br/><br/>
+<img width="1512" alt="ex-reg-ex_문제 풀이" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/e7d30c94-31f4-4039-92b9-c82939274690">
