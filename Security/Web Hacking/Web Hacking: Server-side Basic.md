@@ -139,7 +139,44 @@
 <br/><br/>
 
 ### File Download Vulnerability
+| | 설명 |
+|:---:|------|
+| 정의 | 웹 서비스의 파일 시스템에 존재하는 파일을 다운로드하는 과정에서 발생하는 보안 취약점 |
+| 취약점 발생 상황 | 이용자가 다운로드할 파일의 이름을 임의로 정할 수 있을 때 발생함 <br/> &nbsp;&nbsp; - **<U>사용자가 입력한 파일 이름을 검증하지 않은 채 그대로 다운로드를 제공할 때</U> 가장 흔하게 발생함** |
+| 공격 효과 | 웹 어플리케이션의 소스 코드, 관리자의 패스워드, 서비스 키, 설정 파일, 데이터베이스 백업본 등 민감한 정보을 탈취할 수 있음 <br/> &nbsp;&nbsp; ***→ 다운로드받은 파일을 이용하여 2차 공격을 수행할 수도 있음*** |
 
+<br/>
+
+* Background: **File Downlaod**(파일 다운로드)
+    - 웹 서비스의 파일 시스템에 존재하는 파일을 다운로드하는 기능
+        + 사용자가 업로드한 파일을 다른 사용자와 공유하기 위해서 필요함
+        + 다양한 방법으로 파일 다운로드 기능을 구현할 수 있음
+
+<br/>
+
+* File Download Vulnerability: File Path에서 발생하는 <U>Path Traversal를 이용한 공격</U>
+    | | 설명 |
+    |:---:|------|
+    | 정의 | 웹 서비스가 **특정 디렉터리에 있는 파일만 접근하도록 허용하는 제약을 우회**하여, 파일 이름을 직접 입력 받아 임의 디렉터리에 <br/>있는 파일을 다운로드받을 수 있는 취약점 |
+    | 취약점 <br/> 발생 원인 | 사용자가 입력한 파일 이름을 별다른 검증 없이 사용할 때 발생함 <br/> (*Path Traversal은 Injection의 일종*) |
+    | 공격 방법 | 상위 디렉터리로 이동하는 ```..``` 메타 문자 등을 사용하여 다른 디렉터리에 있는 파일을 다운로드받을 수 있음 |
+    - 예시: File Download Code
+        ```python
+        #...
+        @app.route("/download")
+        def download():
+            # 사용자가 입력한 filename의 인자 값을 가져와 검증 없이 사용하고 있음 → File Download Vulnerability 발생
+            filename = request.args.get("filename", "")
+            return open("uploads/" + filename, "rb").read()
+        ```
+        | | 예시 설명 |
+        |:---:|------|
+        | 일반 사용자 | ```http://example.com/download?filename=docs.pdf``` 압룍 <br/> &nbsp;&nbsp; → **/uploads** 디렉터리에 존재하는 docs.pdf 파일을 다운로드 받음 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (***/uploads/docs.pdf 파일 다운로드***)
+        | 공격자 | ```http://example.com/download?filename=../../../../etc/passwd``` 입력 <br/> &nbsp;&nbsp; → 상위 디렉터리로 이동하는 과정을 반복하여 다른 경로에 존재하는 시스템 계정 파일을 다운로드 받음 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (***/etc/passwd 파일 다운로드***) |
+
+<br/>
+
+* File Download Vulnerability 방지 대책
 
 <br/><br/><br/>
 
