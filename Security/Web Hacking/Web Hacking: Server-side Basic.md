@@ -100,10 +100,9 @@
         if __name__ == '__main__':
             app.run()
         ```
-        | | 설명 |
-        |:---:|------|
-        | 정상적인 <br/> File Upload Request | <br/> ***→ uplaods 디렉터리에 이용자가 업로드한 test.txt가 업로드됨 (저장 경로: ./uploads/test.txt)*** |
-        | 악의적인 <br/> File Upload Request | <br/> ***→ uploads 디렉터리의 상위 디렉터리에 hack.py가 업로드됨 (저장 경로: ./hack.py)*** |
+        | 일반 사용자 | 공격자 |
+        |:---:|:---:|
+        | <img width="400" alt="정상적인 File Upload Request" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b4ed2395-b24a-4211-87f5-4accd54935a3"> | <img width="400" alt="악의적인 File Upload Request" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/a653de65-4bc0-49bb-a66d-ebf0cac1b5d3"> |
 
 <br/>
 
