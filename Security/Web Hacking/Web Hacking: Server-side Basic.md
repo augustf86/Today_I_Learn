@@ -1,5 +1,6 @@
 # Web Hacking: Server-side Basic
-🔖 출처: [Dreamhack Lecture] Server-side Basic [🔗](https://dreamhack.io/lecture/courses/15)
+🔖 출처: [Dreamhack Lecture] Server-side Basic [🔗](https://dreamhack.io/lecture/courses/15) <br/>
+🔖 출처: [Dreamhack Web Hacking] Server Side: File Vulnerability [🔗](https://dreamhack.io/lecture/courses/202)
 
 <br/><br/>
 
@@ -86,11 +87,11 @@
 
         @app.route('/fileUpload', methods=['GET', 'POST'])
         def upload_file():
-            if request.method == 'POST':
-                f = request.files['file']
-                f.save("./uploads/" + f.filename)
+            if request.method == 'POST': # POST 메소드로 요청하는 경우
+                f = request.files['file'] # 사용자가 업로드한 file을 가져옴
+                f.save("./uploads/" + f.filename) # 사용자가 입력한 파일명으로 /uploads 디렉터리에 업로드함
                 return 'Upload Success'
-            else:
+            else: # GET 메소드로 요청하는 경우
                 return """
                 <form action="/fileUpload" method="POST" enctype="multipart/form-data">
                     <input type="file" name="file"/>
@@ -177,6 +178,25 @@
 <br/>
 
 * File Download Vulnerability 방지 대책
+    - 📌 ***기본적으로 인자에 다운로드을 받으려는 파일의 경로나 이름을 넘기지 않는 것이 좋음***
+        + 반드시 이름을 넘기는 방식으로 구현해야 하는 경우 <U>상대경로로 접근하는 데 사용될 수 있는 ```..```, ```/```, ```\\```를 적절하게 필터링해야 함</U>
+        + ⚠️ 필터링을 잘못 구현한 경우 **필터링을 우회할 수 있음**
+            | 예시 | 설명 |
+            |:---:|------|
+            | 단순히 ```../```만 <br/> 필터링하는 경우| 상위 경로로 올라가는 키워드를 없애면 상위 경로로 올라가지 못하기 때문에 안전할 것이라고 착각함 <br/> &nbsp;&nbsp; - ```..././file```와 같은 형식으로 요청하면 필터링에 의해 ```../```가 삭제되어 새로운 ```../```가 생성됨 <br/> &nbsp;&nbsp; - 윈도우 ```..\\```으로도 상위 경로에 접근할 수 있음 |
+    - 데이터베이스에 다운로도 될 파일의 경로와 그에 해당하는 랜덤 키를 생성하여 1:1로 매칭해서 저장해두고 해당 랜덤 값(키)이 인자로 넘어왔을 때 데이터베이스에 존재하는 파일인지를 먼저 식별하고 다운로드를 수행함
+        + 예시 코드
+            ```python
+            @app.route("/download")
+            def donwload():
+                file_id = requests.args.get("file_id", "") # file_id = 쉽게 유추하지 못하는 랜덤한 값
+                file_path = find_path_from_database(file_id) # 데이터베이스에서 file_id와 맵핑된 파일 경로를 반환하는 find_path_from_database() 함수를 정의했다고 가정
+                
+                if file_path is None: # 맵핑되는 파일 경로가 존재하지 않는 경우
+                    return "incorrect file id"
+                return open(file_path, "rb").read() # 맵핑되는 파일 경로가 존재하는 경우
+            ```
+    - 요청된 파일 이름을 ```basepath```와 같은 함수를 통해 검증함
 
 <br/><br/><br/>
 
