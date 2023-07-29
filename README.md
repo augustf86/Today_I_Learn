@@ -87,6 +87,7 @@
 | ***Web Hacking*** | Web 해킹 기초 | 브라우저 개발자 도구(Devtools) | devtools | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/devtools-sources.md) |
 | | | | Carve Party | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Carve%20Party.md) |
 | | | | Flying Chars | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Flying%20Chars.md) |
+| | | | [wargame.kr] fly to the moon | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/%5Bwargame.kr%5D%20fly%20to%20the%20moon.md) |
 | | | HTTP/HTTPS | proxy-1 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/proxy-1.md) |
 | | | Cookie/Session | cookie | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/cookie.md) |
 | | | | session-basic | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/session-basic.md) |
