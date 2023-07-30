@@ -393,3 +393,37 @@
 <br/><br/>
 
 ### 메뉴얼과 실제 구현체의 차이로 인해 발생하는 문제점
+메뉴얼에 설명되어있는 대로 사용했지만 중의적 표현이 존재하거나 잘못 설명되어 있을 때 발생함
+
+<br/>
+
+* 메뉴얼과 실제 구현체의 차이로 인해 발생하는 Misconfiguration: ***Nginx alias Path Traversal 취약점***
+    - Nginx에서 경로를 설정할 때 사용하는 2가지 방식
+        | 방식 | 설명 |
+        |:---:|------|
+        | ```alias``` | 요청한 경로를 지시한 **다른 경로로 변경**하는 역할을 함 <br/> → Nginx docs: alias [🔗](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) 참고 |
+        | ```root``` | 해당 경로의 **root 경로를 명시**해주는 역할을 함 <br/> → Nginx docs: root [🔗](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) 참고 |
+    - ```alias```를 사용하는 경우 발생할 수 있는 문제점
+        ```Nginx
+        # Defines  a replacement for the specified location. For example, with the following configuration
+
+        location /i/ {
+            alias /data/w3/images/;
+        }
+
+        # on request of "/i/top.gif", the file /data/w3/images/top.gif will be sent. (alias)
+        ```
+        + 사용자가 ```location``` 지정 시 ```/i/```와 ```/i```의 차이점
+            | | 차이점 설명 |
+            |:---:|------|
+            | ```location /i/``` <br/> 사용 | ```http://server.com/i/hello.png```로 요청 시 <br/>```/data/w3/images/hello.png```를 가져옴 |
+            | ```location /i``` <br/> 사용 | ```http://server.com/i/hello.png```로 요청 시 ```/data/w3/images//hello.png```를 가져옴 <br/> ```http://server.com/i../hello.png```로 요청 시 ```/data/w3/images/../hello.png```를 가져옴 <br/> ***→ 📌 한 단계 상위 디렉토리의 파일을 가져올 수 있음*** |
+    - 조치 방안
+        | | 방법 |
+        |:---:|------|
+        | 01 | ***alias 대신에 root directive를 사용함*** (권장) |
+        | 02 | ***location 마지막에 /를 붙이거나 alias 맨 뒤의 /를 삭제함*** <br/> - 정상적인 요청은 ```openat```이 성공하고, 악의적인 요청은 ```ENOENT``` 에러와 함께 실패함 |
+
+<br/>
+
+* 메뉴얼과 실제 구현체의 차이로 인해 발생하는 Misconfiguration: ***Nginx Proxy SSRF*** 
