@@ -381,6 +381,9 @@
         | mysql | RDBMS(관계형 DBMS) 서버 |
         | k8s master mode | 클러스터 관리 |
     - 공격 예시
+      <br/><br/>
+      <img width="1512" alt="취약한 redis server 설정" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/6c94f3bb-fcac-4298-a0c8-4b1b8b201eeb">
+      <br/><br/>
     - 조치 방안
         | | 방법 |
         |:---:|------|
