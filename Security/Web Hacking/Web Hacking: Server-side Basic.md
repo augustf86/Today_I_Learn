@@ -431,4 +431,44 @@
 
 <br/>
 
-* 해당 코드나 설정에 대한 이해 없이 사용해 발생하는 문제점: ***StackOverflow 답변 등을 복사하여 사용(Nginx Proxy SSRF)***
+* 해당 코드나 설정에 대한 이해 없이 사용해 발생하는 Misconfiguration: ***StackOverflow 답변 등을 복사하여 사용 (Nginx proxy SSRF)***
+    - Nginx에서 외부 이미지를 다운받아 화면에 보여주는 URL을 아래와 같이 구성하는 엔드포인트를 만드는 경우에 대한 StackOverflow 답변 링크
+        | | 설명 |
+        |:---:|------|
+        | URL 구성 | ```https://dreamhack.io/image/{image URL}``` <br/> ```https://dreamhack.io/image/http://imageviewr.com/941ba06f-fb7e-46e1-bcba-55a1306d6aa7.png``` |
+        | StackOverflow | StackOverflow: Reverse image porxy without specifying host [🔗](https://stackoverflow.com/questions/47404893/reverse-image-proxy-without-specifying-host) <br/> StackOverflow: nginx proxy_pass and URL decoding [🔗](https://stackoverflow.com/questions/28995818/nginx-proxy-pass-and-url-decoding) |
+        + StackOverflow 내용
+            > The question is quite vague, but, based on the error message, what you're trying to do is perform a ```proxy_pass``` entirely based on the user input, by using the complete URL specified after the ```/image/``` prefix of the URI.
+            >
+            > ⚠️ **Bascially, this is very bad idea, as you're opening yourself to become an open proxy.** However, the reason it doesn't work as in the conf you supplied is due to URL normalisation, which, in your case, compacts ```https://example``` into ```http:/example``` (double slash becomes single), which is different in the context of ```proxy_pass```.
+            >
+            > If you don't care about security, you can just change ```merge_slashes``` from the default of ```on``` to ```off```:
+            >   ```nginx
+            >   merge_slashes off;
+            >   location ...
+            >   ```
+            >
+            > Another possibility is to somewhat related to nginx proxy pass and URL decoding:
+            >   ```nginx
+            >   location ~ ^/image/.+{
+            >       rewrite ^ $request_uri;
+            >       rewrite ^/image/(.*) $1 break;
+            >       return 400;
+            >       proxy_pass $uri: # will result in an open-proxy, don't try at home
+            >   }
+            >   ```
+            - ⚠️ **Open-Proxy가 될 수 있다고 답변 작성자는 경고하고 있음** → 제대로 읽지 않고 그대로 사용할 경우 ```/image/``` location에서 SSRF 취약점이 발생해 nginx를 통해 내부 서비스 네트워크에 접근할 수 있음
+                + ```http://dreamhack.io/image/http://127.0.0.1:1234```를 접속하게 되면 로컬 호스트에서 연결이 맺어지는 것을 확인할 수 있음
+    - 공격 시나리오
+    - 조치 방안
+        + ***SSRF 취약점으로부터 안전해지기 위해서는 설정 파일을 수정해야 함***
+            - 개발자가 미리 정의한 호스트에서만 요청할 수 있도록 변경함
+                ```nginx
+                location ~ ^/image/(https?):/((?:hostA|hostB)(?::\d+)?)/(.*) {
+                    proxy_pass $1://$2/$3; # hostA, hostB를 제외한 어떠한 호스트도 프록시 패스를 허용하지 않음
+                }
+                ```
+
+<br/>
+
+* 해당 코드나 설정에 대한 이해 없이 사용해 발생하는 Misconfiguration: ***모든 도메인을 허용한 CORS 설정***
