@@ -308,3 +308,35 @@
 <br/><br/>
 
 ### 편의성을 위한 설정에 의해 발생하는 문제점
+개발자를 위한 설정이 서비스 환경에서도 켜져 있어 공격자가 이를 통해 시스템 내부의 정보를 알아내 추가적인 공격에 사용될 수 있음
+
+<br/>
+
+* 편의성을 위한 설정에 의해 발생하는 Misconfiguration: ***debug***
+    | | 설명 |
+    |:---:|------|
+    | 발생하는 경우 | 디버그 모드 설정 또는 디버그 목적으로 **코드 상에서 특정 정보를 사용자에게 제공할 경우**에 발생함 <br/> &nbsp;&nbsp; - 서버 환경설정 또는 프레임워크 등의 어플리케이션 구동 시 **환경 설정의 Debug 옵션을 설정**해 운용하는 경우 |
+    | 공격 결과 | 정보를 기반으로 서버의 환경 및 정보가 노출될 수 있음 <br/> &nbsp;&nbsp; - Debug 옵션 설정 시 사용자의 입력 데이터에 의해 에러가 발생하게 되면 해당 에러에 대한 정보가 노출될 수 있음 <br/><br/>  ***→ 공격자는 이런 정보들을 통해 서버를 공격하기 위한 기반 정보들을 획득함*** |
+    - 문제점 발생 예시: Debug 모드가 설정된 코드
+        ```python
+        #!usr/bin/env python3
+        from flask import Flask, request
+
+        app = Flask(name)
+
+        @app.route('/')
+        def index():
+            return 'hi'
+
+        @app.route('/download')
+        def download():
+            file = request.args.get("file")
+            return open(file).read()
+        
+        app.run(host='0.0.0.0', port=8000, debug=True) # debug=True → 어플리케이션 구동 시 Debug 옵션을 설정해 운용하고 있음
+        ```
+        + ⚠️ debug 모드가 설정된 상태에서 에러가 발생하게 되면 에러의 정보와 에러가 발생하는 서버 코드가 함께 노출되는 위험이 발생하기도 함
+
+<br/>
+
+* 편의성을 위한 설정에 의해 발생하는 Misconfiguration: ***Error Message Disclosure***
