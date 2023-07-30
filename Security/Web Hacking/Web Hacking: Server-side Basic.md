@@ -340,3 +340,32 @@
 <br/>
 
 * 편의성을 위한 설정에 의해 발생하는 Misconfiguration: ***Error Message Disclosure***
+    | | 설명 |
+    |:---:|------|
+    | 발생하는 경우 | 코드 상에서 사용하는 변수 또는 정보가 디버그 목적 등으로 사용자들에게 노출되는 경우에 발생함 |
+    | 공격 결과 | ⚠️ 디버그 목적으로 사용한 후 삭제하지 않거나 그대로 사용할 경우 **악의적인 공격자에게 정보가 노출될 수 있음** |
+    - 문제점 발생 예시: 에러에 대한 상세한 내용을 출력하여 디버그하는 경우
+        ```python
+        #!usr/bin/env/ python3
+        from flask import Flask, request
+
+        app = Flask(__name__)
+
+        @app.route('/')
+        def index():
+            return 'hi'
+            
+        @app.route('/download')
+        def download():
+            try:
+                file = request.args.get("file")
+                return open(file).read()
+            except Exception as e:
+                return str(e.args) # 에러에 대한 상세한 내용을 출력하고 있음
+            
+        app.run(host='0.0.0.0', port=8000)
+        ```
+
+<br/>
+
+* 편의성을 위한 설정에 의해 발생하는 Misconfiguration: ***0.0.0.0으로 바인딩된 네트워크 설정***
