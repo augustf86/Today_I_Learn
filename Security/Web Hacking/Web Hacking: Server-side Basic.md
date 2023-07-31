@@ -27,6 +27,35 @@
 <br/><br/><br/>
 
 ## Injection
+사용자의 입력 값이 어플리케이션의 처리 과정에서 구조나 문법적인 데이터로 해석되어 발생하는 취약점 <br/> &nbsp;&nbsp; → 실행 흐름 중간에 들어갈 수 있는 사용자의 입력에 **변조된 입력을 주입해 의도하지 않은 행위를 발생**시키는 것을 의미함
+* Injection의 종류
+    | 종류 | 설명 |
+    |:---:|------| 
+    | ***SQL Injection*** | SQL를 사용할 때 공격자의 입력값이 정상적인 요청에 영향을 주는 취약점 |
+    | ***Command Injection*** | OS Command를 사용 시 사용자의 입력 데이터에 의해 실행되는 Command를 변조할 수 있는 취약점 |
+    | ***Server Side Template Injection*** <br/> (SSTI) | 템플릿 변환 도중 사용자의 입력 데이터가 템플릿으로 사용되어 발생하는 취약점 |
+    | ***Path Traversal*** | URL/File Path를 사용 시 사용자의 입력 데이터에 의해 임의의 경로에 접근하는 취약점 |
+    | ***Server Side Request Forgery*** <br/> (SSRF) | 공격자가 서버에서 변조된 요청을 보낼 수 있는 취약점 |
+
+<br/><br/>
+
+### SQL Injection
+
+<br/><br/>
+
+### Command Injection
+
+<br/><br/>
+
+### Server Side Template Injection (SSTI)
+
+<br/><br/>
+
+### Path Traversal
+
+<br/><br/>
+
+### Server Side Request Forgery (SSRF)
 
 <br/><br/><br/>
 
