@@ -90,6 +90,32 @@
 <br/>
 
 * SQL Injection 방지 방법
+    - 📌 ***사용자의 입력 데이터가 SQL 쿼리로 해석되지 않아야 함***
+    - SQL Injection 발생 이유: **⚠️ 사용자의 입력값에 문자열 구분자(```'```, ```"``` 등)가 삽입되어 본래의 쿼리를 벗어날 수 있음**
+        | | 해결 방안 |
+        |:---:|------|
+        | 과거 | 문자열 구분자 앞에 백슬래시(```\```) 문자를 붙여 **사용자의 입력을 escape**해 사용하는 방식을 자주 이용함 <br/><br/> ⚠️ 현재는 이 방식을 권장하지 않음 <br/> &nbsp;&nbsp; - 사용자로부터 입력을 받는 타입이 문자일일 수도 있지만 숫자 타입일 수도 있기 때문 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; → 문자열 구분자를 escape해도 숫자 뒤에 공백 문자(```' '```, ```\n``` 등)를 넣는 것만으로도 쿼리에 사용자의 입력을 삽입할 수 있음 | 
+        | 현재 | ORM과 같이 검증된 SQL 라이브러리를 사용하는 것을 권장함 <br/> &nbsp;&nbsp; - 개발자가 직접 쿼리르 작성하는 Raw 쿼리를 사용하지 않아도 기능 구현이 가능함 <br/> &nbsp;&nbsp; - SQL Injection으로부터 상대적으로 안전함 <br/><br/> ⚠️ ***ORM을 사용하더라도 입력 데이터의 타입 검증이 없으면 잠재적인 위협이 있을 수 있음 → 반드시 입력 데이터의 타입 검증이 필요함***<br/>💡 **ORM**(Object Relational Mapper): SQL의 쿼리 작성을 돕기 위한 라이브러리 <br/> &nbsp;&nbsp;&nbsp;&nbsp; - 생산성과 SQL 쿼리의 안전한 실행을 위해서 사용함 <br/> &nbsp;&nbsp;&nbsp;&nbsp; - *사용자의 입력값을 라이브러리 단에서 스스로 escape하고 쿼리애 매핑시킴* |
+        + ORM 예시: python SQLAlchemy
+            ```python
+            from flask_sqlalchemy import SQLAlchemy
+
+            ...
+            db = SQLAlchemy(...)
+            ...
+
+            class User(db.Model):
+                id = db.Column(db.Integer, primary_key=True)
+                uid = db.Column(...)
+                upw = db.Columb(...)
+                ...
+            
+            User.query.filter(User.uid == uid, User.upw == upw).all()
+            ```
+
+<br/>
+
+* SQL Injection 응용: ***Blind SQL Injection***
 
 <br/><br/>
 
