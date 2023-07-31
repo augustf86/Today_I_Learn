@@ -459,7 +459,13 @@
             >   ```
             - ⚠️ **Open-Proxy가 될 수 있다고 답변 작성자는 경고하고 있음** → 제대로 읽지 않고 그대로 사용할 경우 ```/image/``` location에서 SSRF 취약점이 발생해 nginx를 통해 내부 서비스 네트워크에 접근할 수 있음
                 + ```http://dreamhack.io/image/http://127.0.0.1:1234```를 접속하게 되면 로컬 호스트에서 연결이 맺어지는 것을 확인할 수 있음
+                  <br/><br/>
+                  <img width="1512" alt="Nginx proxy ssrf" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/bd02568a-6906-4939-8a63-de79e1275cac">
+		  <br/><br/>
     - 공격 시나리오
+      <br/><br/>
+      <img width="1512" alt="공격 시나리오" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/63eb0969-81cb-4410-98b1-0a38e6dd9091">
+      <br/><br/>
     - 조치 방안
         + ***SSRF 취약점으로부터 안전해지기 위해서는 설정 파일을 수정해야 함***
             - 개발자가 미리 정의한 호스트에서만 요청할 수 있도록 변경함
