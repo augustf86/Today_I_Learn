@@ -44,12 +44,52 @@
 |:---:|------|
 | 정의 | SQL 쿼리에 사용자의 입력값이 삽입되어 사용자가 원하는 쿼리를 실행할 수 있는 취약점 |
 | 관련 배경 지식 | SQL (Structured Query Language) [🔗]() <br/> RDBMS (Relational DBMS) [🔗]() |
-| 취약점 발생 상황 | 로그인/검색과 같이 사용자의 입력 데이터를 기반으로 DBMS에 저장된 정보를 조회하는 기능을 구현하기 위해 SQL 쿼리에 사용자의 <br/>입력 데이터를 추가하여 DBMS에 요청함 (**웹 애플리케이션과 데이터베이스가 연동되는 부분에서 발생함**) <br/> ***→ 사용자의 입력이 SQL 쿼리에 삽입되어 SQL 구문으로 해석되거나 문법적으로 조작하게 되면 개발자가 의도한 정상적인 SQL <br/>쿼리가 아닌 임의의 쿼리가 실행됨*** |
+| 취약점 발생 상황 | 로그인/검색과 같이 사용자의 입력 데이터를 기반으로 DBMS에 저장된 정보를 조회하는 기능을 구현하기 위해 SQL 쿼리에 사용자의 <br/>입력 데이터를 추가하여 DBMS에 요청함 (**📌 웹 애플리케이션과 데이터베이스가 연동되는 부분에서 발생함**) <br/> ***→ 사용자의 입력이 SQL 쿼리에 삽입되어 SQL 구문으로 해석되거나 문법적으로 조작하게 되면 개발자가 의도한 정상적인 SQL <br/>&nbsp;&nbsp;&nbsp;&nbsp;쿼리가 아닌 임의의 쿼리가 실행됨*** |
 | 공격 결과 | 현재 쿼리를 실행하는 DBMS 계정의 권한으로 공격이 가능함 <br/> &nbsp;&nbsp; - 일반적으로 조작된 쿼리를 이용하여 인증을 우회하거나 데이터베이스의 내용을 추출﹒변조﹒삭제하는 등의 행위가 가능함 |
 
 <br/>
 
 * SQL Injection 예시: 로그인 기능에서의 인증 우회
+    | | 설명 |
+    |:---:|------|
+    | 로그인 과정 | 시용지기 아이디와 패스워드를 입력해 서버에 전송함 → 서버는 해당 데이터가 데이터베이스에 존재하는지 확인하고 로그인 <br/>성공 여부를 판단함 |
+    | SQL Injection <br/> 수행 방법 | - 로그인 과정에서 생성된 SQL 쿼리문에서 문자열 구분자를 확인함 <br/> &nbsp;&nbsp; → **입력에 문자열 구분자를 삽입해 문자열을 탈출하고 뒷 부분에 새로운 쿼리를 작성**하여 전달하면 DBMS에서 사용자가 직접 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 작성한 쿼리를 실행할 수 있음 <br/> - admin으로 로그인한다고 가정했을 때 upw를 모르는 상황이라면 SQL Injection을 통해 **논리적으로 참이 되는 구조를 만들어** <br/> &nbsp;&nbsp; admin으로 로그인하거나 upw를 알아낼 수 있음 |
+    - 예시
+        ```sql
+        # 아이디(uid)와 비밀번호(upw)를 입력받고 DBMS의 user_table에 조회하기 위한 쿼리 (가장 간단한 형태)
+        # → {uid}, {upw} 부분에 사용자가 입력한 문자열을 삽입하고 DBMS를 전달해 실행함
+        SELECT uid FROM user_tale WHERE uid='{uid}' AND upw='{upw}'
+        ```
+        - 사용자의 입력과 웹 어플리케이션이 작성한 SQL 쿼리를 해석할 때 문자열 구분자로 ```'``` 문자를 사용하고 있음 <br/> &nbsp;&nbsp; ***→ 사용자의 입력에 ```'``` 문자를 입력하여 문자열을 탈출하고 뒷 부분이 SQL 구문으로 해석되게 만듦***
+        - SQL Injection 수행 예시
+            - 방법 1: **쿼리 질의를 통해 admin 결과를 반환하는 방법**
+                ```sql
+                SELECT uid FROM user_table WHERE uid='admin' or '1' AND upw=''
+                ```
+                | 항목 | 입력 |
+                |:---:|------|
+                | **uid** | ```admin' or '1``` <br/> &nbsp;&nbsp; - ```or``` 연산: ```A or B```일 때 A와 B 둘 중 하나라도 참(True)인 경우 결과가 참이 됨 |
+                | **upw** | 아무 문자열이나 입력 가능 (여기서는 아무것도 입력하지 않음) |
+            - 방법 2: **쿼리 질의를 통해 admin의 upw를 알아내는 방법**
+                ```sql
+                SELECT uid FROM user_table WHERE uid='' AND upw='' UNION SELECT upw FROM user_table WHERE uid='admin'
+                ```
+                | 항목 | 입력 |
+                |:---:|------|
+                | **uid** | 아무것도 입력하지 않음 |
+                | **upw** | ```' UNION SELECT upw FROM user_table WHERE uid='admin``` <br/> &nbsp;&nbsp; - ```UNION``` 문으로 2개 이상의 ```SELECT``` 문(쿼리)를 결합하고 있음 |
+            - 방법 3: **쿼리 질의를 통해 admin 계정의 upw를 변경하는 방법**
+                ```sql
+                SELECT uid FROM user_table WHERE uid='admin' AND upw=''; UPDATE user_table SET upw='12345' WHERE uid='admin'
+                ```
+                | 항목 | 입력 |
+                |:---:|------|
+                | **uid** | ```admin```
+                | **upw** | ```'; UPDATE user_table SET upw='12345' WHERE uid='admin``` <br/> &nbsp;&nbsp; → 데이터베이스 쿼리문을 연달아 실행할 수 있게 하는 ```;``` 구분자를 사용함 |
+
+<br/>
+
+* SQL Injection 방지 방법
 
 <br/><br/>
 
