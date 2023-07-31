@@ -121,6 +121,7 @@
 | | | | file-download-1 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/file-download-1.md) |
 | | | | File Vulnerability Advanced for linux | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/File%20Vulnerability%20Advanced%20for%20linux.md) |
 | | | | Apache htaccess | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/Apache%20htaccess.md) |
+| | | Misconfiguration | web-misconf-1 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/web-misconf-1.md) |
 | ***Cryptography*** | 키 교환 | Diffie-Hellman | Textbook-DH | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-DH.md) |
 | ***Cryptography*** | 공개키 암호 | RSA | Textbook-RSA | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Cryptography/Textbook-RSA.md) |
 * 🚩 ***위 목록의 모든 워게임의 출처는 [Dreamhack](https://dreamhack.io)에 있습니다.***
