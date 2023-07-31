@@ -15,3 +15,13 @@
 <br/><br/>
 
 ## 문제 풀이(익스플로잇)
+1. 문제 사이트에 접속한 후 username에 'admin'을, password에 'admin'을 입력한 후 [Log in] 버튼을 클릭하면 admin 계정으로 로그인할 수 있음 (Change Password 부분은 [Skip] 버튼으로 넘어감)
+   <br/><br/>
+   <img width="1512" alt="web-misconf-1_문제 풀이 1" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/19638f77-525e-47fa-bc04-5f26ff4d8e3f">
+   <br/>
+
+<br/>
+
+2. 문제 설명에서 Organization에 플래그를 설정해두었다고 했으므로, [Server Admin]의 Settings 탭으로 들어간 후 auth.anonymous 항목의  **org_name**에서 FLAG를 획득할 수 있음
+   <br/><br/>
+   <img width="1512" alt="web-misconf-1_문제 풀이 2" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/8adb7bd2-d7ec-4755-b7a3-b28b7873ef35">
