@@ -220,7 +220,7 @@
 
 <br/>
 
-* System Commnad 예시: ping 명령어 실행
+* Commnad Injection 예시: ping 명령어 실행
     ```python
     @app.route('/ping')
     def ping():
@@ -235,7 +235,49 @@
 
 <br/>
 
-* System Command 방지 방법
+* Commnad Injection 방지 방법 → ***📌 사용자의 입력 데이터가 Command 인자가 아닌 다른 값으로 해석되는 것을 방지해야 함***
+    - 가장 좋은 방법 → 웹 어플리케이션에서 **OS Command를 사용하지 않는** 것
+        + ⚠️ *OS Command를 사용할 경우 해당 Command 내부에서 다른 취약점이 발생하는 등 잠재적인 위협이 될 수 있음*
+        + 웹 어플리케이션에서 OS Command가 필요한 경우 이를 대체하는 방법
+            - 필요한 OS Command가 **라이브러리의 형태로 구현**되어 있는 경우 해당 라이브러리를 사용함
+                + 예시
+                    ```python
+                    #! pip install ping3
+                    # https://github.com/kyan001/ping3/blob/master/ping3.py
+
+                    import ping3 # ping3: 소켓 프로그래밍을 통해 ping 기능을 구현한 라이브러리 (OS command인 ping을 대체함)
+
+                    ping3.ping(ip)
+                    ```
+                + ⚠️ *라이브러리의 보안성 및 안전성 등을 검토하고 사용해야 함!*
+            - 필요한 OS Command가 **라이브러리 형태로 구현되어 있지 않은** 경우 직접 프로그램 코드로 포팅해 사용함
+                + execve args 인자로 사용하는 방법
+                    ```python
+                    subprocess.Popen(['ping', '-c', '3', ip]) # shell meta 문자로 해석되지 입력값을 넣음
+                    ```
+    - OS Command에 사용자의 입력 데이터를 사용해야 하는 경우 **필터링을 사용함** → Allowlist/Blocklist 필터링 방식
+        + **Allowlist 필터링 방식**: 필요한 특정 입력값만 받아들이고 그 외의 모든 값들은 필터링하는 방식
+            - 정규식을 통한 Allowlist 방식의 필터링
+                ```python
+                # ping을 보내는 페이지의 경우 사용자가 입력한 ip가 정상적인 ip 형식인지 정규식으로 검증한 후 사용할 수 있음
+                
+                import re, os, ...
+                ...
+                chk_ip = re.compile('^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+
+                if bool(chk_ip.match(ip)): # 정규식을 만족하는 경우 (IP 형식의 입력인 경우) ping 명령어를 실행함
+                    return run_system(f'ping -c 3 {ip}')
+                else:
+                    return 'ip format error'
+                ```
+        + **Blocklist 필터링 방식**: 알려진 악성 패턴에 한해서만 필터링하고 그 외의 모든 값들은 받아들이는 방식
+            - OS Command에서 메타 문자로 사용되는 값을 필터링하고 따옴표로 감싸는 방법
+                ```python
+                # ping을 보내는 페이지의 경우 사용자가 입력한 ip를 따옴표(Single Quotes)로 감싸서 사용할 수 있음
+                if '\' in ip:
+                    return 'not allow character'
+                return run_system(f'ping -c 3 \'{ip}\'')
+                ```
 
 <br/><br/>
 
