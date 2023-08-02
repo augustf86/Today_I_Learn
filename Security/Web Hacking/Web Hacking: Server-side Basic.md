@@ -384,6 +384,59 @@
 <br/>
 
 * Path Traversal 예시: URL Path Traversal
+    - 외부에서 접근이 가능한 External Server와 내부망에서만 접근이 가능한 Internal Server로 나뉘어 작동하는 페이지의 코드
+        + 외부에서 접근이 가능한 External Server의 코드
+            ```python
+            # https://external.deramhack.io/
+            ...
+
+            def api_get(url):
+                return get('https://internal.dreamhack.io/' + url).text
+            
+            @app.route('/get_info', methods=['POST', 'GET'])
+            def get_into():
+                result = ''
+                if request.method == 'POST': # POST 메소드로 요청하는 경우
+                    # 사용자가 입력한 username 값을 가져와 api_get 함수에 '/api/user/username' 값을 전달함
+                    username = requests.form['username']
+                    result = api_get('api/user/' + username) # api_get 함수 수행 결과 https://internal.dreamhack.io/api/user/username에 요청을 전달하고 그 응답을 result에 저장함
+                return render_template('get_info.html', result=result)
+            
+            ...
+            ```
+            - ⚠️ 사용자의 입력 데이터(```username```)에 대한 필터링이나 인코딩이 부재함 ***→ Path Traversal 공격이 가능함***
+        + 내부에서만 접근이 가능한 Intenral Server의 코드
+            ```python
+            # https://internal.dreamhack.io/
+            ...
+
+            # index page란 문자열을 화면에 출력함
+            @app.route('/')
+            def index():
+                return 'index page'
+
+            # Route Info(Internal 페이지의 경로 정보)를 화면에 출력함
+            @app.route('/api')
+            def api():
+                return route_info()
+
+            # 입력한 username에 해당하는 계정의 레벨을 admin으로 변경하고 변경 사실을 화면에 출력함
+            @app.route("/api/admin/make_admin/<str:username>")
+            def make_admin(username):
+                users[username].level = 'admin'
+                return username + '의 레벨을 관리자로 설정'
+            
+            # 정상적인 사용자의 입력 데이터는 해당 경로로 접속하여 username에 해당하는 정보를 화면에 출력함
+            @app.route("/api/user/<str:username>")
+            def user(username):
+                return json.dumps(users[username])
+            ```
+    - Path Traversal 공격을 수행하기 위해 External Server 페이지의 ```username```에 입력해야 하는 값
+        | Internal Server 페이지 | Path Traversal를 통한 접근 |
+        |:---:|------|
+        | **api 페이지** | ```../```를 입력하면 api 페이지에 접근하여 화면에 Route Info를 출력함 <br/> &nbsp;&nbsp; - ```../```에 의해 상위 디렉터리인 ***/api***로 이동함 |
+        | **인덱스 페이지** | ```../../```를 입력하면 인덱스 페이지에 접근할 수 있음 <br/> &nbsp;&nbsp; - 첫 번째 ```../```에 의해 ***/api***로 이동하고, 두 번째 ```../```에 의해 ***/***로 이동함 |
+        | **make_admin/username <br/> 페이지** | ```../admin/make_admin/guest```를 입력하면 make_admin 페이지에 접근하여 guest 계정의 level를 관리자로 변경할 수 있음 ***→ ⚠️ 이 경로로 접근하면 모든 계정의 레벨을 admin으로 변경할 수 있음!*** |
 
 <br/><br/>
 
