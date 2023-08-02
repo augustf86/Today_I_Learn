@@ -373,6 +373,17 @@
 <br/>
 
 * Background: **URL/File Path**에 사용되는 구분 문자
+    | 문자 | 의미 |
+    |:---:|------|
+    | ```/``` | Path identifier (경로 구분자) |
+    | ```..``` | Parent directory → 상위 디렉터리를 의미함 <br/> - EX: ```/tmp/test/..a``` 경로의 해석 결과 ```/tmp/a```를 나타냄 |
+    | ```?``` | Qeury identifier → ```?``` 뒤는 query로 해석함 |
+    | ```#``` | Fragment Idneitifer → ```#``` 뒤의 값은 Server로 전달되지 않음 |
+    | ```&``` | Parameter separator → ```key1=value1&key2=value2``` 형식으로 사용됨 |
+
+<br/>
+
+* Path Traversal 예시: URL Path Traversal
 
 <br/><br/>
 
