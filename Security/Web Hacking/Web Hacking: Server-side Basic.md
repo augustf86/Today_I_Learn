@@ -328,6 +328,37 @@
 <br/>
 
 * SSTI 취약점 예시: Title과 Content를 입력하는 게시판 기능
+    ```python
+    ...
+    
+    class Secret(object):
+        def __init__(self, username, password):
+            self.username = username
+            self.password = password
+    
+    secret = Secret('admin', secret_password) # 📌 SSTI 취약점을 이용해 secret 변수의 password를 탈취
+
+    @app.route('/board')
+    def board():
+        title = request.form['title']
+        content = request.form['content']
+        template = '''
+        <html>
+            <body>
+                <h3 id="title">{{title}}</h3>
+                <h3 id="content">%s</h3>
+            </body>
+        </html>
+        ''' % content # 사용자가 입력한 content 값에 대한 별다른 검증 없이 사용하고 있음 → ⚠️ jinja2 구문을 삽입하여 서버 정보 탈취 가능
+    
+        # render_template_string 함수 실행 시 template으로 사용되는 데이터가 사용자의 입력 데이터에 의해 변조될 수 있음 (⚠️ SSTI 발생)
+        return render_template_string(template, title=title, secret=secret)
+    ```
+    - SSTI 취약점 공격 과정
+        | 순서 | 설명 |
+        |:---:|------|
+        | 01 | 템플릿 엔진마다 작동하는 문법이 다르기 때문에 웹 어플리케이션이 사용 중인 템플릿 엔진을 특정해줘야 함 <br/> &nbsp;&nbsp; - 예시에서는 Flask의 jinja2 템플릿 엔진을 사용하고 있음 |
+        | 02 | content에 ```{{secret.password}}```를 입력하면 template Engine이 이를 해석하여 secret의 password를 화면에 출력함 <br/> &nbsp;&nbsp; - ```{{...}}``` 구문: 중괄호 안에 들어가는 내용을 동적으로 보여줌 → 이를 이용해 공격함 |
 
 <br/><br/>
 
