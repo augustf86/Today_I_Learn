@@ -363,6 +363,16 @@
 <br/><br/>
 
 ### Path Traversal
+| | 설명 |
+|:---:|------|
+| 정의 | URL/File Path를 사용할 때 사용자의 입력값에 메타문자를 삽입하여 임의의 경로에 접근 가능한 취약점 <br/> &nbsp;&nbsp; - *📌 File Patth에서 발생하는 Path Traversal은 File Vulnerability를 참고* <br/> &nbsp;&nbsp; - 여기서는 URL에서 발생하는 Path Traversal만 다룸 |
+| 발생 상황 | 사용자의 입력 데이터가 적절한 검증 없이 URL/File Path에 직접적으로 사용될 경우에 발생함 <br/> → ⚠️ 사용자의 입력 데이터가 URL Path에 사용될 경우 **URL 구분 문자를 사용하지 못하도록 하는 필터링/인코딩이 부재한 경우**에 <br/> &nbsp;&nbsp;&nbsp;&nbsp; 발생함|
+| 공격 효과 | 설계 및 개발 당시에 **의도하지 않은 임의의 경로에 접근**할 수 있음 <br/> &nbsp;&nbsp; - URL에 구분 문자를 삽입하여 의도한 경로가 아닌 상위 경로에 접근해 다른 API를 호출할 수 있음 |
+| 방지 방법 | URL Encoding과 같은 인코딩을 사용하여 사용자의 입력 데이터에 포함된 구분문자를 인식하지 않도록 만듦 |
+
+<br/>
+
+* Background: **URL/File Path**에 사용되는 구분 문자
 
 <br/><br/>
 
