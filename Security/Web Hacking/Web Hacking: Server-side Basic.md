@@ -295,6 +295,39 @@
 <br/>
 
 * Background: Template Engine
+    - Template Engine을 사용하는 이유
+        + 웹 어플리케이션에서 **동적인 내용을 HTML로 출력할 때** 미리 정의한 Template에 동적인 값을 넣어 출력하기 위해 사용함
+        + 예시: 사용자의 정보를 출룍하는 페이지 (Template Engine으로 jinja2를 사용해 Render함)
+            ```python
+            from flask import ...
+            ...
+
+            @app.route('/user_info')
+            def user_info():
+                ...
+                # Template을 생성함 ({{}}위치에 변수를 넣고 렌더할 때 해당 변수에 들어있는 값을 화면에 출력함)
+                template = '''
+                <html>
+                    <body>
+                        <h3> 유저 아이디: {{user.uid}}</h3> 
+                        <h3> 유제 레벨: {{user.level}}</h3>
+                    </body>
+                </html>'''
+            
+                # 생성한 Template를 Render할 때 guest 유저가 접근한 경우 guest 유저의 아이디와 레벨이 화면에 표시됨
+                return render_template_string(template, user=user)
+            ```
+    - 각 언어별 사용되는 Template Engine
+        | 언어 | Template Engine |
+        |:---:|------|
+        | **Python** | Jinja2, Mako, Tornaod, ... |
+        | **PHP** | Smarty, Twig, ... |
+        | **Javascript** | Pug, Marko, EJS, ... |
+        + 대부분의 Template 엔진에서 ```{{2*3}}```, ```${2*3}```과 같은 문법을 지원함
+
+<br/>
+
+* SSTI 취약점 예시: Title과 Content를 입력하는 게시판 기능
 
 <br/><br/>
 
