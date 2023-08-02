@@ -285,6 +285,16 @@
 <br/><br/>
 
 ### Server Side Template Injection (SSTI)
+| | 설명 |
+|:---:|------|
+| 정의 | Template Engine을 이용하여 웹 어플리케이션을 구동할 때 사용자의 입력값이 적절하게 필터링되지 않아 템플릿 구문을 삽입할 수 있는 취약점 |
+| 발생 상황 | Template 내부에서 사용되는 context가 아닌 **Template source에 사용자 입력이 들어가는 경우**에 발생함 <br/> &nbsp;&nbsp; - 사용자의 입력 데이터가 **Template에 직접 사용**되면 Template Engine이 실행하는 문법을 사용할 수 있기 때문에 발생함 |
+| 공격 결과 | 개발자가 의도히지 않은 임의의 Template 기능을 실행할 수 있음 <br/> &nbsp;&nbsp; - ⚠️ Server side에서 발생하기 때문에 서버가 가지고 있는 **민감한 정보를 탈취**할 수 있음 |
+| 방지 방법 | - 사용자의 입력 데이터를 Template Source에 삽입되지 않도록 해야 함 <br/> - 사용자의 입력 데이터를 Template에서 출력할 때는 Template Source에 값을 넣어 출력해야 함 |
+
+<br/>
+
+* Background: Template Engine
 
 <br/><br/>
 
