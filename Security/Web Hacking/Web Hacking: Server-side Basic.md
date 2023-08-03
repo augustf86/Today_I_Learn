@@ -527,6 +527,76 @@
                 | **user_info** 페이지에서 user_idx에  <br/> ```../search```를 입력 | **/v1/api/user/search**에 접근하여 해당 위치로 URL 요청을 보낼 수 있음 <br/> &nbsp;&nbsp; - ```..``` 문자: 상위 디렉터리로 이동하기 위한 구분자 |
                 | **user_search** 페이지에서 user_name에 <br/> ```admin&user_type=private#```를 입력 | 생성된 URL에서 ```#``` 문자 뒤의 ```&user_type=public```이 생략되어 <br/> ```/search?user_name=admin&user_type=private```로 URL 요청을 전송함 <br/> &nbsp;&nbsp; - ```#``` 문자: Fragment Identifier, ```#``` 뒤에 붙은 문자열은 API 경로에서 생략됨 |
     - **CASE 3**: 웹 서비스의 요청 Body에 이용자의 입력값이 포함되는 경우
+        + 데이터를 구성할 때 이용자의 입력값을 파라미터의 형식으로 설정할 때 **URL에서 파라미터 구분 문자인 ```&```를 포함시킴** <br/> &nbsp;&nbsp; → 설정되는 데이터의 값을 변조할 수 있음
+            + 내부 API에서는 전달받은 값을 파싱할 때 **파라미터의 값을 차례대로 가져와 사용함** (동일한 파라미터가 존재하는 경우 **앞에 위치한 값**을 가져와 사용함) <br/> &nbsp;&nbsp; → ⚠️ 이 점을 이용해 변조해야 할 값을 앞에 위치하도록 만들어 파라미터의 값을 변조할 수 있음
+        + 예시
+            ```python
+            # pip3 install Flask
+            # python main.py # 터미널에서 python 코드 실행 시 사용하는 명령어
+
+            from flask import Flask, request, session
+            import requests
+            from os import urandom
+
+            app = Flask(__name__)
+            app.secret_key = urandom(32)
+
+            INTERNAL_API = "http://127.0.0.1:8000/"
+            header = {"Content-Type": "application/x-www-form-urlencoded"}
+
+            # board_write: 사용자에게 title, body를 입력받고 이를 이용해 POST 메소드로 내부 API에 요청을 보내고 그 응답을 반환함
+            @app.route("/v1/api/board/write", methods=["POST"])
+            def board_write():
+                session["idx"] = "guest" # session idx를 guest로 설정함
+
+                # form 데이터(이용자의 입력값)에서 title, body 값을 가져옴
+                title = request.form.get("title", "")
+                body = request.form.get("body", "")
+
+                # 전송할 데이터(HTTP body 데이터)를 구성 → 형식: key1=value1&key2=value2&key3=value3 형식
+                data = f"title={title}&body={body}&user={session['idx']}"
+
+                # INTERNAL_API에 이용자가 입력한 값을 HTTP body 데이터로 사용해서 요청함
+                response = requests.post(f"{INTERNAL_API}/board/write", headers=header, data=data)
+
+                # INTERNAL_API에 전송한 요청에 대한 응답 결과를 화면에 출력함
+                return response.content
+            
+            # internal_board_write: board_write 함수에서 요청하는 내부 API를 구현하는 기능
+            @app.route("/board/write", methods=["POST"])
+            def internal_board_write():
+                # form 데이터로 입력받은 값(전달된 title, body, 계정 이름)을 JSON 형식으로 변환함
+                title = request.form.get("title", "")
+                body = request.form.get("body", "")
+                user = request.form.get("user", "")
+                info = {
+                    "title": title,
+                    "body": body,
+                    "user": user
+                }
+                return info
+
+            # index: board_write 기능을 호출하기 위한 인덱스 페이지
+            @app.route("/")
+            def index():
+                return """
+                    <form action="/v1/api/board/write" method="POST">
+                        <input type="text" placeholder="title" name="title"/><br/>
+                        <input type="text" placeholder="body" name="body"/><br/>
+                        <input type="submit"/>
+                    </form>
+                """
+            
+            app.run(host="127.0.0.1", port=8000, debug=True)
+            ```
+            - 이용자의 입력값인 title에서 ```&``` 구분 문자를 포함하는 ```title&user=admin```을 입력하면 data을 변조할 수 있음
+                ```python
+                data = f"title=title&user=admin&body=body&user=guest" # 변조된 데이터
+                ```
+                + 내부 API에서는 전달받은 값을 파싱할 때 **앞에 존재하는 파라미터의 값**을 가져와 사용함 <br/> &nbsp;&nbsp; → ```user=admin```이 ```user=guest```보다 앞에 위치하므로 user를 변조할 수 있음
+<br/>
+
+* SSRF 방지 방법
 
 <br/><br/><br/>
 
