@@ -471,6 +471,40 @@
 <br/>
 
 * SSRF 발생 상황
+    - **CASE 1**: 웹 서비스가 이용자가 입력한 URL에 요청을 보내는 경우
+        + 웹 서비스에서 사용하는 **마이크로서비스의 API 주소**를 알아내어 이를 이용자의 입력값으로 전달함 <br/> &nbsp;&nbsp; → **외부에서 직접 접근할 수 없는 마이크로서비스**의 기능을 사용할 수 있음
+        + 예시 코드
+            ```python
+            # pip install flask requests # 파이썬의 flask, requests 라이브러리를 설치하는 명령
+            # python3 main.py # 터미널에서 python 코드를 실행하는 명령어
+
+            from flask import Flask, request
+            import requests
+
+            app = Flaks(__name__)
+
+            # image_downloader: 이용자가 입력한 URL에 HTTP 요청을 보내고 응답을 반환함
+            @app.route("/image_downloader")
+            def image_downloader():
+                image_url = request.args.get("image_url", "") # 이용자가 입력한 image_url를 가져옴
+                response = requests.get(image_url) # requests 라이브러리를 사용해서 image_url에 HTTP GET 메소드 요청을 보내고 결과를 response에 저장함
+
+                return ( # 아래의 3가지 정보를 반환함
+                    response.content, # HTTP 응답으로 온 데이터
+                    200, # HTTP 응답 코드
+                    { "Content-Type": response.headers.get("Content-Type", "")}, # HTTP 응답으로 온 헤더 중 Content-Type(응답의 타입)
+                )
+            
+            # request_info: 웹 페이지에 접속한 브라우저의 정보(User-Agent)를 반환함
+            @app.route("/request_info")
+            def request_info():
+                return request.user_agent.string # '접속할 때' 사용한 브라우저의 정보가 출력됨
+            
+            app.run(host="127.0.0.1", port=8000)
+            ```
+            - image_downloader 페이지에서 ```image_url```로 아래와 같이 **request_info** 경로를 입력 (```https://127.0.0.1:8000/request_info```)하면 request_info에 HTTP 요청을 보내고 응답을 반환함
+            - 웹 서버에 위치한 image_downloader(웹 서비스)에서 request_info에 HTTP Reqeust를 전송함 <br/> &nbsp;&nbsp; → **접속할 때** 사용한 브라우저의 정보(```user-agent```)로 ```python-requests/...```가 출력됨
+    - **CASE 2**: 웹 서비스의 요청 URL에 이용자의 입력값이 포함되는 경우
 
 <br/><br/><br/>
 
