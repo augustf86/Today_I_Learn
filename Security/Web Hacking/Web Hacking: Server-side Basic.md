@@ -3,6 +3,7 @@
 * [Dreamhack Lecture] Server-side Basic [🔗](https://dreamhack.io/lecture/courses/15)
 * [Dreamhack Web Hacking] Server Side: SQL Injection [🔗](https://dreamhack.io/lecture/courses/191)
 * [Dreamhack Web Hacking] Server Side: Command Injection [🔗](https://dreamhack.io/lecture/courses/187)
+* [Dreamhack Web Hacking] Server Side: SSRF [🔗](https://dreamhack.io/lecture/courses/190)
 * [Dreamhack Web Hacking] Server Side: File Vulnerability [🔗](https://dreamhack.io/lecture/courses/202)
 
 <br/><br/>
