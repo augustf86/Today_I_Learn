@@ -597,6 +597,36 @@
 <br/>
 
 * SSRF 방지 방법
+    - 사용자가 입력한 URL의 Host를 **Allowlist 방식**으로 검증하는 방법
+        + 미리 신뢰할 수 있는 Domain Name, IP Address를 Allowlist에 등록함 → 사용자가 입력한 URL에서 Host 부분을 파싱해 Allowlist에 존재하는지 확인함
+        + 예시
+            ```python
+            from urllib.parse import ulrparse
+
+            ALLOWLIST_URL = [ # 미리 신뢰할 수 있는 Domain Name, IP Address를 등록해둔 Allowlist
+                'i.imgur.com',
+                'img.dreamhack.io',
+                ...
+            ]
+            SCHEME = ['http', 'https'] # 허용하는 프로토콜의 목록
+
+            def is_safehost(url):
+                urlp = urlparse(url) # 사용자가 입력한 url를 파싱하여 scheme, host를 얻음
+                if not urlp.scheme in SCHEME: # http, https 외의 프로토콜을 사용하여 접근 시 이를 차단함
+                    return False
+                hostname = urlp.hostname.lower() # hostname을 모두 소문자로 변환함 (대소문자 혼용으로 필터링을 우회하는 것을 방지)
+                if hostname in ALLOWLIST_URL:
+                    return True # hostname이 Allowlist에 등록되어 있는 경우 True를 반환함 (그 외의 경우는 False를 반환함)
+                return False
+
+            print(is_safehost('https://127.0.0.1/')) # False
+            print(is_safehost('https://i.imgur.com/image.png')) # True
+            ```
+            - ⚠️ Blocklist 방식으로 사용자가 입력한 URL의 Host가 내부망/루프백 주소인지 검증할 경우 발생하는 문제점
+                + ```http://127.0.0.4/```, ```https://0x7f000001```와 같은 다양한 루프백 주소를 사용하여 우회 가능
+                + Host에 Domain Name을 넣어 DNS Rebinding 공격 등으로 우회 가능
+    - 사용자의 URL을 처리하는 서버를 **독립적으로 망 분리**를 하는 방법
+        + SSRF 취약점이 발생하더라도 다른 취약점과 연계를 하지 못하도록 방지함
 
 <br/><br/><br/>
 
