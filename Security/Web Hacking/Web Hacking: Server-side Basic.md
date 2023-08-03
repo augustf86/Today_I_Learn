@@ -505,6 +505,28 @@
             - image_downloader 페이지에서 ```image_url```로 아래와 같이 **request_info** 경로를 입력 (```https://127.0.0.1:8000/request_info```)하면 request_info에 HTTP 요청을 보내고 응답을 반환함
             - 웹 서버에 위치한 image_downloader(웹 서비스)에서 request_info에 HTTP Reqeust를 전송함 <br/> &nbsp;&nbsp; → **접속할 때** 사용한 브라우저의 정보(```user-agent```)로 ```python-requests/...```가 출력됨
     - **CASE 2**: 웹 서비스의 요청 URL에 이용자의 입력값이 포함되는 경우
+        + 이용자의 입력값 중 URL의 구성 요소 문자를 삽입함 → API의 경로를 조작할 수 있음 (📌 **Path Traversal**)
+        + 예시
+            ```python
+            INTERNAL_API = "http://api.internal" # "http;://127.17.0.3/"
+
+            @app.route("/v1/api/user/information")
+            def user_info():
+                user_idx = request.args.get("user_idx", "") # 이용자가 전달한 user_idx를 가져옴
+                response = requests.get(f"{INTERNAL_API}/user/{user_idx}") # user_idx(이용자의 입력값)을 내부 API의 경로로 사용함
+
+            @app.route("/v1/api/user/search")
+            def user_search():
+                user_name = request.args.get("user_name", "") # 이용자가 전달한 user_name을 가져옴
+                user_type = "public"
+                response = requests.get(f"{INTERNAL_API}/user/search?user_name={user_name}&user_type={user_type}") # user_name(이용자의 입력값)을 내부 API의 쿼리로 사용함
+            ```
+            - 이용자의 입력값에 따른 결과
+                | 이용자의 입력값 | 설명 |
+                |:---:|------|
+                | **user_info** 페이지에서 user_idx에  <br/> ```../search```를 입력 | **/v1/api/user/search**에 접근하여 해당 위치로 URL 요청을 보낼 수 있음 <br/> &nbsp;&nbsp; - ```..``` 문자: 상위 디렉터리로 이동하기 위한 구분자 |
+                | **user_search** 페이지에서 user_name에 <br/> ```admin&user_type=private#```를 입력 | 생성된 URL에서 ```#``` 문자 뒤의 ```&user_type=public```이 생략되어 <br/> ```/search?user_name=admin&user_type=private```로 URL 요청을 전송함 <br/> &nbsp;&nbsp; - ```#``` 문자: Fragment Identifier, ```#``` 뒤에 붙은 문자열은 API 경로에서 생략됨 |
+    - **CASE 3**: 웹 서비스의 요청 Body에 이용자의 입력값이 포함되는 경우
 
 <br/><br/><br/>
 
