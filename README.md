@@ -118,6 +118,7 @@
 | | | | web-ssrf | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/web-ssrf.md) |
 | | | | pathtraversal | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/pathtraversal.md) |
 | | | | simple-ssti | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/simple-ssti.md) |
+| | | | command-injection-chatgpt | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/command-injection-chatgpt.md) |
 | | | File Vulnerability | image-storage | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/image-storage.md) |
 | | | | file-download-1 | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/file-download-1.md) |
 | | | | File Vulnerability Advanced for linux | [📄](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Wargame/Web/File%20Vulnerability%20Advanced%20for%20linux.md) |
