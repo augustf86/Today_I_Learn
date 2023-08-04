@@ -1,4 +1,4 @@
-# [Dreamhack Wargame] simple-stti
+# [Dreamhack Wargame] simple-ssti
 * 출처: 🚩 simple-ssti [🔗](https://dreamhack.io/wargame/challenges/39)
 * Reference: Server Side Template Injection (SSTI)
 * 문제 설명
