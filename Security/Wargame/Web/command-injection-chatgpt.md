@@ -60,3 +60,10 @@ if __name__ == '__main__':
 <br/><br/>
 
 ## 문제 풀이 (익스플로잇)
+Host에 ```127.0.0.1 | cat flag.py```를 입력한 후 [Ping!] 버튼을 클릭하면 Ping Result 페이지에서 ```cat flag.py``` 명령어 수행 결과로 출력된 FLAG를 획득할 수 있음
+<br/><br/>
+<img width="1512" alt="command-injection-chatgpt_문제 풀이" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/b2675f31-52f8-4ed0-8d94-88402cbb4b7f"><br/>
+
+* 명령어 연속 실행(```&&```), 명령어 구분자(```;```) 메타 문자를 사용하는 경우의 익스플로잇 결과
+  <br/><br/>
+  <img width="1512" alt="command-injection-chatgpt_문제 풀이(추가 자료)" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/14240350-f3c5-4caf-a74a-7753df4fb2d9"><br/>
