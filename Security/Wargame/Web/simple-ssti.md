@@ -48,3 +48,10 @@ app.run(host='0.0.0.0', port=8000)
       <img width="1512" alt="simple-ssti_템플릿 엔진 확인" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/872e7b4d-7fd6-4cd6-95f9-838ac04d9fa4"><br/>
       
     - FLAG가 ```app.secret_key```로 설정되어 있으므로 **```config``` 딕셔너리의 ```SECRET_KEY```를 확인하면 플래그를 획득할 수 있음**
+
+<br/><br/>
+
+## 문제 풀이 (익스플로잇)
+문제 사이트에 접속한 후 주소 뒤에 ```{{config.items()}}```를 덧붙인 후 이를 요청하면 404 에러가 발생하여 SSTI 취약점으로 인해 config 딕셔너리의 key-value 쌍들이 화면에 출력되어 여기서 비밀키로 설정된 플래그를 확인할 수 있음
+<br/><br/>
+<img width="1512" alt="simple-ssti_문제 풀이" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/1ecbaf4d-9224-4b08-8639-83440a96d511">
