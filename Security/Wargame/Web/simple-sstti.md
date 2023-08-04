@@ -44,4 +44,7 @@ app.run(host='0.0.0.0', port=8000)
 ```
 * 404 에러 발생 시 이를 처리하는 ```Error404()``` 함수(```@app.errorhandler```)에서 request.path에 대한 별다른 검증 과정을 수행하지 않아 템플릿 구문을 삽입하여 서버 정보를 탈취할 수 있음
     - Template Engine마다 작동하는 문법이 다름 → 웹 어플리케이션이 사용 중인 템플릿 엔진을 특정해야 함
+      <br/><br/>
+      <img width="1512" alt="simple-ssti_템플릿 엔진 확인" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/872e7b4d-7fd6-4cd6-95f9-838ac04d9fa4"><br/>
+      
     - FLAG가 ```app.secret_key```로 설정되어 있으므로 **```config``` 딕셔너리의 ```SECRET_KEY```를 확인하면 플래그를 획득할 수 있음**
