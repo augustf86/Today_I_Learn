@@ -848,6 +848,66 @@
 <br/>
 
 * Business Logic Vulnerability 예시: 후기 기능에서 발생할 수 있는 취약점
+    - 후기 기능의 비즈니스 로직과 이를 구현한 코드
+        + 후기 작성 기능
+            | 순서 | 설명 |
+            |:---:|------|
+            | 01 | 사용자가 후기 작성을 요청함 *→ ```review_write()``` 함수를 호출함* |
+            | 02 | 로그인한 사용자의 세션값과 후기 내용을 가져옴 *→ ```review_write()``` 함수의 1, 2번째 코드*|
+            | 03 | 후기를 작성한 사용자의 세션이 이미 존재하는지 확인함 *→ ```review_write()``` 함수의 첫 번째 if 조건문 부분* |
+            | 04 | 3번 과정을 통과하면 해당 사용자의 후기를 저장하고 100포인트를 지급함 *→ ```review_write()``` 함수의 조건문 이후 나머지 부분* |
+            ```python
+            @app.route('/reviewWrite')
+            def review_wirte():
+                userName = session['username'] # 세션에서 username(키)에 해당하는 값을 가져옴
+                contents = requests.form['content'] # 사용자가 입력한 content를 가져옴
+
+                if review_Check(userName): # 이미 해당 userName으로 작성된 후기가 존재한다면 Already write를 출력하고 후기 기능을 종료함
+                    return "Already write"
+                
+                result = review_Insert(userName, content) # userName(사용자 이름)과 content(후기 내용)을 review_Insert() 함수로 저장함
+                pointResult = userPoint(userName, 100) # 해당 이용자(userName)의 포인트를 100 증가시킴 (100포인트 지금)
+
+                if result = pointResult: # 리뷰 작성과 포인트 지급이 완료된 경우
+                    return "write success."
+                else:
+                    return "write fail."
+            ```
+        + 후기 삭제 기능
+            | 순서 | 설명 |
+            |:---:|------|
+            | 01 | 사용자가 후기 삭제를 요청함 *→ ```review_delete()``` 함수를 호출함* |
+            | 02 | 로그인한 사용자의 세션값과 삭제할 후기의 인덱스를 가져옴 *→ ```review_delete()``` 함수의 1, 2번째 코드* |
+            | 03 | 삭제하려는 후기를 작성한 사용자와 후기 삭제를 요청한 사용자가 동일한지 확인함 *→ ```review_delete()``` 함수의 첫 번째 if 조건문 <br/>부분* |
+            | 04 | 3번 과정을 통과하면 해당 후기를 삭제함 *→ ```review_delete()``` 함수의 조건문 이후 나머지 부분* <br/> &nbsp;&nbsp; → **⚠️ 저장된 후기를 삭제하지만 지급한 포인트는 차감하지 않아 후기 작성/삭제를 반복하여 포인트를 무제한으로 적립받을 수 있음** |
+            ```python
+            @app.route('/reviewDelete')
+            def review_delete():
+                userName = session['username'] # 세션에서 username(키)에 해당하는 값을 가져옴
+                idx = request.args.get('idx') # 사용자의 idx 인자 값을 가져옴
+
+                if review_owner_check(userName): # 삭제하려는 후기가 후기 삭제를 요청한 사용자가 작성한 것인지 확인함 → 다르다면 후기 삭제 기능을 종료함
+                    return "owner check fail."
+                
+                result = review_Delete(idx) # idx(후기 번호)를 이용해 해당 후기를 삭제함
+
+                if result: # 후기 삭제를 성공적으로 완료한 경우
+                    return "delete success."
+                else:
+                    return "delete fail."
+            ```
+    - 취약점 패치 방법
+        | | 설명 |
+        |:---:|------|
+        | 방법 1 | **후기 삭제 코드**에서 10번째 라인(```result = review_Delete(idx)``` 뒤)에 ```userPoint(userName, -100)``` 코드를 추가함 |
+        | 방법 2 | 최초 1회에만 포인트를 지급하는 형태로 구현함 |
+    - ⚠️ 전체 서비스의 기능 중 하나인 후기 기능에서 발생할 수 있는 취약점만 다루고 있음 ***→ 서비스 전체로 생각한다면 또 다른 취약점이 발생할 수 있음***
+        + 사용자가 후기 이벤트를 통해 얻은 포인트를 쇼핑/송금과 같이 포인트를 사용하는 다른 기능에서 모든 포인트를 사용한 후기를 삭제하는 경우 등
+        + 후기 삭제로 인해 다른 취약점이 발생하는 것을 방지하기 위해 **후기 삭제 기능을 지원하지 않도록 구현함**
+
+<br/><br/>
+
+### IDOR (Insecure Direct Object Reference, 안전하지 않은 객체 참조)
 
 <br/><br/><br/>
 
