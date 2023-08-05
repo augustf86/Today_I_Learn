@@ -918,6 +918,42 @@
 <br/>
 
 * IDOR 취약점 예시: 계좌 정보에 대한 검증 없이 사용하는 잔액 조회/송금 기능 (계좌번호를 데이터베이스에 숫자로 저정함)
+    - 비즈니스 로직과 이를 구현하는 코드
+        + 잔액 조회 기능
+            | 순서 | 설명 |
+            |:---:|------|
+            | 01 | 사용자가 잔액 조회를 요청함 *→ ```amount()``` 함수를 호출함* |
+            | 02 | 사용자가 입력한 계좌번호를 가져옴 *→ ```amount()``` 함수의 첫 번째 코드 부분*|
+            | 03 | 2번에서 가져온 계좌번호에 해당하는 정보를 가져와 화면에 출력함 *→ ```amount()``` 함수의 2, 3번째 코드 부분* <br/> &nbsp;&nbsp; → **⚠️ 계좌정보에 대한 별다른 검증 과정이 존재하지 않아 다른 사용자의 계좌 정보도 조회할 수 있음** |
+            ```python
+            @app.route('/amount')
+            def amount():
+                accountNumber = request.form['accountNumber'] # 사용자가 입력한 accountNumber(계좌번호)를 가져옴
+                accountInfo = get_account_info_by_number(accountNumber) # 계좌번호(accountNumber)에 해당하는 userID(사용자), Amout(계좌 잔액)를 가져옴
+                return accountInfo # 가져온 계좌번호의 정보를 화면에 출력함
+            ```
+        + 송금 기능
+            | 순서 | 설명 |
+            |:---:|------|
+            | 01 | 사용자가 송금을 요청함 *→ ```send()``` 함수를 호출함* |
+            | 02 | 사용자가 입력한 보내는 계좌번호, 받는 계좌번호, 송금할 금액을 가져옴 *→ ```send()``` 함수의 1~3번째 코드 부분* |
+            | 03 | 보내는 계좌번호의 잔고가 송금할 금액보다 큰 지 확인함 *→ ```send()``` 함수의 if문의 조건문* |
+            | 04 | 3번을 통과하면 보내는 계좌번호에서 입력한 금액만큼을 받는 계좌번호로 송금함 *→ if문의 실행 코드들* <br/> &nbsp;&nbsp; → **⚠️ 보내는 계좌번호가 사용자 본인의 것인지 검증하는 과정이 없어 다른 사용자의 계좌에서 돈을 송금시킬 수 있음** |
+            ```python
+            @app.route('/send')
+            def send():
+                # 사용자가 입력한 sendNumber(보내는 계좌번호), recvNumber(받는 계좌번호), amount(금액)를 가져옴
+                sendNumber = request.form['sendNumber']
+                recvNumber = request.form['recvNumber']
+                amount = request.form['amount']
+
+                if amountCheck(sendNumber, amount): # sendNumber(보내는 계좌번호)의 잔액이 amount(송금할 금액)보다 큰 지 확인함
+                    sendResult = sendAmount(sentNumber, recvNumber, amount) # sendNumber(보내는 계좌번호)에서 amount(송금할 금액)만큼을 recvNumber(받는 계좌번호)로 송금함
+                    return sendResult
+            ```
+<br/>
+
+* IDOR 취약점 방지 방법
 
 <br/><br/><br/>
 
