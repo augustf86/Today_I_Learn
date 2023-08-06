@@ -994,6 +994,36 @@
 <br/><br/>
 
 ### Common: PHP, Python, Javascript에서 공통적으로 조심해야 하는 함수 및 패턴
+* 코드 실행 함수(eval)
+    - **```eval```의 인자로 사용자의 입력 데이터가 사용**될 경우 악의적인 데이터를 입력해 원하는 프로그램 코드를 실행할 수 있음 <br/> &nbsp;&nbsp; → 사용자의 입력 데이터가 ```eval```의 인자로 사용되지 않아야 함
+    - 웹 어플리케이션 언어 별 코드 실행 함수
+        + php
+            ```php
+            <?php
+                eval("1+1"); // 결과: 2
+            ?>
+            ```
+            - ```eval(string $code)``` 함수 [🔗](https://www.php.net/manual/en/function.eval.php)
+        + python
+            ```python
+            eval("1+1") # 결과: 2
+            exec("2+2") # 결과: 4
+
+            eval("a=1") # 결과: SyntaxError: invalid syntax → eval() 함수는 하나의 식만 처리하기 때문에 에러가 발생함
+            exec("a=1") # 결과: a=1 → exec() 함수는 하나의 문장을 처리하기 때문에 에러가 발생하지 않음
+            ```
+            - ```eval(expression, globals=None, locals=None)``` 함수 [🔗](https://docs.python.org/3/library/functions.html#eval)
+            - ```exec(object, gloabls=None, locals=None)``` 함수 [🔗](https://docs.python.org/3/library/functions.html#exec)
+        + javascript
+            ```javascript
+            eval("1+1"); // 2
+            ```
+            - ```eval(script)``` 함수 [🔗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval)
+                + ⚠️ eval 사용 시 발생할 수 있는 문제점에 대해서는 [Never use eval()!](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!)을 참고
+
+<br/>
+
+* OS Command Function
 
 <br/><br/><br/>
 
