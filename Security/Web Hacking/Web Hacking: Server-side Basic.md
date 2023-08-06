@@ -1024,6 +1024,38 @@
 <br/>
 
 * OS Command Function
+    - 시스템 함수 사용 시 **실행하는 명령어에 사용자의 입력 데이터가 포함**될 경우 Command Injection 취약점이 발생할 수 있음
+        + **시스템 함수**(system function): OS Command(시스템 명령어)를 실행하기 위한 어플리케이션 함수
+        + 📄 *Injection: Command Injection* [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Web%20Hacking:%20Server-side%20Basic.md#command-injection)을 참고
+    - 웹 어플리케이션 언어 별 시스템 함수
+        + php
+            | 분류 | 항목 | Docs |
+            |:---:|------|:---:|
+            | ***Program execution Functions*** | ```system(string $command, int &$result_code = null)``` | [🔗](https://www.php.net/manual/en/function.system) |
+            | | ```passthru(string $command, int &$result_code = null)``` | [🔗](https://www.php.net/manual/en/function.passthru.php) |
+            | | ```shell_exec(string $command)``` | [🔗](https://www.php.net/manual/en/function.shell-exec) |
+            | | ```proc_open(array\|string $command, ...)``` (```popen()```과 유사함) | [🔗](https://www.php.net/manual/en/function.proc-open) |
+            | | ```exec(string $command, ...)``` | [🔗](https://www.php.net/manual/en/function.exec.php) |
+            | ***Execution Operator*** | backtick operator (```shell_exec()```와 동일함) | [🔗](https://www.php.net/manual/en/language.operators.execution.php) |
+            | ***File System Functions*** | ```popen(string $command, string $mode)``` | [🔗](https://www.php.net/manual/en/function.popen) |
+        + python
+            | module | 함수 | Docs |
+            |:---:|------|:---:|
+            | ***os*** | ```os.system(command)``` | [🔗](https://docs.python.org/3/library/os.html#os.system) |
+            | | ```os.popen(cmd, mode='r', buffering=-1)``` | [🔗](https://docs.python.org/3/library/os.html#os.popen) |
+            | ***subprocess*** | ```subprocess.call(args, *, ...)``` | [🔗](https://docs.python.org/3/library/subprocess.html) |
+            | | ```subprocess.run(args, *, ...)``` | [🔗](https://docs.python.org/3/library/subprocess.html) |
+            | | ```subprocess.Popen(args, ...)``` | [🔗](https://docs.python.org/3/library/subprocess.html) |
+        + javascript (NodeJS)
+            | 함수 | Docs |
+            |------|:---:|
+            | ```child_process.exec(command[, options][,callback])``` | [🔗](https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback) |
+            | ```child_process.spawn(command[, args][, options])``` | [🔗](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) |
+            + ⚠️ 위 함수들을 사용할 때 **필터링되지 않은 사용자의 입력값은 전달하지 않는 것**을 권장함 <br/> &nbsp;&nbsp;&nbsp;&nbsp; → 쉘 메타문자를 포함한 모든 입력은 임의의 명령 실행을 트리거하는 데 사용될 수 있음
+
+<br/>
+
+* Filesystem Function
 
 <br/><br/><br/>
 
