@@ -1072,6 +1072,14 @@
             | Etc (파일 복사) | ```copy($from, $to)``` 함수: ```$from``` 파일을 ```$to``` 파일로 복사함 [🔗](https://www.php.net/manual/en/function.copy.php) |
             | Etc (파일 삭제) | ```unlink($filename)``` 함수: 파일(```$filename```)을 삭제함 (Unix C ```unlinke()``` 함수와 유사) [🔗](https://www.php.net/manual/en/function.unlink.php) |
         + python
+            | 피해 분류 | 함수 |
+            |:---:|------|
+            | File Road | ```open(filename).read()``` <br/> &nbsp;&nbsp; → ```open()``` 함수: filename(파일)을 읽기 모드("r")로 열고 파일 객체를 리턴함 <br/> &nbsp;&nbsp; → ```read()``` 함수: 파일 내용 전체를 문자열로 리턴함 (```파일객체.read()``` 형태로 사용함) |
+            | File Write | ```open(filename, "w").write(data)``` <br/> &nbsp;&nbsp; → ```open()``` 함수: filename(파일)을 쓰기 모드("w")로 열고 파일 객체를 리턴함 <br/> &nbsp;&nbsp; → ```write(data)``` 함수: 문자열 데이터(```data```)를 파일에 씀 (```파일객체.write()``` 형태로 사용함) |
+            | Etc (파일 복사) | ```shutil.copy('Original_FILE', 'Copy_FILE')``` <br/> &nbsp;&nbsp; → ```shutil.copy(src, dst)``` 함수: ```src```(파일)을 ```dst```(파일/디랙터리)에 복사함 (*```import shutil``` 필요* [🔗](https://docs.python.org/3/library/shutil.html)) |
+            | Etc (파일 삭제) | ```os.remove(filename)``` <br/> &nbsp;&nbsp; → ```os.remove(path)``` 함수: 파일 경로를 제거함 (*```import os``` 필요* [🔗](https://docs.python.org/3/library/os.html)) |
+            + 💡 참고: [점프 투 파이썬] 04-3 파일 읽고 쓰기 [🔗](https://wikidocs.net/26)
+        + javascript (NodeJS)
 
 <br/><br/><br/>
 
