@@ -1080,6 +1080,21 @@
             | Etc (파일 삭제) | ```os.remove(filename)``` <br/> &nbsp;&nbsp; → ```os.remove(path)``` 함수: 파일 경로를 제거함 (*```import os``` 필요* [🔗](https://docs.python.org/3/library/os.html)) |
             + 💡 참고: [점프 투 파이썬] 04-3 파일 읽고 쓰기 [🔗](https://wikidocs.net/26)
         + javascript (NodeJS)
+            | 피해 분류 | 함수 |
+            |:---:|------|
+            | File Road | ```var fs = require('fs');``` <br/> ```fs.readFileSync(filename);``` <br/> &nbsp;&nbsp; → ```fs.readFileSync(path)``` 함수: ```path```(경로)의 내용을 반환함 (인코딩 옵션이 없으면 버퍼를 반환함) [🔗](https://nodejs.org/api/fs.html#fsreadfilesyncpath-options) |
+            | File Write | ```var fs = require('fs');``` <br/> ```fs.writeFileSync(filename, data);``` <br/> &nbsp;&nbsp; → ```fs.writeFileSync(path, data)``` 함수: ```file```(파일)에 동기적으로 ```data```를 씀 [🔗](https://nodejs.org/api/fs.html#fswritefilesyncfile-data-options) |
+            | Etc (파일 복사) | ```const fs = require('fs');``` <br/> ```fs.copyFileSync('Original_FILE', 'Copy_FILE');``` <br/> &nbsp;&nbsp; → ```fs.copyFileSync(src, dest)``` 함수: ```src``` 파일의 내용을 ```dest```파일에 동기식으로 복사됨 [🔗](https://nodejs.org/api/fs.html#fscopyfilesyncsrc-dest-mode) |
+            | Etc (파일 삭제) | ```const fs = require('fs');``` <br/> ```fs.unlinkSync(filename);``` <br/> &nbsp;&nbsp; → ```fs.unlinkSync(path)``` 함수: 리눅싀의 ```unlink()```를 사용하여 파일 시스템에서 해당 파일을 삭제함 [🔗](https://nodejs.org/api/fs.html#fsunlinksyncpath) |
+            + 💡 ```require(id)``` 함수: 모듈, JSON 및 로컬 파일을 가져오는데 사용됨 [🔗](https://nodejs.org/api/modules.html#requireid)
+                | | 설명 |
+                |:---:|------|
+                | ```id``` | ```<string>```, 모듈 이름 또는 경로 |
+                | Returns | ```<any>```, 내보낸 모듈 콘텐츠 |
+
+<br/>
+
+* Serialize / Deserialize
 
 <br/><br/><br/>
 
