@@ -1056,6 +1056,22 @@
 <br/>
 
 * Filesystem Function
+    - 어플리케이션에서 파일 시스템에 접근할 수 있는 함수들의 인자가 **사용자의 입력 데이터 또는 변조될 가능성이 있는 변수들을 사용**할 경우 서버의 파일 시스템을 공격하거나, 다른 취약점으로 악용될 수 있음
+    - 파일 시스템을 공격하여 발생할 수 있는 대표적인 피해 → ***⚠️ 서버/어플리케이션의 환경/상황에 따라 발생할 수 있는 문제는 각각 다를 수 있음***
+        | 분류 | 설명 |
+        |:---:|------|
+        | **File Road** | 어플리케이션 코드, 설정 파일 정보 등의 노출 |
+        | **File Write** | WebShell 생성을 통한 원격 코드 실행 공격 <br/> 기존 설정 파일을 덮는 공격을 통해 운영체제/어플리케이션 설정 변경 |
+        | Etc | 파일 복사를 통해 File Write와 유사한 상황 발생 <br/> 설정 파일을 삭제하여 운영체제/어플리케이션 서비스 무력화 |
+    - 웹 어플리케이션 언어 별 파일 시스템 함수
+        + php
+            | 피해 분류 | 함수 |
+            |:---:|------|
+            | File Read | ```file_get_contents($filename)``` 함수: 파일(```$filename```)의 전체 내용을 문자열로 읽는 함수 [🔗](https://www.php.net/manual/en/function.file-get-contents.php) <br/> ```fopen($filename, "r")``` 함수: ```$filename```으로 지정된 파일을 읽기 전용(reading only) 스트림에 <br/>바인딩하는 함수 [🔗](https://www.php.net/manual/en/function.fopen.php) <br/> ```readfile($filename)``` 함수: 파일(```$filename```)을 읽고 출력 버퍼에 쓰는 함수 [🔗](https://www.php.net/manual/en/function.readfile.php) <br/> ```highlight_file($filename)``` 함수: PHP 내장 구문 강조 표시기에 정의된 색상을 이용하여 ```$filename```에 <br/> 포함된 코드를 구문 강조한 것을 반환함 [🔗](https://www.php.net/manual/en/function.highlight-file.php) <br/> &nbsp;&nbsp;&nbsp;&nbsp; → ```show_sources($filename)```은 ```highlight_file($filename)```의 별칭(Alias)이므로 결과는 동일함 <br/> ```include $filename;``` : 리드하는 파일에 php 태그가 포함된 경우 해당 php 태그를 해석하고 실행함 [🔗](https://www.php.net/manual/en/lua.include) |
+            | File Write | ```file_put_contents($filename, $data)``` 함수: 파일에 데이터를 쓰는 함수 [🔗](https://www.php.net/manual/en/function.file-put-contents.php) <br/> &nbsp;&nbsp;&nbsp;&nbsp; ↳ ```fopen()``` → ```fwrite()``` → ```fclose()```를 연속으로 호출하는 것과 동일함 <br/> ```fopen($filename, "w")``` 함수: ```$filename```으로 지정된 파일을 쓰기 전용(writing only) 스트림에 <br/> 바인딩하는 함수 [🔗](https://www.php.net/manual/en/function.fopen.php) |
+            | Etc (파일 복사) | ```copy($from, $to)``` 함수: ```$from``` 파일을 ```$to``` 파일로 복사함 [🔗](https://www.php.net/manual/en/function.copy.php) |
+            | Etc (파일 삭제) | ```unlink($filename)``` 함수: 파일(```$filename```)을 삭제함 (Unix C ```unlinke()``` 함수와 유사) [🔗](https://www.php.net/manual/en/function.unlink.php) |
+        + python
 
 <br/><br/><br/>
 
