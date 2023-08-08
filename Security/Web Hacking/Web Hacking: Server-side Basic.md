@@ -1261,6 +1261,44 @@
 <br/><br/>
 
 ### PHP Specific Vulnerability: PHP의 특징으로 인해 발생할 수 있는 취약점
+* include [🔗](https://www.php.net/manual/en/lua.include)
+    | | 설명 |
+    |:---:|------|
+    | 실행 | 인자로 전달된 파일을 읽은 후 해당 파일의 내용을 출력함 <br/> &nbsp;&nbsp; - 📌 파일의 내용 중 PHP 코드로 해석되는 구문이 존재하면 해당 코드를 실행함 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - PHP 코드로 해석되는 구문의 종류 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```<?php {php code} ?>``` <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```<?={php code}?>``` (short echo tag: php 코드의 결과가 출력됨) |
+    | 사용 | 동적으로 다른 PHP 페이지를 로드해야 할 때 주로 사용함 <br/> &nbsp;&nbsp; - 페이지의 배경이나 기본 레이아웃은 고정시킨 채 내용의 변경이 필요한 경우 include를 통해 다른 php 파일을 포함시킬 수 있음 |
+    | 주의사항 | **파일의 확장자 또는 파일의 타입과는 상관없이 파일의 내용에 PHP 태그가 포함될 경우 PHP 코드가 실행**되기 때문에 사용에 주의해야 함 |
+    | 유사 함수 | ```include_once```, ```require```, ```require_once``` 등 |
+    - ⚠️ **include할 파일을 사용자의 입력 데이터로 조작할 수 있다면** 서버 내 파일 정보를 출력하거나 원하는 PHP 코드를 실행하는 등의 취약점이 발생해 공격에 사용될 수 있음
+        | 취약점 종류 | 설명 |
+        |:---:|------|
+        | ***Local File Inclusion*** (LFI) | 서버 로컬 파일을 include 하는 취약점 *→ 서버 내 파일 정보를 출력할 수 있음* |
+        | ***Remote File Inclusion*** (RFI) | 외부 자원을 include 하는 취약점 *→ 원하는 PHP 코드를 실행시킬 수 있음* |
+        + 💡 **PHP의 ```allow_url_include``` 설정**: 외부 자원에 대한 접근을 방지하는 옵션
+            - 대부분의 기본 설정에서는 해당 옵션이 off된 상태임
+            - ⚠️ 취약점이 발생하는 경우에는 ```allow_url_include=on```으로 설정되어 있음
+    - include 함수 예시
+        + 소스코드의 구성
+            ```php
+            <?php
+                // index.php: 사용자의 입력 데이터로 include 할 파일을 가져옴
+                include $_GET["page"];
+            ?>
+            ```
+            ```php
+            <?php
+                // register.php
+                echo "This is registeration page. <br/>";
+            ?>
+            ```
+        + 요청에 따른 결과
+            | 요청 | 설명 |
+            |:---:|------|
+            | ```/index.php?page=register.php``` | 동적으로 register.php를 로드해 사용자에게 회원가입 페이지를 보여줄 수 있음 |
+            | ```/index.php?page=/etc/passwd``` | include 할 파일을 사용자의 입력 데이터로 조작하여 /etc/passwd를 화면에 출력하도록 함 <br/> &nbsp;&nbsp; → ⚠️ LFI 취약점이 발생하여 서버 내 /etc/passwd 파일 정보를 확인할 수 있음 |
+
+<br/>
+
+* Wrappers
 
 <br/><br/><br/>
 
