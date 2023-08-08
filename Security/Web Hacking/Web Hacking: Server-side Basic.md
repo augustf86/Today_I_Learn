@@ -1457,6 +1457,29 @@
 <br/>
 
 * Type Juggling
+    - PHP에서 **서로 다른 타입인 변수를 비교/연산** 시 자동으로 **타입 변환**이 발생하여 의도치 않은 결과가 발생할 수 있음
+    - Type Juggling 예시
+        | 상황 | 설명 |
+        |:---:|------|
+        | String과 Integer 타입의 비교/연산 | - 앞 문자열이 숫자로 시작할 경우 해당 숫자를 사용하여 연산함 <br/> - 그렇지 않을 경우 0으로 처리됨 |
+        | String과 Boolean 타입의 비교/연산 | - 문자열의 내용이 존재하면 True로 처리됨 <br/> - 빈 문자열일 경우 False로 처리됨 |
+        ```php
+        <?php
+            $a = "a";
+            $b = "2";
+            echo $a * 2; // 0 (문자열 "a"과 정수 2의 연산 → 0으로 처리됨)
+            echo $b * 2; // 4 (문자열 "2"와 정수 2의 연산 → 숫자로 시작하기 때문에 2 * 2 = 4로 처리됨)
+
+            $a = "a";
+            $b = "";
+            var_dump($a == True); // bool(true) → 문자열의 내용이 존재하므로 True로 처리되어 True == True가 됨
+            var_dump($b == True); // bool(false) → 빈 문자열이므로 False로 처리되어 False == True가 됨
+        ?>
+        ```
+
+<br/>
+
+* Comparsion
 
 <br/><br/><br/>
 
