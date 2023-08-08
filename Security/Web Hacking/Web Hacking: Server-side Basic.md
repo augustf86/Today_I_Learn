@@ -1429,7 +1429,34 @@
 
 <br/>
 
-* extract
+* extract [🔗](https://www.php.net/manual/en/function.extract)
+    - 배열에서 변수를 가져오는 함수
+        ```php
+        <?php
+            $size = "large";
+            $var_array = array("color" => "blue",
+                                "size" => "medium",
+                                "shape" => "sphere");
+            extract($var_array);
+            echo "$color, $size, $shape\n"; // 결과: blue, medium, sphere
+        ?>
+        ```
+    - extract 함수 사용 시 **기존에 사용되고 있는 변수의 데이터를 덮을 수 있음** <br/> &nbsp;&nbsp; → ⚠️ extract 함수에 사용자의 입력(```$_GET```, ```$_POST```, ```$_FILES```)과 같은 **신뢰할 수 없는 데이터가 사용되면 다른 변수를 변조**하여 공격에 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용될 수 있음
+        ```php
+        <?php
+            $systemCMD = "ping 127.0.0.1"; // ping 명령어를 저장하고 있는 변수 $systemCMD
+            ...
+            extract($_GET); // extract 함수에 사용자의 입력(id)을 사용하고 있음 → 변수 systemCMD와 동일한 변수가 배열에 존재하면 이를 덮어쓸 수 있음
+            ...
+            system($systemCMD); // 시스템 함수로 OS Command를 실행함 → id 명령어가 실행됨 (/?systemCMD=id) ⇒ uid, gid, group 정보를 획득할 수 있음
+        ?>
+        ```
+        + PHP extract 문서에서는 사용자 입력과 같이 신뢰할 수 없는 데이터에는 ```extract()```을 사용하지 않을 것을 권고하고 있음
+            > **Warning** &nbsp;&nbsp;&nbsp;&nbsp; Do no use ```extract()``` on untrusted data, like user input (e.g. ```$_GET```, ```$_FILES```).
+
+<br/>
+
+* Type Juggling
 
 <br/><br/><br/>
 
