@@ -1480,6 +1480,35 @@
 <br/>
 
 * Comparsion
+    - 서로 다른 타입이 비교 연산자에서 사용될 경우 Type Juggling에 의해 의도치 않은 결과가 발생할 수 있음
+    - PHP 비교 연산자의 종류
+        | Name | Example | Result |
+        |:---:|---|------|
+        | Equal (```==```) | ```$a == $b``` | **Type Juggling** 후 ```$a```와 ```$b```의 값이 같으면 True, 그렇지 않으면 False |
+        | Identical (```===```) | ```$a === $b``` | ```$a```와 ```$b```의 타입과 값이 모두 같다면 True, 둘 중 하나라도 다르다면 False |
+        | Not equal (```!=```) | ```$a != $b``` | **Type Juggline** 후 ```$a```와 ```$b```의 값이 다르면 True, 그렇지 않다면 False |
+        | Not equal (```<>```) | ```$a <> $b``` | **Type Juggline** 후 ```$a```와 ```$b```의 값이 다르면 True, 그렇지 않다면 False |
+        | Not identical (```!==```) | ```$a !== $b``` | ```$a```와 ```$b```의 타입 또는 값이 다르면 True, 그렇지 않으면 False |
+        + 비교 연산자(Equal, ```==```)를 사용할 때 **비교하는 두 변수의 타입**이 다르면 type juggling에 의해 타입이 변환된 후 비교됨 <br/> &nbsp;&nbsp; → 📌 **정확한 비교를 하기 위해서**는 동일한 타입인지도 비교하는 비교연산자(Identical, ```===```)를 사용해야 함
+    - PHP strcmp [🔗](https://www.php.net/manual/en/function.strcmp)
+        | | 설명 |
+        |:---:|------|
+        | 설명 | 문자열을 비교함 <br/> &nbsp;&nbsp; - 두 인자를 비교했을 때 같으면 0을 반환함 <br/> &nbsp;&nbsp; - en 
+        | 형식 | ```strcmp(string $string1, string $string2): int``` |
+        | 결과 | - 두 인자를 비교했을 때 같으면 ```0```을 반환함 <br/> - 두 인자를 비교했을 때 ```$string1```이 작으면 음수를 반환함 <br/> - 두 인자를 비교했을 때 ```$string2```가 작으면 양수를 반환함 <br/> - string이 아닌 array를 인자로 전달할 경우 NULL을 반환함 |
+        + PHP에서는 ```NULL```과 ```0```을 비교하는 경우 의도치 않은 결과가 발생할 수 있음
+            ```php
+            <?php
+                var_dump(strcmp("a", array())); // 결과: "a"와 array를 비교하기 때문에 NULL을 반환함
+                var_dump(strcmp("a", array()) == 0); // 결과: NULL == 0은 단순 Equal 연산이기 때문에 Type Juggling이 발생함 → 0 == 0으로 비교하게 되어 true가 됨 (문제 발생 가능성 존재)
+                var_dump(strcmp("a", array()) === 0); // 결괴: NULL === 0은 Identical 연산이기 때문에 Type Juggling이 발생하지 않음 → 값은 같지만 타입이 다르므로 false가 됨
+            ?>
+            ```
+        + ***⚠️ ```strcmp``` 함수로 문자열을 비교할 때는 Equal이 아닌 Identical을 사용해야 함***
+
+<br/>
+
+* session
 
 <br/><br/><br/>
 
