@@ -1299,6 +1299,60 @@
 <br/>
 
 * Wrappers
+    - 파일 시스템 함수([🔗](https://www.php.net/manual/en/book.filesystem.php))에서 URL style 프로토콜을 위한 wrapper들이 존재함
+        + PHP에서 지원하는 Wrappers & Protocols [🔗](https://www.php.net/manual/en/wrappers.php)
+            | Wrapper | 설명 |
+            |:---:|------|
+            | ```file://``` | Accessing local filesystem [🔗](https://www.php.net/manual/en/wrappers.file.php) <br/> &nbsp;&nbsp; - 상대 경로가 지정되면 주어진 경로가 현재 작업 디렉터리에 적용됨 |
+            | ```http://``` | Accessing HTTP(s) URLs [🔗](https://www.php.net/manual/en/wrappers.http.php) <br/> &nbsp;&nbsp; - HTTP를 통해 파일/리소스에 대한 읽기 전용 액세스를 허용함 |
+            | ```ftp://``` | Accessing FTP(s) URLs [🔗](https://www.php.net/manual/en/wrappers.ftp.php) <br/> &nbsp;&nbsp; - FTP를 이용하여 파일에 대한 읽기/쓰기 엑세스를 허용함 |
+            | ```php:///``` | Accessing various I/O streams [🔗](https://www.php.net/manual/en/wrappers.php.php) <br/> &nbsp;&nbsp; - PHP의 다양한 I/O 스트림을 제공함|
+            | ```zlib://``` | Compression Streams [🔗](https://www.php.net/manual/en/wrappers.compression.php) <br/> &nbsp;&nbsp; - 압축 스트림으로, 읽기/쓰기를 위해 gzip 파일을 여는 것을 허용함 |
+            | ```data://``` | Data (RFC 2397) [🔗](https://www.php.net/manual/en/wrappers.data.php) <br/> &nbsp;&nbsp; - ```data:[<mediatype>][;base64], <data>``` 형식의 URL애 대한 stream wrapper |
+            | ```glob://``` | Find Pathnames matching pattern [🔗](https://www.php.net/manual/en/wrappers.glob.php) |
+            | ```phar://``` | PHP Archieve [🔗](https://www.php.net/manual/en/wrappers.phar.php) |
+    - ⚠️ 파일 시스템 관련 함수로 **filename이 사용자의 입력이 될 경우** php에 존재하는 wrapper를 사용해 개발자의 의도와 다른 행위를 발생시킬 수 있음
+        + ***File*** : 파일 시스템에 접근함
+            ```php
+            <?php
+                include "file:///etc/passwd";
+                /* →/etc/passwd 파일의 읽어와 파일의 php 태그를 해석하고 실행함 (/etc/passwd 파일의 내용을 확인할 수 있음)
+                    root:x:0:0:root:/root:/bin/bash
+                    daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+                    bin:x:2:2:bin:/bin:/usr/sbin/nologin
+                    ...
+                */
+            ?>
+            ```
+        + ***URLs*** : HTTP(s), FTP(s) URL에 접근함
+            - 📌 ```include``` 함수에서 사용 시 ```allow_url_include``` 옵션이 설정되어 있어야 사용이 가능함
+                ```php
+                <?php
+                    // php.ini → allow_url_include=On
+
+                    include "http://example.com";
+                    /* 결과: example.com의 리소스를 읽을 수 있음
+                        <!doctype html>
+                        <html>
+                            ...
+                    */
+                ?>
+                ```
+                ```php
+                <?php
+                    // php.ini → allow_url_include=Off
+
+                    include "http://example.com"; // Warning: include(): http:// wrapper is disabled in the server configuration by allow_url_include=0
+
+                    echo file_get_contents("http://example.com"); // allow_url_include의 영향을 받지 않음
+                    /*
+                        <!doctype html>
+                        <html>
+                            ...
+                    */
+                ?>
+                ```
+        + ***data*** 
 
 <br/><br/><br/>
 
