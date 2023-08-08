@@ -1352,7 +1352,84 @@
                     */
                 ?>
                 ```
-        + ***data*** 
+        + ***data*** : RFC 2397 형식(```data:[<mediatype>][;base64], <data>```)을 처리함
+            ```php
+            <?php
+                echo file_get_contents('data://text/plain;base64, SSBsb3ZlIFBIUAo='); // 결과: I love PHP
+            ?>
+            ```
+            - ⚠️ ```data:``` Wrapper는 ```allow_url_include```의 영향을 받음
+        + ***php*** : PHP의 다양한 I/O stream과 filter를 사용함
+            | ```php://``` wrapper | 설명 |
+            |:---:|------|
+            | ```php://stdin``` <br/> ```php://stdout``` <br/> ```php://stderr``` | stdin, stdout, stderr로 연결함 <br/> &nbsp;&nbsp; - PHP 프로세스의 해당 입/출력 스트림에 직접 액세스할 수 있음 <br/> &nbsp;&nbsp; - 📌 Wrapper를 사용하여 스트림을 수동으로 여는 것보다 상수인 ```STDIN```, ```STDOUT```, ```STDERR```을 사용하는 것을 권장함 |
+            | ```php://fd/<fd descriptor>``` | file descriptor에 연결함 <br/> &nbsp;&nbsp; - 지정된 file descriptor에 직접 액세스할 수 있다는 말과 동일 <br/> &nbsp;&nbsp; - EX: ```php://fd/3``` = file descriptor 3에 연결함 |
+            | ```php://memory``` <br/> ```php://temp``` | 메모리에 연결함 *= 임시 데이터를 파일과 같은 Wrapper에 저장하 수 있도록 하는 읽기=쓰기 스트림* <br/> &nbsp;&nbsp; - ```php://memory```는 **항상 데이터를 메모리에 저장**함 <br/> &nbsp;&nbsp; - ```php://temp```는 **미리 정의된 제한에 도달하면 임시 파일을 사용**함 |
+            | ```php://input``` | HTTP의 body, 즉 POST 데이터를 입력 받음 <br/> &nbsp;&nbsp; - request Body에서 raw data를 읽을 수 있도록 하는 읽기 전용 스트림을 의미함 |
+            | ```php://filter``` | I/O 스트림에 특정 필터를 설정함 <br/> &nbsp;&nbsp; - 스트림을 열 때 필터를 적용할 수 있도록 설계된 일종의 meta wrapper임 <br/> &nbsp;&nbsp; - ```readfile()```, ```file()```, ```file_get_contents()```와 같은 all-in-one 파일 함수에서 유용함 |
+            - ```php://filter``` parameters
+                | 이름 | 설명 |
+                |:---:|------|
+                | ```read=<filter>``` | (optional/선택) read 시 사용할 하나 이상의 필터명을 파이프 문자(```\|```)로 구분하여 지정함 |
+                | ```write=<filter>``` | (optional/선택) write 시 사용할 하나 이상의 필터명을 파이프 문자(```\|```)로 구분하여 지정함 |
+                | ```resource=<stream name>``` | (required/필수) 필터링하는 스트림을 지정함 |
+            - ```php://``` wrapper 예시
+                + ```php;//temp``` 예시
+                    ```php
+                    <?php
+                        // Set the limit to 5MB (the default if 2MB) → 5MB에 도달하면 임시 파일을 사용함
+                        $fiveMBs = 5 * 1024 * 1024;
+                        $fp = fopen("php://temp/maxmemory:$fiveMBs", "r+");
+                        fputs($fp, "hello\n");
+                    ?>
+                    ```
+                + ```php://input``` 예시
+                    ```php
+                    <?php
+                        // HTTP Request Body Data
+                        $rawData = file_get_contents("php://input");
+                    ?>
+                    ```
+                + ```php://filter``` 예시
+                    ```php
+                    <?php
+                        // 데이터 리드 시 대문자로 처리 (read=<filter> → string.toupper)
+                        include 'php://filter/read=string.toupper/resource=/etc/passwd';
+                        /* ↳ /etc/passwd의 내용을 확인할 수 있음 (대문자로 처리되어 있음)
+                            ROOT:X:0:0:ROOT:/ROOT:/USR/BIN/ZSH
+                            DAEMON:X:1:1:DAEMON:/USR/SBIN:/USR/SBIN/NOLOGIN
+                            ...
+                        */
+
+
+                        // 데이터 출력 시 대문자로 처리 (write=<filter> → string.toupper)
+                        file_out_contents("php://filter/write=string.toupper/resource=example.txt", "Hello World");
+                        /* ↳ $cat example.txt (cat 명령어로 example.txt 파일의 내용을 확인함)
+                            HELLO WORLD
+                        */
+                    ?>
+                    ```
+                    ```php
+                    <?php
+                        // include 시 php 태그가 존재하면 구문 분석되어 php로 실행되고 해당 코드는 출력되지 않음
+                        include 'test.php';
+                        /* test.php 파일 내용
+                            <?php echo 'test !'; ?>
+                            → 결과: test !
+                        */
+
+                        // read=conver.base64-encode로 필터를 설정하여 php tag를 인코딩(base64)시킴 → ⚠️ 코드가 실행되지 않고 출력되도록 하여 소스 코드를 노출시킬 수 있음
+                        include 'php://filter/read=convert.base64-encocde/resource=test.php';
+                        /*
+                            PD9waHAgZWNobyAndGVzdCAhJzsgPz4=
+                            base64_decode("PD9waHAgZWNobyAndGVzdCAhJzsgPz4="); ==> <?php echo 'test !'; ?>
+                        */
+                    ?>
+                    ```
+
+<br/>
+
+* extract
 
 <br/><br/><br/>
 
