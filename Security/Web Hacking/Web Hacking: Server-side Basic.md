@@ -1550,6 +1550,53 @@
 <br/>
 
 * Upload Logic
+    - 파일 업로드 기능을 수행하는 PHP 코드
+        ```php
+        <?php
+            $uploadDIR = './uploads';
+
+            $error = $_FILES['file']['error'];
+            $name = $_FILES['file']['name'];
+
+            if ($error != UPLOAD_ERR_OK) {
+                // error occurs
+            }
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], "$uploadDIR/$name")) {
+                // upload success
+            } else {
+                // upload fail
+            }
+        ?>
+        ```
+        + PHP 파일 업로드 시 서버에서 지정된 파일 시스템 경로로 바로 업로드되는 것이 아님 <br/> &nbsp;&nbsp; → **임시 디렉터리에 저장된 후 ```move_uploaded_file``` 함수에 의해 서버 코드가 설정된 경로로 파일을 옮기게 됨**
+            - 📌 사용자가 업로드할 파일을 서버 파일 시스템에 옮길 때 사용하는 ```move_uploaded_file``` 함수 [🔗](https://www.php.net/manual/en/function.move-uploaded-file.php)
+                | | 설명 |
+                |:---:|------|
+                | 실행 | 업로드한 파일을 새 위치로 이동시키는 함수 |
+                | 형식 | ```move_uploaded_file(string $from, string $to): bool``` <br/> - ```$from```: 업로드할 파일 이름 <br/> - ```$to```: 이동할 파일의 위치 |
+            - PHP 파일 업로드 내부 로직
+                | 순서 | 설명 |
+                |:---:|------|
+                | 01 | 임시 디렉터리에 임시 파일 생성 (리눅스 시스템에서는 기본적으로 ```/tmp```를 사용함) <br/> &nbsp;&nbsp; - 임시 파일의 파일명 규칙 ```php[a-zA-Z0-9]{6}``` |
+                | 02 | PHP 로직 중 업로드 파일 처리 로직 존재 시 임시파일 참조 (```$_FILES['file']['tmp_name']```)
+                | 03 | PHP 로직 처리 후 임시 파일 삭제 <br/> &nbsp;&nbsp; → PHP 코드에서 로직 처리 등을 이유로 지연이 발생한다면 임시 파일은 지연이 발생하는 시간 동안 존재하게 됨 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ***⇒ ⚠️ 시간 지연이 발생한는 페이지에 파일을 업로드한 후 해당 서버의 임시 디렉터리를 확인하면 생성된 임시 파일을 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;확인할 수 있음***|
+    - ⚠️ **PHP 파일 업로드 내부 로직에서 문제가 발생할 수 있는 점**
+        + [1] PHP 코드 상에서 업로드 기능을 구현하지 않아도 사용자가 서버의 임시 디렉터리에 업로드 가능
+            - PHP의 기본 설정에서 사용자의 요청 중 파일이 존재함 → **코드 상에서 처리하는 로직이 존재하지 않더라도 임시 파일을 생성함**
+                + 원하는 파일 경로나 파일 명으로 서버 파일 시스템에 존재하는 것은 아님
+                + *원하는 파일 데이터가 서버의 예측 가능한 디렉터리(임시 디렉터리)에 작성될 수 있음*
+            - PHP 엔진의 문제를 발생시키는 Unhandled Exception 발생 시 내부적으로 일어나는 일
+                + PHP 로직이 정상적으로 종료되지 않음
+                + ⚠️ PHP 파일 업로드 내부 로직의 마지막 과정인 **임시 파일 삭제가 실행되지 않음** <br/> &nbsp;&nbsp; → 삭제되지 않은 임시 파일은 특별한 행위가 발생하기 전까지 임시 디렉터리에 남아있게 됨
+        + [2] 예측 가능한 임시 파일 생성 규칙
+            - 임시 파일의 파일명 생성 규칙: ```php[a-zA-Z0-9]{6}``` → 일반적으로 해당 파일 명을 한 번에 찾기는 어려움
+                + Unhandled exception을 이용하여 임시 디렉타리 내에 임시 파일이 삭제되지 않도록 함 + 같은 파일 데이터를 가진 파일을 무한히 업로드함 <br/> &nbsp;&nbsp; *= **무작위 대입공격**을 통해 충분히 예측 가능한 범위까지 줄일 수 있음*
+            - 파일 업로드 내부 로직에서 발생할 수 있는 문제점이 ```include``` 또는 파일 시스템에서 발생하는 취약점과 연계 시 서버의 명령어를 실행시키는 등의 공격으로 연계할 수도 있음
+
+<br/><br/>
+
+### Javascript Specific Vulnerability: Javascript만의 특징으로 인해 발생하는 취약점
 
 <br/><br/><br/>
 
