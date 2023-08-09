@@ -1639,6 +1639,70 @@
 <br/>
 
 * Prototype Pollution
+    - Background: 자바스크립트에서의 객체 접근 방법
+        | 용어 | 설명 |
+        |:---:|------|
+        | **dot notation** | ```.```을 이용하여 객체에 접근함 |
+        | **bracket notation** | ```[xyz]```를 이용하여 객체에 접근함 <br/> &nbsp;&nbsp; - 속성의 키를 문자열로 사용함 → 변수를 넣거나 dot notation에서 사용할 수 없는 문자들을 속성 키로 지정할 수 있음 |
+        + dot notation과 bracket notation의 비교 예시
+            ```javascript
+            var a = {a: 0};
+
+            // bracket notation → dot notation에서 사용할 수 없는 문자인 =를 속성 키로 지정하고 있음
+            a["="] = "Equal Sign";
+            a["="]; // Equal Sign 
+
+            // dot notation → =를 사용할 수 없으므로 오류를 발생시킴
+            a.=; // Uncaught SyntaxError: Unexpected token '='
+            ```
+    - Background: 자바스크립트에서의 객체의 프로토타입
+        + 프로토타입의 특징
+            ```javascript
+            // 객체 a, b 생성 (초기화할 프로토타입 미지정)
+            var a = {0: 1};
+            var b = {1: 2};
+            console.log(a.__proto__ == b.__proto__); // 객체 a, b 모두 Object.prototype을 상속 받았기 때문에 프로토타입은 동일함 → 비교 결과: true
+            console.log(b.__proto__ = Object.prototype); // 객체 b는 Object.prototype을 상속 받음 → 비교 결과: true (Object.prototype과 일치함)
+            ```
+            - 객체를 생성할 때 초기화 할 프로토타입을 지정해주지 않으면 ```Object.prototype```의 속성과 정의된 함수(method)를 상속 받음
+            - 객체는 ```__proto__```를 이용하여 자신이 가리키고 있는 프로토타입에 접근할 수 있음
+            - 같은 프로토타입을 상속받은 모든 객체는 메모리 상 같은 주소를 가리키고 있음
+        + Prototype Chain Lookup: *프로토타입이 사용되는 상황 예시*
+            ```javascript
+            var x = {a: 0}; // 객체 x 생성 (초기화할 프로토타입을 미지정 → Object.prototype을 상속 받음)
+
+            // x.__proto__(객체 x의 프로토타입 = Object.prototype)에 a, b를 할당함 & Object.prototype에 c를 할당함
+            x.__proto__.a = 1337;
+            x.__proto__.b = 1;
+            Object.prototype.c = 2;
+
+            var y = Object.create(x); // x를 프로토타입으로 하는 객체 y를 생성함
+            console.log(y.__proto__ == x); // y의 프로토타입과 x가 같은지 비교한 결과: true
+
+            var z = {}; // 객체 z 생성 (초기화할 프로토타입을 미지정 → Object.prototype을 상속 받음)
+            console.log(z.__proto__ == y.__proto__); // z의 프로토타입은 Object.prototype이고, y의 프로토타입은 x이므로 결과는 false
+            console.log(z.__proto__ == x.__proto__); // x, z 모두 Object.prototype을 상속받음 → 결과는 true
+            console.log(z.__proto__ == y.__proto__.__proto__); // y의 프로토타입은 x이고, x의 프로토타입은 Object.prototype이므로 결과는 true
+
+            // 키에 해당하는 값을 찾는 과정: 해당 객체에 키가 있는지 검색한 후 없으면 프로토타입에서 키를 검색함
+
+            console.log(y.a); // 0
+            console.log(y.b); // 1
+            // y의 프로토타입인 x에 c가 존재하지 않음 → 상위 프로토타입인 Object.prototype에서 c를 찾아 해당하는 값을 반환함
+            // 검색 순서: y에서 c를 찾음 (존재 X) → y.__proto__ (x)에서 c를 찾음 (존재 X) → y.__proto__.__proto__ (Object.prototype)에서 c를 찾음
+            console.log(y.c); // 2
+
+            console.log(x.a); // 0
+            console.log(x.b); // 1
+            console.log(x.c); // 2
+
+            console.log(z.a); // 1337
+            console.log(z.b); // 1
+            console.log(z.c); // 2
+            ```
+            - 객체 접근 시 키에 해당하는 값을 찾는 과정: 해당 객체에 키가 존재하는지 검색한 후 있으면 값을 반환, 없다면 프로토타입에서 키를 검색함
+                + 프로토타입에 원하는 속성이 없으면 계속해서 상위 프로토타입에서 이를 검색함
+    - ⚠️ Prototype Pollution
 
 <br/><br/><br/>
 
