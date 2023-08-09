@@ -1509,6 +1509,47 @@
 <br/>
 
 * session
+    - PHP session(세션)의 가장 기본적인 사용 형태
+        ```php
+        <?php
+            session_start(); // session 사용을 위해 필수적으로 사용되어야 함
+            $_SESSION['uid'] = 1234; // 해당 유저의 session['uid']에 int 1234를 할당함
+        ?>
+        ```
+        + PHP의 기본 세션 관리 로직
+            | 순서 | 설명 |
+            |:---:|------|
+            | 01 | ```session_start()``` [🔗](https://www.php.net/manual/en/function.session-start) - HTTP Request에서 쿠키를 가져와 PHPSESSID의 값을 가져옴 <br/> &nbsp;&nbsp; → PHPSESSID 값이 존재하지 않으면 랜덤한 값의 PHPSESSID 값을 생성하고 세션 변수(```$_SESSION```)에 빈 array를 할당함 <br/> &nbsp;&nbsp; → PHPSESSID 값이 존재하면 해당 PHPSESSID에 해당하는 값을 세션 변수(```$_SESSION```)에 로드함 <br/><br/> *📄 **PHPSESSID**: PHP의 기본 Session ID, 쿠키를 통해 서버와 사용자가 주고받는 PHP session의 이름* |
+            | 02 | ```$_SESSION``` 변수에 접근하여 값을 읽거나 변경함 |
+            | 03 | ```session_start()```로 시작된 해당 페이지(PHP)가 종료될 때 자동으로 세션 변수를 serialize(직렬화)한 값을 파일 시스템에 저장함 <br/> &nbsp;&nbsp; - 기본적으로 파일 시스템의 ```{세션기본경로}/sess_{PHPSESSID값}``` 경로에 저장됨 |
+        + 세션 파일이 저장되는 경로와 파일을 추측하는 방법
+            - 리눅스 시스템의 경우 기본 설정이라면 ```/var/lib/php/sessions```을 기본 경로로 하는 시스템이 대부분임 *→ 세션 파일이 저장되는 경로를 추측할 수 있음*
+            - 세션에서 사용되는 키(```PHPSESSID```)를 사용자는 쿠키 정보를 확인하여 알 수 있음 *→ 세션 파일 명을 추측해볼 수 있음*
+    - **⚠️ 세션에 사용자의 입력 데이터가 들어가게 된다면 다른 공격과 연계하여 사용될 수 있음**
+        + 공격 예시 <br/> : **```include``` 함수의 인자를 조작 가능하고 인자에 대한 검증이 없는** 페이지에셔 세션 파일을 ```include``` 인자로 넘기면 원하는 PHP 코드를 실행시킬 수 있음
+            - [1] session.php
+                ```php
+                <?php
+                    session_start();
+                    $_SESSION['name'] = $_GET['name']; // 사용자의 입력 데이터를 세션에 저장하고 있음
+                ?>
+                ```
+                | 입력 | 결과 |
+                |:---:|------|
+                | ```/session.php?name=<?php system('id'); ?>``` | PHP 코드를 세션에 삽입 가능 <br/> &nbsp;&nbsp; → 사용자의 입력 데이터 ```<?php system('id'); ?>```를 세션에 저장함 |
+            - [2] index.php
+                ```php
+                <?php
+                    include $_GET['page']l // 사용자의 입력 데이터를 기반으로 include를 실행함
+                ?>
+                ```
+                | 입력 | 결과 |
+                |:---:|------|
+                | ```/index.php?page=/var/lib/php/sessions/sess_{PHPSESSID값}``` | 세션 파일을 ```include```의 인자로 넘겨줌 <br/> **→ ⚠️ 세션 파일에 작성된 PHP 코드가 실행됨** | 
+
+<br/>
+
+* Upload Logic
 
 <br/><br/><br/>
 
