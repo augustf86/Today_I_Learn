@@ -1597,6 +1597,48 @@
 <br/><br/>
 
 ### Javascript Specific Vulnerability: Javascript만의 특징으로 인해 발생하는 취약점
+* Javascript의 특징
+    - 변수의 타입을 동적으로 정할 수 있는 Dynamic 언어 *→ Comparison Problem 발생*
+    - 프로토타입(Prototype)을 사용하는 언어 *→ Prototype Pollution 발생*
+
+<br/>
+
+* Comparison Problem
+    - 자바스크립트에서 타입이 다른 두 변수의 값을 비교하는 과정
+        + 두 값을 비교할 때 두 값 모두 객체가 아닐 경우 ```valueOf```, ```toString``` 함수를 이용해 원시 값(primitive value)를 가져와 비교함
+            | 함수 | 설명 |
+            |:---:|------|
+            | ```valueOf()``` | 특정 객체의 원시 값을 반환하는 함수 [🔗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf) <br/> &nbsp;&nbsp; - ```valueOf```를 재정의하면 ```toString()```보다 우선으로 호출됨 |
+            | ```toString()``` | 객체를 나타내는 문자열을 반환하는 함수 [🔗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString) <br/> &nbsp;&nbsp; - 객체를 원시 값으로 변환하기 위해 호출하지만, 직접 호출할 필요는 거의 없음 (자동으로 호출함) |
+            ```javascript
+            var a = {};
+            console.log(a.toString()); // 객체 a의 원시 값을 가져옴 → 결과: [object Object]
+
+            a.toString = () => 'dreamhack'; // 객체 a의 toString() 함수를 'dreamhack' 문자열을 반환하도록 재정의
+            console.log(a == 'dreamhack'); // 객체 a와 'dreamhack' 문자열을 비교 → valueOf()를 재정의하지 않았으므로 toString()이 호출되어 원시 값을 가져옴 → 결과: true
+
+            a.valueOf = () => 'dreamhack2'; // 객체 a의 valueOf() 함수를 'dreamhack2' 문자열을 반환하도록 재정의
+            console.log(a == 'dreamhack2'); // 객체 a와 'dreamhack2' 문자열을 비교 → valueOf()이 호출되어 원시 값을 가져옴 → 결과: true
+            ```
+            - **📌 ```toString()```보다 ```valueOf()``` 함수가 원시 값을 구하기 위해 먼저 호출됨**
+    - Array's String Primitive
+        + 배열에서 기본적으로 반환하는 문자열 원시값은 ```Array.join[array, ',']```와 일치함
+        + 배열에서 타입이 다른 두 변수의 값을 비교할 때 발생할 수 있는 문제점 예시
+            ```javascript
+            var req = {sercret: A}; // A 값을 수정해서 if문 내의 실행문 data =...에서 Exception이 발생하게 할 수 있음
+            if ("secretValue" == req.secret) {
+                data = req.secret.charAt(0); // ⚠️ Exception 발생 위치 (A에 의해 발생함)
+                /* ... */
+            }
+            ```
+            | ```A```에 입력된 값의 타입 | 설명 |
+            |:---:|------|
+            | 문자열 타입 | ```var req = {secret: "secretValue"};```인 경우 조건문을 통과하고 data에는 ```"s"```가 대입됨 |
+            | 배열 타입 | ```var req = {secret: [secretValue]};```인 경우 비교문에서는 정상적으로 검증되지만, <br/>```chatAt(0)``` 함수 호출 시 Array에는 존재하지 안는 함수이기 때문에 오류가 발생함 <br/> &nbsp;&nbsp; - *Uncaught TypeError: req.secret.charAt is not a function.* |
+
+<br/>
+
+* Prototype Pollution
 
 <br/><br/><br/>
 
