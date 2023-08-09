@@ -1702,7 +1702,23 @@
             ```
             - 객체 접근 시 키에 해당하는 값을 찾는 과정: 해당 객체에 키가 존재하는지 검색한 후 있으면 값을 반환, 없다면 프로토타입에서 키를 검색함
                 + 프로토타입에 원하는 속성이 없으면 계속해서 상위 프로토타입에서 이를 검색함
-    - ⚠️ Prototype Pollution
+    - ⚠️ Prototype Pollution: **객체의 프로토타입을 오염**시켜 의도치 않은 결과를 발생시키는 것
+        - Prototype Pollutiion 예시
+            ```javascript
+            // 객체 x, y는 초기화할 프로토타입을 지정하지 않음 → 둘 모두 Object.prototype을 상속받고 있음
+            var x = {a: {foo: "bar"}, b: {1: 2}, c: {hello: "world"}};
+            var y = {}
+
+            x[A][B] = C; // Input(사용자 입력): A, B, C
+            if (y.keyA == 'secret'){  // y.keyA의 값을 secret으로 만들면 Prototype Pollution에 성공
+                console.log('Success');
+            }
+            ```
+            | | A | B | C |
+            |:---:|:---:|:---:|:---:|
+            | **Input** | ```__proto__``` | ```keyA``` | ```secret``` |
+            + ```x[A][B] = C;```를 보면 bracket notation을 이용해 객체에 접근하고 있음을 알 수 있음 **→ 이를 통해 임의의 key, value를 설정할 수 있음**
+            + 결괴: ```x[__proto__][keyA] = "secret"```이 됨 → ```x.__proto__```와 ```y.__proto__```가 동일하므로 keyA에 접근 시 "secret"를 반환하게 됨 ⇒ 조건을 만족하여 ```'Success'```를 출력함
 
 <br/><br/><br/>
 
