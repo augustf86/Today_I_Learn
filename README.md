@@ -4,7 +4,10 @@
 
 ### 🌐 Web Hacking
 * Introduction of Webhacking [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Introduction%20of%20Webhacking.md) *← Click!*
-* Web Hacking: Server-side Basic [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Web%20Hacking%3A%20Server-side%20Basic.md)
+* Web Hacking: Server-side Basic [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Web%20Hacking%3A%20Server-side%20Basic.md)<br/><br/>
+  | Lecture | Link |
+  |------|:---:|
+  | Server-side Advnacead - File Vulnerability | [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Web%20Hacking%3A%20Server-side%20Advanced%20-%20File%20Vulnerability.md) |
 
 <br/>
 
