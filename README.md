@@ -8,6 +8,7 @@
   | Lecture | Link |
   |------|:---:|
   | Server-side Advnacead - File Vulnerability | [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Web%20Hacking%3A%20Server-side%20Advanced%20-%20File%20Vulnerability.md) |
+  | Server-side Advanced - SQL Injection | [🔗](https://github.com/augustf86/Today_I_Learn/blob/main/Security/Web%20Hacking/Web%20Hacking%3A%20Server-side%20Advanced%20-%20SQL%20Injection.md) |
 
 <br/>
 
