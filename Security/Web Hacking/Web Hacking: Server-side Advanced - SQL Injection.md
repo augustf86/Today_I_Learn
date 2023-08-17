@@ -135,6 +135,38 @@
 <br/>
 
 * Subquery를 이용한 공격 예시: 사용자에게 ```username```을 입력 받아 해당 username을 조회한 후 admin이면 true를, 아니면 false를 반환하는 경우
+    - 🙂 정상적인 사용자의 입력과 생성되는 쿼리문
+        | | 사용자 입력 |
+        |:---:|------|
+        | **username** | admin |
+        ```sql
+        # username이 'admin'인 항목의 username을 조회하는 쿼리문이 생성됨
+        SELECT username FROM user_table WHERE username='admin';
+        ```
+    - 😈 악의적인 사용자의 입력과 생성되는 쿼리문
+        | | 사용자 입력 |
+        |:---:|------|
+        | **username** | ' UNION SELECT IF(SUBSTR(upw, start, 1)='알파벳', 'admin', 'not admin') FROM user_table WHERE username='admin' -- |
+        ```sql
+        # SQL의 IF문을 사용해 비교 구문을 만들어 관리자 계정의 비밀번호를 한 글자씩 알아냄
+        # start: 시작 위치, len: 길이(한 자리씩 비교하므로 1), '알파벳': 'a', 'b' 와 같이 해당 위치의 알파벳과 비교할 알파벳을 명시함
+        #   ↳ 비교 결과 일치하면 'admin'을, 그렇지 않으면 'not admin'을 반환함 
+        
+        SELECT username FROM user_table WHERE username='' UNION SELECT IF(SUBSTR(upw, start, 1)='알파벳', 'admin', 'not admin') FROM user_table WHERE username='admin' -- AND userpw='';
+        ```
+        + Supplement
+            - **SQL의 ```IF``` 조건문**: ```IF (조건문, 참일때 값, 거짓을 때 값)```
+                ```sql
+                SELECT IF(required, '필수', '선택') AS '필수 여부' FROM TABLE
+                ```
+            - **```SUBSTR``` 함수**: 문자열 중 특정 위치에서 시작하여 지정한 길이만큼 문자열을 반환하는 함수
+                ```sql
+                SUBSTR('문자열', 시작위치, 길이)
+                ```
+
+<br/><br/>
+
+### Blind SQL Injection
 
 <br/><br/><br/>
 
