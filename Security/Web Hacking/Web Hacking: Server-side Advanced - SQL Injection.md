@@ -74,6 +74,28 @@
 <br/>
 
 * UNION 절을 이용한 공격 예시: 사용자에게 ```uid```, ```upw```를 입력 받아 uid를 조회하는 경우
+    - 🙂 정상적인 사용자의 입력과 생성되는 쿼리문
+        | | 사용자 입력 |
+        |:---:|------|
+        | **uid** | admin |
+        | **upw** | admin |
+        ```sql
+        # uid가 'admin'이고, upw 'admin'인 데이터를 조회하는 쿼리문이 생성됨
+        SELECT uid FROM user_table WHERE uid='admin' AND upw='admin';
+        ```
+    - 😈 악의적인 사용자의 입력과 생성되는 쿼리문
+        | | 사용자 입력 |
+        |:---:|------|
+        | **uid** | ' UNION SELECT upw FROM user_table WHERE uid='admin' -- |
+        | **upw** | 아무 압력이나 상관 없음 (주석 처리됨) |
+        ```sql
+        # UNION 절을 이용해 admin의 upw를 화면에 출력시킴
+        SELECT uid FROM user_table WHERE uid='' UNION SELECT upw FROM user_table WHERE uid='admin' -- AND upw='';
+        ```
+
+<br/><br/>
+
+### Subquery
 
 <br/><br/><br/>
 
