@@ -96,6 +96,45 @@
 <br/><br/>
 
 ### Subquery
+* Background: **Subquery**
+    - 한 쿼리 내에 또 다른 쿼리를 사용하는 것
+        + 하나의 SQL문 안에 다른 SQL문이 중첩된(nested) 질의 → '부속질의'라고도 함
+    - 주질의(main query, 외부질의)와 부속질의(subquery, 내부질의)로 구성됨
+        + 📌 서브쿼리는 메인 쿼리 내에서 **소괄호 안에 구문을 삽입**해야 하며, ```SELECT``` 구문만 사용할 수 있음
+    - 위치와 역할에 따른 서브쿼리의 분류
+        + ```SELECT``` 절에서 사용되며 **단일 값**을 반환하는 **스칼라 부속질의**(scalar subquery)
+            - 💡 ```SELECT``` 구문의 컬럼(COLUMNS) 절에서 서브 쿼리를 사용할 때에는 **단일 행**(Single Row)과 **단일 열**(Single Column)이 반환되도록 해야 함
+                + 복수의 행과 열을 반환하는 서브 쿼리를 작성하면 실행 시 에러를 발생할 수 있음 <br/> &nbsp;&nbsp;&nbsp;&nbsp; ↳ *결과가 다중 행이거나 다중 열이라면 DBMS는 그 중 어떠한 행, 어떠한 열을 출력해야 하는지 알 수 없어 에러를 출력함*
+                    - 예시
+                        ```sql
+                        # 복수 행을 반환함 (에러 발생; Subquery returns more than 1 row)
+                        SELECT username, (SELECT 'ABCD' UNION SELECT 1234) FROM users;
+
+                        # 복수 열을 반환함 (에러 발생: Operand should contain 1 column(s))
+                        SELECT username, (SELECT "ABCD", 1234) FROM users;
+                        ```
+            - ```SELECT``` 구문과 ```UPDATE``` 구문에서 사용할 수 있음
+        + ```FROM``` 절에서 결과를 **뷰**(View) 형태로 반환하는 **인라인 뷰**(Inline View, table subquery)
+            - ```FROM``` 절에서 서브 쿼리를 사용하면 다중 행(Multiple Rows)과 다중 열(Multiple Columns) 결과를 반환할 수 있음
+            - 뷰(View): 기존 테이블로부터 **일시적으로** 만들어진 가상의 테이블
+                + ```AS```를 사용하여 뷰에 테이블 별칭을 명명할 수 있음
+            - 인라인 뷰 예시
+                ```sql
+                # 생성한 인라인 뷰(user 테이블의 모든 열과 1234를 열으로 가지는 테이블)의 별칭을 u로 명명함
+                SELECT * FROM (SELECT *, 1234 FROM users) AS u; 
+                ```
+        + ```WHERE``` 절에서 술어(predicate)와 같이 사용되며 결과를 한정시키기 위해 사용하는 **중첩질의**(nested subquery, predicate subquery)
+            - ```WHERE```절에서 서브 쿼리를 사용하면 다중 행(Multiple Rows) 결과를 반환하는 쿼리문을 실행할 수 있음
+            - 주질의의 자료 집합에서 한 행씩 가져와 부속질의를 수행함 <br/> &nbsp;&nbsp; → 연산 결과에 따라 ```WHERE``` 절의 조건이 참인지 거짓인지 확인하여 참이면 주질의의 해당 행을 출력함
+            - 중첩질의 예시
+                ```sql
+                # users 테이블에서 username이 "admin", "guest"인 행을 검색함
+                SELECT * FROM users WHERE username IN (SELECT "admin" UNION SELECT "guest");
+                ```
+
+<br/>
+
+* Subquery를 이용한 공격 예시: 사용자에게 ```username```을 입력 받아 해당 username을 조회한 후 admin이면 true를, 아니면 false를 반환하는 경우
 
 <br/><br/><br/>
 
