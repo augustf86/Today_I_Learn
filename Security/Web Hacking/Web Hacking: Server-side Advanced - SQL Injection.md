@@ -228,6 +228,42 @@
 <br/><br/>
 
 ### INSERT: 데이터를 추가하는 구문
+* MySQL 8.0 Reference Manual의 ```INSERT Statement``` [🔗](https://dev.mysql.com/doc/refman/8.0/en/insert.html)
+    ```SQL
+    INSERT [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE]
+        [INTO] tbl_name
+        [PARTITION (partition_name [, partition_name] ...)]
+        [(col_name [, col_name] ...)]
+        { {VALUES | VALUE} (value_list) [, (value_list)] ... }
+        [AS row_alias[(col_alias [, col_alias] ...)]]
+        [ON DUPLICATE KEY UPDATE assignment_list]
+    ```
+    - INSERT 구문의 간단한 형식: ```INSERT INTO 테이블이름 [(속성리스트)] VALUES (값 리스트);```
+        | 절 | 설명 |
+        |:---:|------|
+        | INSERT | 해당 문자열을 시작으로, 추가할 테이블과 데이터를 정의함 |
+        | INTO | 데이터를 추가할 테이블의 이름과 컬럼을 정의함 (새로운 행을 삽입할 때에는 속성의 이름을 생략할 수 있음) <br/> &nbsp;&nbsp; ***→ 데이터의 입력 순서는 속성의 순서와 일치해야 함*** |
+        | VALUES | INTO 절에서 정의한 테이블의 컬럼에 추가할 데이터의 값을 명시함 |
+    - ⚠️ INSERT 구문에서는 추가할 데이터의 값들이 입력되는 ```VALUE[S]``` 절에서 주로 SQL Injection이 발생함
+
+<br/>
+
+* INSERT 구문 사용 예시
+    ```sql
+    # 예시 1: 쿼리 한 줄로 두 개 이상의 데이터를 추가함 → ,를 이용해 여러 데이터를 한 번에 추가하고 있음
+    INSERT
+        INTO boards (title, boardcontent)
+        VALUES ('title 1', 'content 1'), ('title 2', 'content 2'); # board 테이블의 title, boardcontent 열에 소괄호 안의 값을 순서대로 추가함
+    
+    # 예시 2: 서브 쿼리를 통해 다른 테이블에 존재하는 데이터를 추가함
+    INSERT
+        INTO boards (title, boardcontent)
+        VALUES ('title 1', (SELECT upw FROM users WHERE uid='admin'));
+    ```
+
+<br/><br/>
+
+### UPDATE: 데이터를 수정하는 구문
 
 <br/><br/><br/>
 
