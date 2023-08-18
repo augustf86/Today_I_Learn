@@ -292,6 +292,29 @@
 <br/><br/>
 
 ### DELETE: 데이터를 삭제하는 구문
+* MySQL 8.0 Reference Manual의 ```DELETE Statement``` [🔗](https://dev.mysql.com/doc/refman/8.0/en/delete.html)
+    ```sql
+    DELETE [LOW_PRIORITY] [QUICK] [IGNORE] FROM tbl_name [[AS] tbl_alias]
+        [PARTITION (partition_name [, partition_name] ...)]
+        [WHERE where_condition]
+        [ORDER BY ...]
+        [LIMIT row_count]
+    ```
+    - DELETE 구문의 간단한 형식: ```DELETE FROM 테이블이름 [WHERE <검색조건>];```
+        | 절 | 설명 |
+        |:---:|------|
+        | DELETE | 해당 문자열을 시작으로, 이후에 삭제할 테이블을 정의함 |
+        | FROM | 삭제할 테이블을 정의함 |
+        | WHERE | (optional) 삭제할 행의 조건을 명시함 → 없으면 모든 행을 삭제함 |
+    - ⚠️ DELETE 구문에서는 이용자의 입력 데이터가 주로 사용되는 ```WHERE``` 절에서 SQL Injection이 발생할 확률이 높음
+
+<br/>
+
+* DELETE 구문 사용 예시
+    ```sql
+    DELETE FROM boards # boards 테이블에서 행을 삭제함
+        WHERE title = 'title 1'; # 조건: title의 값이 'title 1'인 경우
+    ```
 
 <br/><br/><br/>
 
