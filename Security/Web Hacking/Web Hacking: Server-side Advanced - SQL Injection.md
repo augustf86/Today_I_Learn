@@ -178,6 +178,56 @@
 <br/><br/>
 
 ### SELECT: 데이터를 조회하는 구문
+* MySQL 8.0 Reference Manual의 ```SELECT Statement``` [🔗](https://dev.mysql.com/doc/refman/8.0/en/select.html)
+    ```sql
+    SELECT
+        [ALL | DISTINCT | DISTINCTROW ]
+        select_expr [, select_expr]
+        [FROM table_references
+        [PARTITION partition_list]]
+        [WHERE where_condition]
+        [GROUP BY {col_name | expr | position}, ... [WITH ROLLUP]]
+        [HAVING where_condition]
+        [WINDOW window_name AS (window_spec)
+            [, window_name AS (window_spec)] ...]
+        [ORDER BY {col_name | expr | position}
+        [ASC | DESC], ... [WITH ROLLUP]]
+        [LIMIT {[offset,] row_count | row_count OFFSET offset}]
+    ```
+    - 데이터를 검색하는 기본 문장 → **질의어**(query)라고 부름
+    - SELECT 구문의 간단한 형식: ```SELECT 열1[, 얄2, ...] FROM 테이블 이름 [WHERE <검색조건>] [GROUP BY 속성이름] [ORDER BY 속성이름 [ASC | DESC]];```
+        | 절 | 설명 |
+        |:---:|------|
+        | SELECT | 해당 문자열을 시작으로, 조회하기 위한 표현식과 컬럼들에 대해 정의함 <br/> &nbsp;&nbsp; - 열의 순서는 결과 테이블의 열 순서를 결정하며, 기본적으로 중복을 제거하지 않음 <br/> &nbsp;&nbsp; - ```SELECT *```은 테이블의 모든 열을 조회한다는 의미 |
+        | FROM | 데이터를 조회할 테이블의 이름 |
+        | WHERE | 조회할 데이터의 조건 <br/> &nbsp;&nbsp; - 조건으로 사용할 수 있는 **술어**(predicate)가 존재하며, 복합조건 사용 시 **논리 연산자 ```AND```, ```OR```, ```NOT```**을 사용함 |
+        | ORDER BY | 조회한 결과를 원하는 컬럼 기준으로 정렬함 <br/> &nbsp;&nbsp; - 정렬을 원하는 열 이름을 순서대로 지정하며, 기본은 오름차순(ASC) 정렬임 |
+        | LIMIT | 조회한 결과에서 행의 갯수와 오프셋을 지정함 |
+        + WHERE절에서 조건으로 사용할 수 있는 술어(predicate)
+            | 술어 | 설명 |
+            |:---:|------|
+            | 비교 | ```=```, ```<>```, ```<```, ```<=```, ```>```, ```>=``` 등을 사용함 |
+            | 범위 | ```BETWEEN``` 연산자를 사용하면 값의 범위를 지정할 수 있음 (논리 연산자 ```AND```을 함께 사용함) <br/> &nbsp;&nbsp; - ex: 가격이 10000 이상 20000 이하인 경우 → ```WHERE price BETWEEN 10000 AND 20000``` |
+            | 집합 | 두 개 이상의 값을 비교하기 위해 ```IN```, ```NOT IN``` 연산자를 이용함 |
+            | 패텬 | 문자열의 패턴 비교를 위해 ```LIKE``` 연산자와 와일드카드 문자를 사용함 |
+            | NULL |
+            | 복합조건 | 논리 연산자 ```AND```, ```OR```, ```NOT```을 사용하면 복합 조건을 명시할 수 있음 |
+    - ⚠️ SELECT 구문에서 이용자의 입력 데이터가 주로 사용되는 ```WHERE```, ```ORDER BY```, ```LIMIT``` 절에서 SQL Injection이 발생할 수 있음
+
+<br/>
+
+* SELECT 구문 사용 예시
+    ```sql
+    SELECT uid, title, boardcontent # uid, title, boardcontent 열을 조회 (결과 테이블의 열 순서도 이와 동일함)
+    FROM boards # board 테이블에서
+    WHERE boardcontent LIKE '%abc%' # 조건(패턴 비교): abc를 포함하는 문자열
+    ORDER BY uid DESC # 정렬: uid를 기준으로 내림차순(DESC) 정렬
+    LIMIT 5; # 결과 테이블의 행의 수: 5
+    ```
+
+<br/><br/>
+
+### INSERT: 데이터를 추가하는 구문
 
 <br/><br/><br/>
 
