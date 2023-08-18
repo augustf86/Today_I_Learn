@@ -264,6 +264,34 @@
 <br/><br/>
 
 ### UPDATE: 데이터를 수정하는 구문
+* MySQL 8.0 Reference Manual의 ```UPDATE Statement``` [🔗](https://dev.mysql.com/doc/refman/8.0/en/update.html)
+    ```sql
+    UPDATE [LOW_PRIORITY] [IGNORE] table_reference
+        SET assignment_list
+        [WHERE where_condition]
+        [ORDER BY ...]
+        [LIMIT row_count]
+    ```
+    - UPDATE 구문의 간단한 형식: ```UPDATE 테이블이름 SET 속성이름1=값1[, 속성이름2=값2, ...] [WHERE <검색조건>];```
+        | 절 | 설명 |
+        |:---:|------|
+        | UPDATE | 해당 문자열을 시작으로, 수정할 테이블을 정의함 |
+        | SET | 수정할 컬럼과 데이터를 정의함 <br/> &nbsp;&nbsp; - 데이터는 SELECT문을 사용하여 다른 테이블의 속성 값을 이용할 수 있음 |
+        | WHERE | 수정할 행의 조건을 명시함 |
+    - ⚠️ UPDATE 구문에서는 이용자의 입력 데이터가 주로 사용되는 ```SET``` 절과 ```WHERE``` 절에서 SQL Injection이 발생할 확률이 높음
+
+<br/>
+
+* UPDATE 구문 사용 예시
+    ```sql
+    UPDATE boards # boards 테이블에서 수정할 것이라고 명시함
+        SET boardcontent = "update content 2" # (수정할 컬럼) = (수정할 데이터) 형식으로 SET 절 명시
+        WHERE title = 'title 1'; # 조건: title 행의 값이 'title 1'인 경우
+    ```
+
+<br/><br/>
+
+### DELETE: 데이터를 삭제하는 구문
 
 <br/><br/><br/>
 
