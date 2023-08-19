@@ -167,6 +167,32 @@
 <br/><br/>
 
 ### Blind SQL Injection
+* 데이터베이스 조회 후 결과를 직접적으로 확인할 수 없을 때 사용될 수 있는 공격 기법
+    - DBMS의 함수 또는 연산 과정 등을 이용해 데이터베이스 내에 존재하는 데이터와 이용자의 입력을 비교함 <br/> &nbsp;&nbsp; → 특정한 조건 발생 시 특별한 응답을 발생시켜 해당 비교에 대한 검증을 수행함
+    - Blind SQL Injection을 수행하기 위해 만족해야 하는 조건
+        | | 조건 |
+        |:---:|------|
+        | 1 | 데이터를 비교해 참/거짓을 구분함 |
+        | 2 | 참/거짓의 결과에 따른 특별한 응답을 생성함 |
+        + 데이터를 비교하여 참/거짓을 구분하는 구분으로 **If Statements**를 많이 사용함
+            - DBMS별 IF Statement 사용 예시
+                ```sql
+                # MySQL: IF Statement (IF(조건식, 참일때 수행할 값, 거짓일 때 수행할 값)의 형태로 사용됨)
+                SELECT IF(1=1, True, False);
+
+                # SQLite: CASE expression (WHEN 다음의 식이 참이라면 THEN...ELSE 사이의 값를, 거짓이라면 ELSE...END 사이의 값을 출력함)
+                SELECT CASE WHEN 1=1 THEN 'true' ELSE 'false' END;
+
+                # MSSQL: IF (IF 키워드 다음에 위치한 조건의 결과가 참이라면 SELECT 구문을 수행함)
+                if (SELECT 'test') = 'test' SELECT 1234;
+                ```
+    - 📌 Blind SQL Injection의 단점 *→ 조금 더 효율적인 방법으로 Blind SQL Injection을 수행해야 함*
+        + 수많은 쿼리를 전송하기 때문에 실제 환경에서는 방화벽에 의해 접속 IP가 차단될 수 있음
+        + 데이터의 길이가 길면 길수록 실행해야 하는 쿼리의 수도 증가하고 공격에 들이는 시간이 길어짐
+
+<br/>
+
+* Blind SQL Injection: 데이터베이스의 결과를 받은 어플리케이션에서 결과 값에 따라 다른 행위를 수행하게 되는 점을 이용해 참과 거짓을 구분하는 방법
 
 <br/><br/><br/>
 
