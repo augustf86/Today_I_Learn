@@ -507,6 +507,64 @@
 <br/> 
 
 * DBMS별로 Time based SQL Injection을 통해 공격하는 방법
+    - MySQL
+        + MySQL에서 제공하는 함수를 이용하는 방법
+            | 사용 함수 | 설명 |
+            |:---:|------|
+            | ```SLEEP(duration)``` | 대기할 시간(sec)을 인자로 받으며 지정한 시간만큼 대기하게 만드는 함수 (반환값 없음) <br/> &nbsp;&nbsp; - ```WHERE``` 조건문에 의해 선택되는 행의 수만큼 ```SLEEP``` 함수를 호춣함 → ```WHERE``` 조건문을 이용해 ```SLEEP``` 함수를 반복하게 만들 수 있음 |
+            | ```BENCHMARK(count, expr)``` | 반복 수행할 횟수(count)와 실행할 표현식(expr)을 인자로 필요로 하며, 표현식을 반복횟수만큼 실행하며 시간 지연을 발생시킴 <br/> &nbsp;&nbsp; - 표현식은 반드시 스칼라(단일) 값을 반환해야 함 <br/> &nbsp;&nbsp; - **지정한 횟수만큼 반복실행하는데 얼마나 시간이 소요되었는지**가 중요함 <br/> &nbsp;&nbsp; - 📌 해당 함수로 얻은 쿼리나 함수의 성능은 그 자체로는 별 의미가 없음에 유의 <br/> &nbsp;&nbsp;&nbsp;&nbsp; (2개의 기능을 상대적으로 비교﹒분석하는 용도로만 사용할 것을 권장함) |
+            - 함수 사용 예시
+                ```sql
+                SELECT SLEEP(1); # 결과: 1 row in set(1.00 sec)
+
+                SELECT BENCHMARK(4000000, SHA(1)); # 결과: 1 row in set (10.78 sec)
+                ```
+        + 헤비 쿼리를 이용하는 방법
+            - 많은 수의 데이터가 포함된 테이블을 연산 과정에 포함시켜 시간을 지연시킴
+                + **```information_schema.tables``` 테이블**을 이용하는 방법이 대표적임 <br/> &nbsp;&nbsp;&nbsp;&nbsp; ↳ MySQL에서 기본적으로 제공하는 시스템 테이블 → 기본적으로 **많은 수의 데이터가 포함되어 있음**
+                + 충분한 시간 지연이 발생하기에 데이터가 적은 경우에는 테이블을 여러번 추가하면 됨
+            - 헤비 쿼리 예시
+                ```sql
+                SELECT (SELECT COUNT(*) FROM information_schema.tables A, information_schema.tables B, information_schema.tables C) as heavy;
+                # 결과: 1 row in set (1.38 sec)
+                ```
+    - MSSQL
+        + MSSQL에서 제공하는 함수를 이용하는 방법
+            | 사용 함수 | 설명 |
+            |:---:|------|
+            | ```WAITFOR``` | ```WAITFOR DELAY 'time_to_pass'``` 형식 → 특정 시간 동안 지연시킬 때 사용됨 <br/> &nbsp;&nbsp; - ```'time_to_pass'``` 부분에 **'시:분:초:밀리세컨드' 형식**으로 딜레이를 줄 수 있음 |
+            - 함수 사용 예시
+                ```sql
+                SELECT '' IF((SELECT 'abc')='abc') WAITFOR DELAY '0:0:1';
+                /* 쿼리 실행 결과
+                Execution time: 1.02 sec, rows selected: 0, rows affected: 0, absolute service time: 1.17 sec, absolute service time: 1.16 sec
+                */
+                ```
+        + 헤비 쿼리를 이용하는 방법
+            - ```information_schema.columns``` 테이블과 같이 많은 수의 데이터가 포함된 테이블을 연산 과정에 포함시켜 시간을 지연시킴
+                + 충분한 시간 지연이 발생하기에 데이터가 적은 경우에는 테이블을 여러 번 추가하면 됨
+            - 헤비 쿼리 예시
+                ```sql
+                SELECT (SELECT COUNT(*) FROM information_schema.columns A, information_schema.columns B, information_schema.columns C, information_schema.columns D, information_schema.columns E, information_schema.columns F);
+                /* 쿼리 실행 결과
+                Execution times: 6.36 sec, rows selected: 1, rows affected: 0, absolute service time: 6.53 sec, absolute service time: 6.53 sec
+                */
+                ```
+    - SQLite
+        + 헤비 쿼리를 이용하는 방법
+            - ```RANDOMBLOB```에 의해 많은 수의 데이터가 생성되며, 변환 과정과 함수를 거치면 시간 지연이 발생한다는 점 등을 공격에 활용할 수 있음
+            - 헤비 쿼리 예시
+                ```sql
+                .timer ON
+                SELECT LIKE('ABCDEFG', UPPER(HEX(RANDOMBLOB(150000000000000/2)))) # SLEEP TIME: 150000000000000/2
+                /* 쿼리 실행 결과
+                Run Time: real 9.740 user 7.983349 sys 1.743972
+                */
+                ```
+
+<br/><br/>
+
+### Short-circuit Evaluation
 
 <br/><br/><br/>
 
