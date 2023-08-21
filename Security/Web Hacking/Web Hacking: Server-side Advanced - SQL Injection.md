@@ -565,6 +565,27 @@
 <br/><br/>
 
 ### Short-circuit Evaluation
+* Logic 연산의 원리를 이용한 Error/Time based SQL Injection
+    - ```AND``` 연산자를 이용한 공격
+        + 앞의 식의 결과에 따라 뒤의 식의 결과가 달라진다는 점을 이용함 <br/> &nbsp;&nbsp; *→ 앞의 식이 거짓이라면 뒤의 식은 연산을 하지 않더라도 결과 거짓이라는 것을 알 수 있음 **= 실제로 뒤의 식을 수행하지 않는 것을 의미함***
+        + 공격 예시: Short-circuit evaluation - Time based SQLI
+            ```sql
+            # 앞의 식이 거짓(0)을 반환하기 때문에 SLEEP 함수가 실행되지 않음
+            SELECT 0 AND SLEEP(10); # 결과: 1 row in set (0.00 sec)
+
+            # 앞의 식이 참(1)을 반환하기 때문에 SLEEP 함수가 실행됨
+            SELECT 1 AND SLEEP(10); # 결괴: 1 row in set (10.04 sec)
+            ```
+    - ```OR``` 연산자를 이용한 공격
+        + 앞의 식이 참이라면 뒤의 식의 결과가 출력에 영향을 주지 않는다는 점을 이용함 <br/> &nbsp;&nbsp; *→ 앞의 식이 참이라면 뒤의 식의 결과는 실행에 영향을 주지 않음 **= 실제로 뒤의 식은 수행되지 않는 것을 의미함***
+        + 공격 예시: Short-circuit evaluation - Error based Blind SQLI
+            ```sql
+            # 앞의 식이 참이로 뒤의 식이 DOUBLE 자료형의 최댓값을 초과함에도 불구하고 정상적인 결과를 출력함 (에러 메시지 출력 X)
+            SELECT 1=1 OR 9e307*2; # 결과: 1
+
+            # 앞의 식이 거짓이고, 뒤의 식이 DOUBLE 자료형의 최댓값을 초과하므로 에러 메시지를 출력함
+            SELECT 1=0 OR 9e307*2; # 결과: ERROR 1690 (22003): DOUBLE value is out of range in '(9e307 * 2)'
+            ```
 
 <br/><br/><br/>
 
