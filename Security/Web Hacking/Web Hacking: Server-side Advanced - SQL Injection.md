@@ -478,6 +478,24 @@
 <br/>
 
 * Error based Blind SQL Injection
+    - Error based SQL Injection과 Error based Blind SQL Injection의 차이점
+        | 공격 종류 | 설명 |
+        |:---:|------|
+        | **Error based SQLI** | 에러 메시지를 통해 출력된 데이터로 정보를 수집해 출력값에 영향을 받음 <br/> &nbsp;&nbsp; *→ 에러 메시지를 통해 데이터가 출력되는 에러를 이용해야 함* |
+        | **Error based Blind SQLI** | 에러 발생 여부만을 필요로 하기 때문에 용이하게 사용할 수 있음 <br/> &nbsp;&nbsp; *→ 다른 Runtime Error도 사용 가능함* |
+    - 📌 서버가 반환하는 HTTP Response 상태 코드(Status number) 또는 애플리케이션 응답 차이 등을 통해 에러 발생 여부를 판단하고 참/거짓 여부를 판단할 수 있음
+        + 예시: MySQL의 ```DOUBLE``` 자료형의 최댓값을 초과해 에러를 발생시키는 경우
+            ```sql
+            SELECT IF (1=1, 9e307*2, 0); # 1=1이 참이므로 9e307*2를 반환함
+            # 결과: ERROR 1690 (22003): DOUBLE value is out of range in '(9e307 * 2)'
+
+            SELECT IF(1=0, 9e307*2, 0); # 1=0이 거짓이므로 0을 반환함
+            # 결과: 0
+            ``` 
+
+<br/><br/>
+
+### Time based
 
 <br/><br/><br/>
 
