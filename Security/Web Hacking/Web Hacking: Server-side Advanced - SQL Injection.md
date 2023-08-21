@@ -1,6 +1,10 @@
 # Web Hacking: Server-side Advanced - SQL Injection
 🔖 출처
 * [Dreamhack Lecture] Server-side Advanced - SQL Injection [🔗](https://dreamhack.io/lecture/courses/27)
+* [Dreamhack Web Hacking Advanced - Server Side] Background: SQL Features [🔗](https://dreamhack.io/lecture/courses/303)
+* [Dreamhack Web Hacking Advanced - Server Side] Background: SQL DML [🔗](https://dreamhack.io/lecture/courses/302)
+* [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Blind SQL Injection Advanced [🔗](https://dreamhack.io/lecture/courses/304)
+* [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Error & Time based SQL Injection [🔗](https://dreamhack.io/lecture/courses/286)
 
 <br/><br/>
 
