@@ -791,4 +791,53 @@
 
 <br/>
 
-* System Tables: **MySQL**
+* System Tables: **MySQL** <br/> *📌 주의: MSSQL은 스키마와 데이터베이스가 동일함*
+    ```sql
+    -- 데이터베이스의 목록을 출력하는 명령
+    SHOW databases;
+    /* 출력 결과
+        - 초기 설치 시 존재하는 데이터베이스: information_schema, mysql, performance_schema, sys
+        - 이용자 정의 데이터베이스가 존재할 경우 해당 데이터베이스도 출력함
+    */
+    ```
+    - **```information_schema```**: (Read-only) MySQL 서버 내에 존재하는 DB의 메타 정보(테이블, 컬럼, 인덱스 등의 스키마 정보)를 모아둔 DB
+        + 실제 레코드가 있는 게 아니라 SQL을 이용해 조회할 때마다 메타 정보를 MySQL 서버의 메모리에서 가져와서 보여줌 <br/><br/>
+            > 💡 **메타 데이터**(meta data)
+            > * 데이터의 데이터 → 데이터베이스 또는 테이블의 이름, 컬럼의 데이터 타입, 접근 권한 같은 것을 의미함
+            <br/>
+        + ```information_schema```의 주요 테이블
+            | 테이블 | 설명 |
+            |:---:|------|
+            | ```TABLES``` | 생성된 모든 테이블의 정보를 담고 있음 → 스키마, 테이블의 정보를 조회할 수 있음 |
+            | ```COLUMNS``` | 모든 스키마의 컬럼 정보를 확인할 수 있음 → 컬럼의 정보를 조회할 수 있음 |
+            | ```PROCESSLIST``` | 수행 중인 프로세스 리스트를 담고 있음 → 실시간으로 실행되는 쿼리를 조회할 수 있음 |
+            | ```USER_PRIVILEGES``` | 사용자 권한 정보를 담고 있음 → MySQL 서버의 계정 정보를 조회할 수 있음 |
+            - ```information_schema``` DB의 각 테이블 조회 예시
+                ```sql
+                -- 스키마 정보 조회 (information_schema 데이터베이스의 TABLES 테이블): TABLE_SCHEMA(테이블 스키마)에 해당하는 정보를 그룹화하여 조회함
+                SELECT TABLE_SCHEMA FROM information_schema.TABLES GROUP BY TABLE_SCHEMA;
+
+                -- 테이블 정보 조회 (information_schema 데이터베이스의 TABLES 테이블): TABLES_SCHEMA(테이블 스키마), TABLE_NAME(테이블 이름)을 조회함
+                SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES;
+
+                -- 컬럼 정보 조회 (information_schema 데이터베이스의 COLUMNS 테이블): TABLE_SCHEMA(테이블 스키마), TABLE_NAME(테이블 이름), COLUMN_NAME(컬럼 이름)을 조회함
+                SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS;
+
+                -- 실시간 실행 쿼리 정보 조회 (information_schema 데이터베이스의 PROCESSLIST 테이블): 모든 내용을 조회함
+                SELECT * FROM information_schema.PROCESSLIST; -- → 쿼리 결과에 해당 쿼리가 포함되어 있음을 알 수 있음
+                /*
+                    💡 SYS 데이터베이스의 SESSION 테이블을 통해서 실행 중인 계정과 함께 조회하는 방법도 있음
+                    SELECT user, current_statement FROM sys.session;
+                */
+
+                -- DBMS 계정 정보 조회 (information_schema 데이터베이스의 USER_PRIVILEGES 테이블): GRANTEE(계정 정보), PRIVILEGE_TYPE, IS_GRANTABLE(각 권한에 대한 내용들 - 허용된 쿼리문과 해당 권한을 부여할 수 있는지 여부 등)을 조회함
+                SELECT GRANTEE, PRIVILEGE_TYPE, IS_GRANTABLE WHERE information_schema.USER_PRIVILEGES;
+                /*
+                    💡 mysql 데이터베이스의 user 테이블을 통해 DBMS의 계정 정보를 조회하는 방법도 있음
+                    SELECT user, authentication_string FROM mysql.user;
+                */
+                ```
+
+<br/>
+
+* System Tables: **MSSQL**
