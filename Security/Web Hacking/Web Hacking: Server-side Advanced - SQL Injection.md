@@ -841,3 +841,67 @@
 <br/>
 
 * System Tables: **MSSQL**
+    ```sql
+    -- 데이터베이스의 목록을 출력하는 명령
+    SHOW databases;
+    /* 출력 결과
+        - 초기 설치 시 존재하는 데이터베이스: master, tempdb, model, msdb 데이터베이스
+        - 이용자 정의 데이터베이스가 존재할 경우 해당 데이터베이스도 출력함
+    */
+    ```
+    - **```master```** 데이터베이스
+        + ```master``` 데이터베이스의 **```sysdatabases``` 테이블**
+            - 데이터베이스의 정보를 조회할 수 있음
+            - ```mastser..sysdatabases``` 조회 예시
+                ```sql
+                -- master 데이터베이스의 sysdatabases 테이블에서 name(데이터베이스 이름)에 해당하는 정보를 출력함
+                SELECT name FROM master..sysdatabases;
+                /* 출력 결과
+                    - 초기 실처 시 존재하는 데이터베이스들(master, tempdb, model, msdb)을 출력함
+                    - 이용자 정의 데이터베이스가 존재할 경우 이용자 정의 데이터베이스(들)도 출력함
+                */
+
+                -- DB_NAME(num) 형식으로 데이터베이스의 정보를 알아낼 수 있음
+                SELECT DB_NAME(1);
+                /* 출력 결과
+                    - 1번 데이터베이스가 master라면 master를 출력함
+                    - 숫자 0은 현재 데이터베이스를 의미함
+                */
+                ```
+        + ```master``` 데이터베이스의 **```sys.sql_logins``` 테이블**
+            - MSSQL 서버의 계정 정보를 조회할 수 있음
+                + ```master``` 데이터베이스의 ```syslogins``` 테이블을 통해서도 조회할 수 있음
+            - ```master.sys.sql_logins``` 조회 예시
+                ```sql
+                -- master 데이터베이스의 sys.sql_logins 테이블을 통해 user(계정 이름)과 password_hash(비밀번호의 해시 정보)를 조회함
+                SELECT name, password_hash FROM master.sys.sql_logins;
+
+                -- master 데이터베이스의 syslogins 테이블을 통해 유사한 결과를 얻을 수 있음
+                SELECT * FROM master..syslogins;
+                ```
+    - 이용자 정의 데이터베이스의 **```sysobjects``` 테이블**
+        + 이용자 정의 데이터베이스의 테이블 정보를 조회할 수 있음
+            - 이용자 정의 데이터베이스의 ```information_schema``` 스키마의 ```tables``` 테이블을 통해서도 조회할 수 있음
+        + ```sysobjects``` 조회 예시
+            ```sql
+            -- 이용자 정의 데이터베이스(users)의 sysobjects 테이블을 조회하여 데이터베이스의 name(테이블 이름)을 조회함
+            SELECT name FROM users..sysobjects WHERE xtype='U'; -- xtype='U'는 이용자 정의 테이블을 의미함
+
+            -- information_schema 스키마의 tables 테이블을 통해 동일한 결과를 얻을 수 있음
+            SELECT table_name FROM users.information_schema.tables;
+            ```
+    - 이용자 정의 데이터베이스의 **```syscolumns```** 테이블
+        + 이용자 정의 데이터베이스의 컬럼 정보를 조회할 수 있음
+            - 이용자 정의 데이터베이스의 ```information_schema``` 스키마의 ```columns``` 테이블을 통해서도 조회할 수 있음
+        + ```syscolumns``` 조회 예시
+            ```sql
+            -- syscolumns 테이블에서 서브쿼리의 결과에 해당하는 id의 name(컬럼명)을 조회함
+            SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects FROM name='users');
+
+            -- information_schema 스키마의 columns 테이블을 통해 유사한 결과를 얻을 수 있음
+            SELECT table_name, column_name FROM users.information_schema.columns;
+            ```
+
+<br/>
+
+* System Tables: **PostgreSQL**
