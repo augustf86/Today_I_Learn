@@ -1002,3 +1002,33 @@
 <br/>
 
 * System Tables: **Oracle**
+    - **```all_tables```**: 데이터베이스의 정보를 확인할 수 있는 테이블
+        + 현재 사용자가 접근할 수 있는 테이블의 집합 = 로그인된 계정의 권한으로 접근할 수 있는 모든 테이블들
+        + ```all_tables``` 테이블 조회 예시
+            ```sql
+            -- all_tables의 owner(테이블을 소유한 사용자)를 조회
+            SELECT DISTINCT owner FROM all_tables; -- DISTINCT(중복 제거) 키워드로 중복된 데이터를 제거함
+
+            -- all_tables의 owner(테이블을 소유한 사용자)와 table_name(테이블 이름)을 조회
+            SELECT owner, table_name FROM all_tables;
+            ```
+    - **```all_tab_columns```**: 특정 테이블의 컬럼 정보를 확인할 수 있는 테이블
+        + 현재 로그인된 계정의 권한으로 접근할 수 있는 모든 테이블 내의 컬럽의 집합
+        + ```WHERE``` 구문으로 ```table_name```에 조회하고 싶은 테이블을 조건으로 입력하면 해당 테이블의 컬럼 이름을 조회할 수 있음
+        + ```all_table_columns``` 테이블 조회 예시
+            ```sql
+            -- all_tab_columns 테이블에서 table_name이 users인 테이블의 column_name(컬럼 이름)을 조회
+            SELECT column_name FROM all_tab_columns WHERE table_name = 'users';
+            ```
+    - **```all_users```**: DBMS의 계쩡 정보를 확인할 수 있는 테이블
+        + 모든 유저의 정보를 조회할 수 있음
+        + ```all_users``` 테이블 조회 예시
+            ```sql
+            -- all_users 테이블의 모든 열을 조회하여 DBMS에 생성된 모든 유저를 조회함
+            SELECT * FROM all_users;
+            -- SELECT * FROM DBA_USERS;를 이용해도 동일한 결과가 출력됨
+            ```
+
+<br/>
+
+* System Table: **SQLite**
