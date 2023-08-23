@@ -1061,3 +1061,43 @@
 <br/>
 
 * SQL Injection 발생 상황별로 DBMS를 파악하는 방법
+    - 쿼리 실행 결과 출력
+        + 애플리케이션에서 삽입한 쿼리의 실행 결과를 출력한다면 **DBMS에서 지원하는 환경 변수의 값**을 이용할 수 있음
+            - DBMS 별로 버전을 나타내는 함수 및 데이터가 다르다는 점을 이용함
+        + 예시: DBMS에서 제공하는 환경 변수와 함수를 사용해 버전을 확인하는 쿼리문
+            ```sql
+            SELECT @@version;
+            SELECT version();
+            ```
+    - 에러 메시지 출력
+        + 삽입할 쿼리를 애플리케이션에서 실행하면서 에러 메시지를 출력하는 경우 **에러 메시지를 이용하여 사용하는 DBMS를 알아낼 수 있음**
+        + 예시: 잘못된 쿼리를 삽입하여 에러 메시지를 출력시키는 경우
+            ```sql
+            -- 컬럼의 수가 일치하지 않으면, UNION 구문은 에러를 발생시킴
+            SELECT 1 UNION SELECT 1, 2;
+            /* 출력 결과
+                MySQL) ERROR 1222 (21000): The used SELECT statements have a different number of columns (SELECT * FROM not_exists_table)
+                                ↳ 이 에러코드는 MySQL에서만 사용되므로 이를 통해 DBMS의 정보가 노출됨
+                SQLite) Error: no such table: not_exists_table
+            */
+            ```
+    - 참 또는 거짓 출력
+        + 애플리케이션에서 쿼리 실행 결과가 아닌 **참과 거젓 여부만을 출력**할 경우 **Blind SQL Injection 공격**으로 사용 중인 DBMS 정보를 알아낼 수 있음
+        + 예시: Blind SQL Injection 기법을 이용한 쿼리문 중 일부(함수부분)
+            ```sql
+            -- 버전 환경 변수 및 함수를 통해 가져온 버전을 한 바이트씩 비교해 알아냄
+            MID(@@version, 1, 1) = '5';
+            SUBSTR(version(), 1, 1) = 'P';
+            ```
+    - 예외 상황
+        + 애플리케이션에서 쿼리와 관련된 어떠한 결과도 출력하지 않는 경우 **시간 지연 함수**인 ```SLEEP```을 사용함
+            - 일부 DBMS에서는 ```SLEEP``` 함수를 지원하지 않음 → 시스템에 맞는 시간 지연 함수를 사용해야 함
+        + 예시: 시간 지연 함수를 이용함
+            ```sql
+            SLEEP(10) -- MySQL를 사용함
+            pg_sleep(10) -- PostgreSQL를 사용함
+            ```
+
+<br/>
+
+* DBMS Fingerprinting: **MySQL**
