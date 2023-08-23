@@ -1052,3 +1052,12 @@
 <br/><br/>
 
 ### Exploit Tech: DBMS Fingerprinting
+* SQL Injection 취약점이 발생할 때 데이터베이스의 테이블과 컬럼 등 데이터베이스가 저장하고 있는 중요한 정보를 수집하는 방법
+    - **핑거프린팅**(Fingerprinting): 공격 대상의 정보를 수집하는 과정
+        + 공격 대상이 사용하는 웹 서버와 개발 언어, 그리고 DBMS의 내부 정보 등을 알아내는 과정이 이에 해당됨
+        + Penetration Testing Execution Standard(PTES)에서 정의한 모의 해킹의 7단계 중 **공격 대상을 정하고 대상의 정보를 수집하는 1단계**에 해당
+    - ⚠️ Blackbox 점검에서 SQL Injection이 의심되는 Endpoint를 찾았을 때 DBMS의 종류를 파악한 후 공격하는 것이 효율적임
+
+<br/>
+
+* SQL Injection 발생 상황별로 DBMS를 파악하는 방법
