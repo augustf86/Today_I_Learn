@@ -904,4 +904,101 @@
 
 <br/>
 
-* System Tables: **PostgreSQL**
+* System Tables: **PostgreSQL** <br/> *📌 주의: PostgreSQL은 스키마와 데이터베이스가 다름*
+    - **```pg_database```**: 생성된 데이터베이스의 목록을 확인할 수 있음
+        + 데이터베이스의 이름, 소유자, 정렬 순서 등의 데이터베이스 정보를 관리함
+        + ```pd_database``` 조회 예시
+            ```sql
+            -- pg.database의 datname(데이터베이스 이름)을 조회
+            SELECT datname FROM pg_database;
+            /* 출력 결과 (초기 설치 시 아래와 같은 3개의 데이터베이스가 존재함)
+                 datname
+                 ----------
+                 postgres
+                 template1
+                 template2
+                (3 rows)
+            */
+            ```
+    - **```pg_catalog```**: 주요 정보를 담고 있는 테이블을 포함한 스키마(시스템 카탈로그)
+        + ```information_schema```로도 비슷한 정보를 조회할 수 있음
+        + ```pg_catalog``` 조회 예시
+            ```sql
+            -- pg_catalog 스키마의 pg_namespace(스키마 정보) 테이블에서 nspname(네임스페이스의 이름)을 조회함
+            SELECT nspname FROM pg_catalog.pg_namespace;
+            /* 출력 결과
+                 nspname
+                 ----------
+                 pg_toast
+                 pg_temp_1
+                 pg_toast_temp_1
+                 pg_catalog
+                 public
+                 information_schema
+                (6 rows)
+            */
+            ```
+        + ```pg_catalog``` 스키마의 각 테이블을 이용해 조회할 수 있는 정보들
+            | 테이블 | 조회할 수 있는 정보 |
+            |----|------|
+            | ```pg_catalog.pg_shadow``` 테이블 | PostgreSQL 서버의 계정 정보를 조회할 수 있음 |
+            | ```pg_catalog.pg_settings``` 테이블 | PostgreSQL 서버의 설정 정보를 조회할 수 있음 |
+            | ```pg_catalog.pg_database``` 테이블 | PostgreSQL 서버의 데이터베이스 정보를 조회할 수 있음 |
+            | ```pg_catalog.stat_activity``` 테이블 | 실시간으로 실행되는 쿼리를 조회할 수 있음 |
+            - ```pg_catalog``` 스키마의 각 테이블 조회 예시
+                ```sql
+                -- DBMS 계정 정보 조회(pg_catalog 스키마의 pg_shadow 테이블): username(계정 이름), passwd(비밀번호의 해시 정보)를 조회함
+                SELECT username, passwd FROM pg_catalog.pg_shadow;
+
+                -- DBMS 설정 정보 조회(pg_catalog 스키마의 pg_settings 테이블): name(서버 이름), setting(설정 정보)를 조회함
+                SELECT name, setting FROM pg_catalog.pg_settings;
+
+                -- 데이터베이스 정보 조회(pg_catalog 스키마의 pg_database 테이블): datname(데이터베이스 이름)을 조회함
+                SELECT datname FROM pg_catalog.pg_database; -- 위의 pg_database 테이블 조회와 동일함
+
+                -- 실시간 실행 쿼리 확인(pg_catalog 스키마의 stat_activity 테이블): username(쿼리를 실행시킨 계정 이름), query(실행한 쿼리)를 조회함
+                SELECT username, query FROM pg_catalog.stat_activity;
+                ```
+    - **```information_schema```**: 데이터베이스의 모든 메타 정보를 가지고 있는 스키마
+        + 각 테이블의 정보를 조회하는데 사용할 수 있음
+        + ```information_schema``` 조회 예시
+            ```sql
+            -- information_schema 스키마의 tables 테이블에서 스키마가 pg_catalog인 항목의 table_name(테이블 이름)을 조회함
+            SELECT table_name FROM information_schema.tables WHERE table_schema='pg_catalog';
+            /* 출력 결과
+                 table_name
+                 ----------
+                 pg_shadow
+                 pg_settings
+                 pg_databases
+                 ...
+            */
+            
+            -- information_schema 스키마의 tables 테이블에서 스키마가 information_schema인 항목의 table_name(테이블 이름)을 조회함
+            SELECT table_name FROM information_schema.tables WHERE table_schema='information_schema';
+            /* 출력 결과
+                 table_name
+                 ----------
+                 schemata
+                 tables
+                 columns
+                 ...
+            */
+            ```
+        + ```information_schema``` 스키마의 각 테이블을 이용해 조회할 수 있는 정보들
+            | 테이블 | 조회할 수 있는 정보 |
+            |----|------|
+            | ```information_schema.tables``` 테이블 | 데이터베이스의 스키마 및 테이블 정보 등을 조회할 수 있음 |
+            | ```information_schema.colunns``` 테이블 | 컬럼 정보를 조회할 수 있음 |
+            - ```information_schema``` 스키마의 각 테이블 조회 예시
+                ```sql
+                -- 테이블 정보 조회(information_schema 스키마의 tables 테이블): table_schema(테이블의 스키마), table_name(테이블 이름)을 조회함
+                SELECT table_schema, table_name FROM information_schema.tables;
+
+                -- 컬럼 정보 조회(information_schema 스키마의 columns 테이블): table_schema(테이블의 스키마), table_name(테이블 이름), column_name(컬럼 이름)을 조회함
+                SELECT table_schema, table_name, column_name FROM information_schema.columns;
+                ```
+
+<br/>
+
+* System Tables: **Oracle**
