@@ -1032,3 +1032,22 @@
 <br/>
 
 * System Table: **SQLite**
+    - **```sqlite_master``` 시스템 테이블**
+        + 생성되어 있는 테이블 등의 정보와 sql를 획득할 수 있음
+        + ```sqlite_master``` 테이블 조회 예시
+            ```sql
+            .header on -- 콘솔에서 실행 시 컬럼 헤더를 출력하기 위해 설정함
+
+            -- sqlite_master 테이블의 전체 데이터를 조회함
+            SELECT * FROM sqlite_master;
+            /* 결과
+            type | name | tbl_name | rootpage | sql
+            table | users |users | 2 | CREATE TABLE users (uid text), upw text)
+            */
+            ```
+            - ```uid```(text), ```upw```(text)를 열로 가지고 있는 users 테이블과 테이블 생성 시 사용한 SQL 문을 획득함
+
+
+<br/><br/>
+
+### Exploit Tech: DBMS Fingerprinting
