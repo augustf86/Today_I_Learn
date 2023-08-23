@@ -5,6 +5,7 @@
 * [Dreamhack Web Hacking Advanced - Server Side] Background: SQL DML [🔗](https://dreamhack.io/lecture/courses/302)
 * [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Blind SQL Injection Advanced [🔗](https://dreamhack.io/lecture/courses/304)
 * [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Error & Time based SQL Injection [🔗](https://dreamhack.io/lecture/courses/286)
+* [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: System Table Fingerprinting [🔗](https://dreamhack.io/lecture/courses/306)
 
 <br/><br/>
 
