@@ -1178,3 +1178,38 @@
 <br/>
 
 * DBMS Fingerprinting: **PostgreSQL**
+    - 쿼리 실행 결과 출력: *version*
+        + ```version``` 함수를 사용해 DBMS의 상세 정보와 운영체제 정보를 알아낼 수 있음
+            ```sql
+            SELECT version();
+            /* 출력 결과: 
+                PostgreSQL 12.2 (Debian 12.2-2.pgdg100+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 8.3.0-6) 8.3.0, 64-bit
+                (1 row) 
+            */
+            ```
+    - 에러 메시지 출력: *error*
+        + ```UNION``` 문으로 에러 메시지를 출력시킨 다음, 에러 메시지에 포함된 키워드로 PostgreSQL에서 출력된 문자열임을 검색을 통해 확인할 수 있음
+            ```sql
+            SELECT 1 UNION SELECT 1, 2; -- UNION 문은 컬럼의 개수가 같지 않다면 에러를 발생시킴
+            -- ERROR: each UNION query must have the same number of columns
+            ```
+    - 참 또는 거짓 출력: *Blind*
+        + ```version``` 함수로 가져온 버전의 각 위치에 해당하는 문자를 ```SUBSTR``` 함수를 통해 Blind SQL Injection으로 알아낼 수 있음
+            ```sql
+            -- version() 함수 출력 결과: 'PostgreSQL 12.2 ...'
+            -- SUBSTR(version(), 1, 1) → version() 함수의 첫 번째 문자: 'P'
+
+            SELECT SUBSTR(version(), 1, 1) = 'P'; -- version()의 첫 번째 문자가 'P'인지 확인 → t (참)
+            SELECT SUBSTR(version(), 1, 1) = 'Q'; -- version()의 첫 번째 문자가 'Q'인지 확인 → f (거짓)
+            ```
+    - 예외 상황: *Time based*
+        + 애플리케이션에서 쿼리 실행 결과를 반환하지 않을 때 ```pg_sleep``` 함수를 사용하여 시간 지연 발생 여부로 그 결과를 알아낼 수 있음
+            ```sql
+            -- SUBSTR(version(), 1, 1) → version() 함수의 첫 번째 문자: 'P'
+            SELECT SUBSTR(version(), 1, 1) = 'P' AND pg_sleep(10); -- AND 앞의 식이 참이므로 pg_sleep(10)이 실행되어 10초 지연됨 (시간 지연 발생)
+            SELECT SUBSTR(version(), 1, 1) = 'Q' AND pg_sleep(10); -- AND 앞의 식이 거짓이므로 뒤의 식도 실행되지 않음 (시간 지연 미발생)
+            ```
+
+<br/>
+
+* DBMS Fingerprinting: **SQLite**
