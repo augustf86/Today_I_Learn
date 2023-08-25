@@ -7,6 +7,7 @@
 * [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Error & Time based SQL Injection [🔗](https://dreamhack.io/lecture/courses/286)
 * [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: System Table Fingerprinting [🔗](https://dreamhack.io/lecture/courses/306)
 * [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: DBMS Fingerprinting [🔗](https://dreamhack.io/lecture/courses/305)
+* [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Bypass WAF [🔗](https://dreamhack.io/lecture/courses/309)
 
 <br/><br/>
 
