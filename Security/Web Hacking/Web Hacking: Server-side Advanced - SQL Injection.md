@@ -1380,3 +1380,29 @@
 <br/>
 
 * WAF Bypass: **PostgreSQL**
+    - 문자열 검사 우회
+        + 문자열 검사 우회 시 사용할 수 있는 PostgreSQL 함수
+            | 함수 | 설명 |
+            |:---:|------|
+            | ```CHR``` 함수 | ```CHR(num)``` 형식 <br/> &nbsp;&nbsp; - ```num```(ASCII 코드 또는 UTF8로 변환되는 정수)를 입력 받아 ASCII 코드 값 또는 유니코드 코드포인트에 해당하는 <br/> &nbsp;&nbsp;&nbsp;&nbsp; 값을 반환함 |
+            | ```CONCAT``` 함수 | ```CONCAT(str_1, str_2, ...)``` 형식 <br/> &nbsp;&nbsp; - 문자열로 변환할 수 있는 인수 목록을 받아 이를 연결하여 하나의 문자열을 반환함 |
+            | ```SUBSTRING``` 함수 | ```SUBSTRING(string, start_position, length)``` 형식 <br/> &nbsp;&nbsp; - ```string```에서 ```start_position``` 위치부터 ```length```만큼 자른 문자열을 반환함 |
+        + 문자열 검사 우회 예시
+            ```sql
+            SELECT CHR(65); -- 결과: A
+            SELECT CONCAT(CHR(65), CHR(66)); -- 결과: AB
+            SELECT SUBSTRING(version(), 23, 1); -- 결과: n
+            ```
+    - 공백 검사 우회
+        + PostgreSQL에서는 **개행과 주석**을 이용하여 공백 검사를 우회할 수 있음
+        + 공백 검사 우회 예시
+            ```sql
+            SELECT
+            1; -- 결과: 1 (SELECT 다음의 개행으로 공백 검사를 우회함)
+
+            SELECT/**/1; -- 결과: 1 (주석 /**/를 이용해 공백 검사를 우회함)
+            ```
+
+<br/>
+
+* WAF Bypass: **SQLite**
