@@ -1354,3 +1354,29 @@
 <br/>
 
 * WAF Bypass: **MSSQL**
+    - 문자열 검사 우회
+        + 문자열 검사 우회 시 사용할 수 있는 MSSQL 함수
+            | 함수 | 설명 |
+            |:---:|------|
+            | ```CHAR``` 함수 | ```CHAR(integer_expression)``` 형식 <br/> &nbsp;&nbsp; - 0에서 255 사이의 정수를 입력받아 현재 데이터베이스의 기본 데이터 정렬 문자 집합 및 인코딩에 정의된 대로<br/> &nbsp;&nbsp;&nbsp;&nbsp; 지정된 정수 코드를 사용하는 싱글 바이트 문자를 반환함 |
+            | ```CONCAT``` 함수 | ```CONCAT(string_value1, string_value2[, ..., string_valueN])``` 형식 <br/> &nbsp;&nbsp; - 둘 이상의 ```string_value``` 인수를 연결한 문자열을 반환함 |
+            | ```SUBSTRING``` 함수 | ```SUBSTRING(expression, start, length)``` 형식 <br/> &nbsp;&nbsp; - ```expression```에서 ```start``` 위치부터 ```length``` 길이만큼 자른 문자열을 반환함 |
+        + 문자열 검사 우회 예시
+            ```sql
+            SELECT CHAR(0x61); -- 결괴: a
+            SELECT CONCAT(CHAR(0x61), CHAR(0x62)); -- 결과: ab
+            SELECT SUBSTRING(@@version, 134, 1); -- 결과: n
+            ```
+    - 공백 검사 우회
+        + MSSQL에서는 **개행과 주석**을 이용해 공백 검사를 우회할 수 있음
+        + 공백 검사 우회 예시
+            ```sql
+            SELECT
+            1; -- 결과: 1 (개행을 이용해 공백 검사를 우회할 수 있음)
+
+            SELECT/**/1; -- 결과: 1 (주석 /**/를 이용해 공백 검사를 우회할 수 있음)
+            ```
+
+<br/>
+
+* WAF Bypass: **PostgreSQL**
