@@ -1520,3 +1520,18 @@
 <br/>
 
 * DBMS 문자열 비교(String Compare) 주의사항
+    - 각각의 DBMS는 문자열을 비교하는 방법이 다름 (⚠️ DBMS에 따라 우회가 가능할 수 있음) <br/> &nbsp;&nbsp; → 웹 어플리케이션과 DBMS에서 문자열을 비교하는 방식이 달라 문제가 발생하거나 개발자가 생각했던 의도와 다르게 작동하는 경우가 존재함
+        | 상황 | 설명 |
+        |:---:|------|
+        | Case sensitive <br/> (대소문자 비교) | MySQL, MSSQL 등 일부 DBMS의 비교 연산에서 대소문자를 구분하지 않음 <br/> &nbsp;&nbsp; → 소문자와 대소문자를 비교한 연산에서 참을 반환함 |
+        | space로 끝나는 <br/> 문자열 비교 | MySQL, MSSQL 등의 일부 DBMS의 비교 연산에서 할당된 컬럼의 크기에 맞게 공백 문자(space, ```""```)를 채운 후 비교함 <br/> &nbsp;&nbsp; → 공백을 추가하지 않은 문자와 공백을 추가한 문자를 비교한 연산에서 참을 반환함 |
+        + DBMS 별 문자열 비교 예시
+            | | MySQL | MSSQL |
+            |:---:|------|------|
+            | 대소문자 구분 | ```SELECT 'a'='A';``` <br/> &nbsp;&nbsp; ↳ 결과: ```1``` (참) | ```SELECT 1 FROM test WHERE 'a'='A';``` <br/> &nbsp;&nbsp; ↳ 결과: ```1``` (참) |
+            | space로 끝나는 문자열 비교 | ```SELECT 'a'='a ';```  <br/> &nbsp;&nbsp; ↳ 결과: ```1``` (참) | ```SELECT 1 FROM test WHERE 'a'='a ';```  <br/> &nbsp;&nbsp; ↳ 결과: ```1``` (참) |
+
+
+<br/>
+
+* DBMS 다중 쿼리 주의사항
