@@ -1535,3 +1535,38 @@
 <br/>
 
 * DBMS 다중 쿼리 주의사항
+    - **Mutiple statement**(Mutiple query): 하나의 쿼리 요청에 다수의 구문을 사용하는 것
+        ```sql
+        -- 다중 쿼리 예시
+        SELECT * from users WHERE uid=''; INSERT users VALUES(...);
+        ```
+        + 📌 **대부분의 웹 어플리케이션은 DBMS에 쿼리를 전송할 때 Multiple Statement를 지원하지 않음** <br/> &nbsp;&nbsp; → 쿼리 요청 한 번에 여러 statement를 실행하지 못하기 때문에 특정 쿼리에서 SQL Injection을 찾더라도 해당 쿼리를 벗어나 다른 새로운 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 쿼리를 실행할 수 없음 ***⇒ 공격에 의한 피해를 최소화할 수 있음***
+    - ⚠️ Multiple ststement을 지원할 경우 공격자는 본래 실행되는 쿼리 요청에 새로운 쿼리를 작성해 삭제/추가/수정 등의 행위가 가능함
+        + DBMS에서 값을 조회하는 쿼리에서 데이터베이스를 삭제할 수 있음
+            - 예시: SQL Injection을 통해 ```SELECT * FROM users WHERE uid='test'; DROP TABLE users;#```과 같은 쿼리를 만들 경우
+                | | 결과 |
+                |:---:|------|
+                | Multiple Statement 지원 | ```SELECT``` 문 다음의 ```DROP``` 문이 연달아 실행되어 users 테이블이 삭제됨 |
+                | Multiple Statement 미지원 | ```SELECT``` 문만 실행됨 (```DROP```문은 실행되지 않음) |
+        + SQLite의 경우 ```attach```를 통해 다른 파일에 값을 쓸 수 있음
+    - 💡 PHP의 PHP Data Object(PDO)
+        | PDO 함수 | 설명 |
+        |:---:|------|
+        | ```query(string $query)``` | Multiple Statement를 지원하지 않음 [🔗](https://www.php.net/manual/en/pdo.query) |
+        | ```exec(string $statement)``` | Multiple Statement를 지원함 [🔗](https://www.php.net/manual/en/pdo.exec.php) |
+        + 예시
+            ```php
+            <?php
+                // test.php
+                $db1 = new PDO('sqlite:test1.db');
+                $db2 = new PDO('sqlite:test2.db');
+                $query = 'SELECT 1234; CREATE TABLE test(test INT);';
+                $db1->query($query);
+                $db2->exec($query);
+            ?>
+            ```
+            - 리눅스의 터미널에서 ```php test.php```로 위의 코드를 실행시킨 후 ```ls -al``` 명령어로 디렉터리를 조회한 결과
+                | 데이터베이스 | 결과 |
+                |:---:|------|
+                | test1.db | ```query()``` 함수는 Multiple Statement를 지원하지 않음 <br/> &nbsp;&nbsp; → ```CREATE TABLE```문이 실행되지 않아 test1.db의 크기가 변하지 않음 |
+                | test2.db | ```exec()``` 함수는 Multiple Statement를 지원함 <br/> &nbsp;&nbsp; → ```CREATE TABLE```문이 실행되어 test2.db의 크기가 증가함 |
