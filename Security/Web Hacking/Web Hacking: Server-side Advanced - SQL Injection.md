@@ -1488,3 +1488,22 @@
 <br/>
 
 * Out of DBMS: MSSQL
+    - **```xp_cmdshell``` 기능**을 이용해 OS 명령어를 실행할 수 있음
+        + 📌 **SQL Server 2005 버전부터는 기본적으로 비활성화되어 있음**
+            - 임의로 활성화하지 않는 이상 해당 기능을 이용한 공격은 불가능함 → 해당 기능이 활성화되어 있는지 확인해야 함
+            - ```xp_cmdshell``` 기능의 활성화 여부를 판단하는 쿼리
+                ```sql
+                SELECT * FROM sys.configuration WHERE name = 'xp_cmdshell';
+                -- 결과로 1이 반환되면 활성화, 0이 반환되면 비활성화된 상태를 의미함
+                ```
+        + ```xp_cmdshell```이 활성화되어 있는 경우 OS 명령어를 실행시키는 방법
+            ```sql
+            -- EXEC [저장프로시저 이름] [매개변수 1], [매개변수 2], ...;
+            -- 저장 프로시저의 이름에 xp_cmdshell을, 매개변수의 위치에 실행시킬 OS 명령어를 문자열로 전달함
+            EXEC xp_cmdshell "net user";
+            EXEC master.dbo.xp_cmdshell 'ping 127.0.0.1';
+            ```
+
+<br/><br/>
+
+### DBMS 주의 사항
