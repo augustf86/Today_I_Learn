@@ -1447,3 +1447,44 @@
 <br/>
 
 * Out of DBMS: MySQL
+    - File System
+        - 파일과 관련된 작업을 할 때 ```mysql```(uid, gid) 권한을 기준으로 수행되며, "my.cnf" 설정 파일의 ```secure_file_priv``` 값에 영향을 받음
+            + Background: ```secure_file_priv``` [🔗](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_secure_file_priv)
+                - mysql 쿼리 내에서 ```LOAD_FILE```, ```OUTFILE```를 이용해 파일에 접근할 때 접근할 수 있는 파일 경로에 대한 정보를 가지고 있음
+                - 설정값의 종류
+                    | Values | 형태 | 설명 |
+                    |:---:|-----|------|
+                    | empty string | ```secure_file_priv=""``` | 미설정 → 해당 변수가 영향을 미치지 않음 (⚠️ 보안 설정이 아님) <br/> &nbsp;&nbsp; - mysql의 권한이 가능한 모든 경로에 접근이 가능함 |
+                    | dirname | ```secure_file_priv="\tmp"``` | 파일에 대한 작업을 해당 디렉터리의 하위 경로 및 파일에 대해서만 <br/>작업하도록 제한함 (존재하는 디렉터리로 설정해야 함) |
+                    | NULL | ```secure_file_priv=NULL``` | 파일에 대한 작업을 비활성화함 |
+                    + 기본값: STANDALONE이면 비어있고(empty string), DEB/RPM/SVR4의 경우 ```var/lib/mysql-files```로 되어 있음
+                - 조회 방법
+                    ```sql
+                    SELECT @@secure_file_priv; -- 결과: /var/lib/mysql-files;
+                    ```
+        - **```LOAD_FILE``` 함수** - 인자로 주어진 파일을 읽어 파일 내용을 문자열로 반환함
+            + ```LOAD_FILE(file_name)``` 형식으로 사용됨
+            + 파일의 전체 경로 이름을 지정해야 하며, 해당 파일에 대한 권한이 있어야 함
+            + 예시
+                ```sql
+                -- echo test1234 > /var/lib/mysql-files/test (test 파일 내에 test1234가 작성함)
+                -- /var/lib/mysql-files/test을 조회함
+                SELECT LOAD_FILE('/var/lib/musql-files/test'); -- 결과: test1234가 출력됨
+                ```
+        - **```SELECT ... INTO``` 형식의 쿼리** - 쿼리 결과를 변수나 파일에 쓸 수 있음
+            + ```SELECT ... INTO```의 종류
+                | 쿼리문 | 설명 |
+                |---|------|
+                | ```SELECT ... INTO var_list``` | column(열) 값을 선택하여 변수에 저장함 |
+                | ```SELECT ... INTO OUTFILE 'filename'``` | 쿼리 결과의 rows(행) 값을 파일에 저장함 <br/> (column/file terminators를 지정하여 특정 출력 포맷을 생성할 수 있음) |
+                | ```SELECT ... INTO DUMPFILE 'filename'``` | 쿼리 결과의 단일 행(single row)을 파일에 저장함 |
+            + ⚠️ 파일에 값을 쓸 수 있기 때문에 ```secure_file_priv``` 값이 올바르지 않게 설정되지 않은 경우 이를 통해 웹셀을 업로드 하는 등 추가적인 공격으로 연계될 수 있음
+                - 예시
+                    ```sql
+                    SELECT '<?= `ls`?>' INTO OUTFILE '/tmp/a.php';
+                    -- <?php include $_GET['page'].'.php'; // "?page=../../../tmp/a"
+                    ```
+
+<br/>
+
+* Out of DBMS: MSSQL
