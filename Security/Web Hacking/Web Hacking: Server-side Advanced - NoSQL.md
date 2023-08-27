@@ -102,7 +102,40 @@
                 |:---:|------|
                 | SQL | ```INSERT INTO account(user_id, user_pw) VALUES ("guest", "guest");``` <br/> → account 테이블의 user_id(첫 번째 열)에 "guest"(첫 번째 값)을, user_pw(두 번째 열)에 "guest"(두 번째 값)을 삽입함 |
                 | MongoDB | ```db.account.insert({user_id: "guest"}, {user_pw: "guest"})``` <br/> → account 셀렉션의 user_id(key)에 "guest"(value)를, user_pw(key)에 "guest"(value)를 삽입함 |
-        + **데이터 삭제**
+        + **데이터 삭제**: ```db.collection.remove()``` [🔗](https://www.mongodb.com/docs/manual/reference/method/db.collection.remove/)
+            ```mongodb
+            db.collection.remove(
+                <query>,
+                <justOne>
+            )
+            ```
+            | Parameter | Type | Description |
+            |:---:|---|------|
+            | ```query``` | document | 연산자를 사용하여 삭제 기준을 지정함 <br/> &nbsp;&nbsp; - 모든 문서를 삭제하려면 빈 문서(```{}```)를 전달함 |
+            | ```justOne``` | boolean | (Optional) 삭제를 하나의 문서로 제한하려면 true, 일치하는 모든 문서를 삭제하려면 false |
+            - SQL의 ```DELETE``` 문에 해당함
+                | | 예시 및 설명 |
+                |:---:|------|
+                | SQL | ```DELETE FROM account;``` <br/> → account 테이블에서 데이터 전체를 삭제함 <br/><br/> ```DELETE FROM account WHERE user_id="guest";``` <br/> → account 테이블에서 user_id가 "guest"인 데이터를 삭제함 |
+                | MongoDB | ```db.account.remove()``` <br/> → account 셀렉션 내의 모든 키-값을 삭제함 <br/><br/> ```db.account.remove({user_id: "guest"})``` <br/> → account 셀렉션에서 user_id(key)가 "guest"(value)인 데이터를 삭제함 |
+        + **데이터 수정**: ```db.collection.update()``` [🔗](https://www.mongodb.com/docs/manual/reference/method/db.collection.update/)
+            ```mongodb
+            db.collection.update(query, update, options)
+            ```
+            | Parameter | Type | Description |
+            |:---:|---|------|
+            | ```query``` | document | 업데이트 선택 기준 |
+            | ```update``` | document/pipeline | 연산식, 대체 문서, 파이프라인 등을 이용해 적용할 수정 사항을 지정함 |
+            | ```options``` | document | (Optional) ```query```에 대한 추가 옵션을 지정함 <br/> &nbsp;&nbsp; - 쿼리 동작과 결과가 반환되는 방식을 수정함 |
+            - SQL의 ```UPDATE``` 문에 해당함
+                | | 예시 및 설명 |
+                |:---:|------|
+                | SQL | ```UPDATE account SET user_id="guest2" WHERE user_idx=2;``` <br/> → account 테이블에서 user_idx가 2인 데이터의 user_id를 "guest2"로 변경함 |
+                | MongoDB | ```db.account.update({user_idx: 2}, {$set: {user_id: "guest2"}})``` <br/> → account 셀렉션에서 user_idx가 2인 데이터의 user_id를 "guest2"로 설정(```$set```)하고 변경사항을 저장함 |
+
+<br/><br/>
+
+### MongoDB Injection
 
 <br/><br/><br/>
 
