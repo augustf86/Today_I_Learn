@@ -27,6 +27,47 @@
 <br/><br/><br/>
 
 ## MongoDB
+* Background: MongoDB
+    - **key-value**의 쌍을 가지는 JSON objects 형태인 도큐먼트(Document)를 저장함
+    - MongoDB의 특징
+        + Schema가 존재하지 않아 각 콜렉션에 대한 특별한 정의를 하지 않아도 됨
+            - MongoDBd에서는 SQL의 테이블과 유사한 개념으로 콜렉션(Collection)을 사용함
+        + JSON 형식으로 쿼리를 작성할 수 있음
+        + ```_id``` 필드가 Primary Key 역할을 함
+    - MongoDB의 Query Operator [🔗](https://www.mongodb.com/docs/manual/reference/operator/query/) <br/> &nbsp;&nbsp; ↳ MongoDB는 **```$``` 문자**를 통해 연산자를 사용할 수 있음
+        + Comparison
+            | Operator | 설명 |
+            |:---:|------|
+            | ```$eq``` | 지정된 값과 같은 값을 찾음 (equal) |
+            | ```$gt``` | 지정된 값보다 큰 값을 찾음 (greater than) |
+            | ```$gte``` | 지정된 값보다 크거나 같은 값을 찾음 (greater than equal) |
+            | ```$in``` | 배열 안의 값들과 일치하는 값을 찾음 (in) |
+            | ```$lt``` | 지정된 값보다 작은 값을 찾음 (less than) |
+            | ```$lte``` | 지정된 값보다 작거나 같은 값을 찾음 (less than equal) |
+            | ```$ne``` | 지정된 값과 같지 않은 값을 찾음 (not equal) |
+            | ```$nin``` | 배열 안의 값들과 일치하지 않은 값을 찾음 (not in) |
+        + Logical
+            | Operator | 설명 |
+            |:---:|------|
+            | ```$and``` | 논리적 AND → 각각의 쿼리를 모두 만족하는 문서가 반환됨 |
+            | ```$or``` | 논리적 OR → 각각의 쿼리 중 하나 이상 만족하는 문서가 반환됨 |
+            | ```$not``` | 쿼리 식의 효과를 반전시킴 → 쿼리 식과 일치하지 않은 문서를 반환함 |
+            | ```$nor``` | 논리적 NOR → 각각의 쿼리를 모두 만족하지 않는 문서가 반환됨 |
+        + Element
+            | Operator | 설명 |
+            |:---:|------|
+            | ```$exists``` | 지정된 필드가 있는 문서를 찾음 |
+            | ```$type``` | 지정된 필드가 지정된 유형인 문서를 선택함 |
+        + Evaluation
+            | Operator | 설명 |
+            |:---:|------|
+            | ```$expr``` | 쿼리 언어 내에서 집계식을 사용할 수 있음 |
+            | ```$jsonSchema``` | 주어진 JSON 스키마에 대해서 문서를 검증함 |
+            | ```$mod``` | 필드 값에 대해 mod 연산을 수행하고 지정된 결과를 가진 문서를 선택함 |
+            | ```$regex``` | 지정된 정규식과 일치하는 문서를 선택함 |
+            | ```$text``` | 지정된 텍스트를 검색함 |
+            | ```$where``` | 지정된 Javascript 식을 만족하는 문서와 일치함 |
+    - MongoDB의 문법
 
 <br/><br/><br/>
 
