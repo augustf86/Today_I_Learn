@@ -68,6 +68,41 @@
             | ```$text``` | 지정된 텍스트를 검색함 |
             | ```$where``` | 지정된 Javascript 식을 만족하는 문서와 일치함 |
     - MongoDB의 문법
+        + **데이터 조회**: ```db.collection.find()``` [🔗](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#std-label-find-projection)
+            ```mongodb
+            db.collection.find(query, projection, options)
+            ```
+            | Parameter | Type | Description |
+            |:---:|---|------|
+            | ```query``` | document | (Optional) 연산자를 사용하여 선택 필터를 지정함 <br/> &nbsp;&nbsp; - 모든 문서를 반환시키기 위해서는 매개변수 생략 또는, 빈 문서(```{}```)를 전달함 |
+            | ```projection``` | document | (Optioanl) ```query```와 알치하는 문서에서 반환할 필드를 지정함 <br/> &nbsp;&nbsp; - 생략 시에는 일치하는 문서의 모든 필드를 반환함 |
+            | ```options``` | document | (Optional) ```query```에 대해 추가 옵션을 지정함 <br/> &nbsp;&nbsp; - 쿼리 동작과 결과가 반환되는 방식을 수정함 |
+            - SQL의 ```SELECT``` 문에 해당함
+                | | 예시 및 설명 |
+                |:---:|------|
+                | SQL | ```SELECT * FROM account``` <br/> → account 테이블 전체 조회 <br/><br/> ```SELECT * FROM account WHERE user_id="admin";``` <br/> → account 테이블에서 user_id가 "admin"인 데이터를 조회함 <br/><br/> ```SELECT user_idx FROM account WHERE user_id="admin";``` <br/> → account 테이블에서 user_id가 "admin"인 행에서 user_idx 열에 해당하는 데이터를 조회함 |
+                | MongoDB | ```db.account.find()``` <br/> → account 셀력센을 검색함 <br/><br/> ```db.account.find({user_id: "admin"})``` <br/> → account 셀렉션에서 user_id(key)가 "admin"인 데이터를 검색함 <br/><br/> ```db.account.find({user_id: "admin"}, {user_idx: 1, _id: 0})``` <br/> → account 셀렉션에서 user_id가 "admin"인 데이터의 user_idx 정보를 조회함 <br/> &nbsp;&nbsp; (```user_idx: 1```은 포함한다는 의미이고, ```_id:0```은 제외한다는 의미임) |
+        + **데이터 삽입**: ```db.collection.insert()``` [🔗](https://www.mongodb.com/docs/manual/reference/method/db.collection.insert/)
+            ```mongodb
+            db.collection.insert(
+                    <documnet or array of documents>,
+                    {
+                        writeConcern: <document>,
+                        orderer: <boolean>
+                    }
+            )
+            ```
+            | Parameter | Type | Description |
+            |:---:|---|------|
+            | ```document``` | document/array | 컬렉션에 삽입할 문서 또는 문서 배열 |
+            | ```writeConcern``` | document | (Optional) 기본으로 설정 시 생략 가능 → [🔗](https://www.mongodb.com/docs/manual/reference/method/db.collection.insert/#std-label-insert-wc) Write Concern 참고 |
+            | ```ordered``` | boolean | (Optional) true일 경우 순서대로 삽입하고, false일 경우 정렬하지 않고 삽입을 수행함 |
+            - SQL의 ```INSERT``` 문에 해당함
+                | | 예시 및 설명 |
+                |:---:|------|
+                | SQL | ```INSERT INTO account(user_id, user_pw) VALUES ("guest", "guest");``` <br/> → account 테이블의 user_id(첫 번째 열)에 "guest"(첫 번째 값)을, user_pw(두 번째 열)에 "guest"(두 번째 값)을 삽입함 |
+                | MongoDB | ```db.account.insert({user_id: "guest"}, {user_pw: "guest"})``` <br/> → account 셀렉션의 user_id(key)에 "guest"(value)를, user_pw(key)에 "guest"(value)를 삽입함 |
+        + **데이터 삭제**
 
 <br/><br/><br/>
 
