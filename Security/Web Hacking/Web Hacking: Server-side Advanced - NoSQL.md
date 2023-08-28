@@ -146,7 +146,58 @@
 
 <br/>
 
-* 예제
+* 예제: user 콜렉션에서 이용자가 입력한 ```uid```, ```upw```에 해당하는 데이터를 찾고 출력하는 경우
+    ```javascript
+    const express = require('express');
+    const app = express();
+
+    const mongoose = require('mongoose');
+    const db = mongoose.connection;
+    mongoose.connect('mongodb://localhost:27017/', {useNewUrlParser: true, useUnifiedTopology: true});
+
+    // GET 메소드 방식을 사용함
+    app.get('/query', function(req, res) {
+        db.collection('user').find({ // db의 user 컬렉션에서 uid, upw가 이용자의 입력값과 동일한 데이터를 검색함
+            'uid': req.query.uid,
+            'upw': req.query.upw // 이용자의 입력값인 req.query.uid, req.query.upw를 '어떠한 검사'도 없이 그대로 사용하고 있음 → 객체 타입의 데이터를 전달할 수 있음
+        }).toArray(function(err, result) {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+
+    const server = app.listen(3000, function() {
+        console.log('app.listen');
+    })
+    ```
+    - ⚠️ ```db.collection.find()``` 함수를 이용하여 user 콜렉션의 데이터를 조회할 때 **이용자의 입력값에 대한 타입 검증을 수행하지 않아 오브젝트 타입의 값을 입력할 수 있음** <br/> &nbsp;&nbsp; → 이를 이용하면 uid 또는 upw를 모르는 상황에서도 user 콜렉션의 데이터를 조회할 수 있음
+    - ```$ne``` 연산자(not equal)를 이용하여 user 콜렉션의 정보를 획득하는 방법
+        | | 설명 |
+        |:---:|------|
+        | URL(GET) | ```http://localhost/query?uid=admin&upw[$ne]=a``` <br/> → GET 방식으로 요청 시 upw에 지정된 값과 같지 않는 값을 찾는 ```$ne``` 연산자를 삽입함 |
+        | 함수 | ```db.collection('user').find({'uid': 'admin', 'upw': {'$ne': 'a'}})``` <br/> → uid가 'admin'이고, upw가 'a'가 아닌 값을 user 콜렉션에서 조회함 ⇒ upw의 값에 상관 없이 uid가 'admin'인 계정을 조회할 수 있음 |
+    - 📌 동일한 코드를 GET이 아닌 POST 메소드 방식으로 요청하는 경우
+        ```javascript
+        // 위의 예제 코드에서 app.get() 함수 부분을 대신 아래의 app.post() 함수를 사용할 경우 (POST 메소드 방식을 사용함)
+        app.post('/query', function(req, res) {
+            db.collection('user').find({
+                'uid': req.body.uid,
+                'upw': req.body.upw // req.body.uid, req.body.upw를 '어떠한 검사도 없이' 그대로 사용하고 있음 → JSON 형식으로 객체 타입의 데이터를 전달할 수 있음
+            }).toArray(function(err, result) {
+                if (err) throw err;
+                res.send(result);
+            });
+        });
+        ```
+        + ```$ne``` 연산자(not equal)를 이용하여 uid 또는 upw를 모르는 상황에서도 원하는 데이터를 조회할 수 있음
+            | | 설명 |
+            |:---:|------|
+            | POST Data | ```{'uid': 'admin', 'upw': {'$ne':''}}``` <br/> → JSON 형식의데이터에서 upw에 지정된 값과 같지 않는 값을 찾는 ```$ne``` 연산자를 삽입한 후 이를 POST의 body로 하여 요청을 전송함 |
+            | 함수 | ```db.collection('user').find({'uid': 'admin', 'upw': {'$ne': ''}})``` <br/> → uid가 'admin'이고, upw가 ''가 아닌 값을 user 콜렉션에서 조회함 ⇒ upw의 값에 상관 없이 uid가 'admin'인 계정을 조회할 수 있음 |
+
+<br/><br/>
+
+### MongoDB Blind Injection
 
 <br/><br/><br/>
 
