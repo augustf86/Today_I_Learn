@@ -252,6 +252,31 @@
 <br/><br/><br/>
 
 ## Redis
+* Background: Redis
+    - **key-value** 데이터 모델을 가지며, **메모리 기반으로 작동**하는 NoSQL DBMS
+        + 메모리를 사용해 데이터를 저장하고 접근하기 때문에 Read/Write 속도가 다른 DBMS보다 빠름 <br/> → 다양한 서비스에서 임시 데이터를 캐싱하는 용도로 많이 사용됨
+    - Redis의 Commands [🔗](https://redis.io/commands/)
+        + 데이터 조회/조작 명령어
+            | Command | Syntax | Description |
+            |:---:|----|------|
+            | GET | ```GET key``` | 데이터 조회 [🔗](https://redis.io/commands/get/) <br/> &nbsp;&nbsp; - key의 값을 가져옴 (키가 없는 경우 ```nil```이 반환됨) |
+            | MGET | ```MGET key [key ...]``` | 여러 데이터를 조회 [🔗](https://redis.io/commands/mget/) <br/> &nbsp;&nbsp; - 지정된 모든 key의 값을 반환함 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(문자열 값을 보유하지 않거나 존재하지 않는 모든 키 값에 대해 ```nil```이 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 반환됨) |
+            | SET | ```SET key value``` | 새로운 데이터 추가 [🔗](https://redis.io/commands/set/) <br/> &nbsp;&nbsp; - 키에 이미 값이 있을 경우 덮어씀 |
+            | MSET | ```MSET key value [key value ...]``` | 여러 데이터를 추가 [🔗](https://redis.io/commands/mset/) <br/> &nbsp;&nbsp; - 주어진 키를 각각의 값으로 설정함 (기존 값이 존재하면 새 값으로 덮어씀) |
+            | DEL | ```DEL key [key ...]``` | 데이터 삭제 [🔗](https://redis.io/commands/del/) <br/> &nbsp;&nbsp; - 지정된 키를 제거함 |
+            | EXISTS | ```EXISTS key [key ...]``` | 데이터 유무 확인 [🔗](https://redis.io/commands/exists/) <br/> &nbsp;&nbsp; - 키가 존재하면 반환함 |
+            | INCR | ```INCR key``` | [64 bit signed integer] 데이터 값에 1을 더함 [🔗](https://redis.io/commands/incr/) <br/> &nbsp;&nbsp; - 키에 저장된 숫자를 1씩 증가시킴 (키가 없으면 해당 작업 수행 전에 0으로 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 설정됨) |
+            | DECR | ```DECR key``` | [64 bit signed integer] 데이터 값에 1을 뺌 [🔗](https://redis.io/commands/decr/) <br/> &nbsp;&nbsp; - 키에 저장된 숫자를 1씩 감소시킴 (키가 없으면 해당 작업 수행 전에 0으로 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 설정됨) |
+        + 관리 명령어
+            | Command | Syntax | Description |
+            |:---:|----|------|
+            | INFO | ```INFO [section]``` | DBMS 정보 조회 [🔗](https://redis.io/commands/info/) <br/> &nbsp;&nbsp; - 서버에 대한 정보와 통계를 컴퓨터가 분석하기 쉽고 사람이 읽기 쉬운 형식으로 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 반환함 (자세한 옵션은 공식 문서 참고) |
+            | CONFIG GET | ```CONFIG GET parameter``` | 설정 조회 [🔗](https://redis.io/commands/config-get/) <br/> &nbsp;&nbsp; - 실행 중인 Redis 서버의 구성 매개변수를 읽는 데 사용함 |
+            | CONFIG SET | ```CONFIG SET parameter value``` | 새로운 설정을 입력 [🔗](https://redis.io/commands/config-set/) <br/> &nbsp;&nbsp; - 재시작 필요 없이 런타임에 서버를 재구성하기 위해 사용함 |
+
+<br/><br/>
+
+### Bug Case
 
 <br/><br/><br/>
 
