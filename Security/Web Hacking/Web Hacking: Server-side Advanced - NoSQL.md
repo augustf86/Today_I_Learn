@@ -381,6 +381,31 @@
             ```
             - ⚠️ django-redis-cache의 기본 Serializer인 ```PickleSerializer```에서 Python의 pickle 모듈을 사용하여 serialize를 수행하고 있음 <br/> &nbsp;&nbsp; → ***Redis에서 원하는 데이터를 저장한 후 해당 데이터가 deserialize하게 되는 과정에서 pickle 모듈을 이용하여 공격을 수행할 수 있음***
     - django-redis-cache 모듈 예시
+        ```python
+        # settings.py
+        CACHES = {
+            "default": {
+                "BACKEND": "django-redis.cache.RedisCache",
+                "LOCATION": "redis://127.0.0.1:6379/"
+            }
+        }
+
+        # views.py
+        from django.http import HttpResponse
+        from .models import Memo
+        from django.core.cache import cache
+
+        def p_set(request):
+            # p_set 함수 실행 시 cache.set 함수를 사용해 cache_memo라는 키를 생성함 (redis에서 key * 명령어로 생성된 키 확인 가능)
+            # 
+            cache.set('cache_memo', Memo('memo test!!'))
+            return HttpResponse('set session')
+        ```
+        + ```p_set``` 함수 실행 시 ```cache.set``` 함수를 사용해 cache_memo라는 키를 생성함 (redis에서 ```key *```를 입력하여 생성된 키를 확인할 수 있음) <br/> &nbsp;&nbsp; → ```get ':1:cache_memo```로 cache_memo의 값을 확인해보면 Pickle로 dump된 값을 확인할 수 있음
+
+<br/>
+
+* Redis 명령어를 이용한 공격
 
 <br/><br/><br/>
 
