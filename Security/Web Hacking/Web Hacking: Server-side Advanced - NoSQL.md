@@ -324,6 +324,36 @@
 <br/>
 
 * SSRF(Server-Side Request Forgery)
+    - Redis는 **기본적으로 인증 수단이 존재하지 않으며 bind 127.0.0.1로 서비스되기 때문**에 직접 접근하여 인증 과정 없이 명령어를 실행할 수 있음 <br/> &nbsp;&nbsp; → ⚠️ 공격자는 SSRF 취약점을 통해 Redis 서버에 접근하여 명령어를 실행시키거나 데이터베이스의 정보를 획득할 수 있음
+    - SSRF 공격 기법
+        + 유효하지 않은 명령어 삽입
+            - 이전 명령어로 유효하지 않은 명령어가 입력되어도 연결이 끊어지지 않고 다음 유효한 명령어를 처리함 <br/> &nbsp;&nbsp; → 유효하지 않은 명령어 뒤에 임의의 명령어를 삽입하여 Redis에서 실행시킴
+        + HTTP 프로토콜 이용
+            - HTTP의 Body 부분에 원하는 명령어를 포함시켜 요청을 전송함 → 애플리케이션에서 Redis 명령어가 포함된 Body 데이터를 처리할 때 해당 명령어를 Redis에서 실행함
+                + 예시: Body에 포함된 ```SET key value``` 명령어를 Redis에서 실행시킴
+                    ```
+                    POST / HTTP/1.1
+                    host: 127.0.0.1:6379
+                    user-agent: Mozilla/5.0...
+                    content-type: application/x-www-form-urlencoded
+
+                    data=a
+                    SET key value
+                    ```
+            - 💡 HTTP 프로토콜을 이용한 SSRF 방어 방법 → **HTTP의 주요 키워드가 명령어로 입력되면 해당 연결을 끊어버리는 방식**을 사용함 [🔗](https://github.com/redis/redis/commit/a81a92ca2ceba364f4bb51efde9284d939e7ff47)
+                + 예시
+                    ```linux
+                    $ echo -e "post a\r\nget hello" | nc 127.0.0.1 6379
+                    $ echo -e "host: a\r\nget hello" | nc 127.0.0.1 6379
+
+                    # 12235:M 01 May 09:59:57.614 # Possible SECURITY ATTACK detected. It looks like somebody is sending POST or Host: commands to Redis. This is likely due to an attacker attempting to use Cross Protocol Scripting to compromise your Redis instance. Connection aborted.
+                    ```
+                    - *```post``` 또는 ```host``` 키워드가 포함될 경우 securityWarningCommand로 인식하여 클라이언트와의 연결을 끊어버려 다음 명령어가 실행되지 않도록 패치됨*
+                + ⚠️ HTTP 프로토콜을 제외한 다른 프로토콜을 이용한 공격 방법에는 취약할 수 밖에 없음
+
+<br/><br/>
+
+### Exploit Technique: Redis를 통해 공격할 수 있는 방법들
 
 <br/><br/><br/>
 
