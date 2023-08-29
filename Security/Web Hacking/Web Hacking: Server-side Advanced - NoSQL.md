@@ -354,6 +354,33 @@
 <br/><br/>
 
 ### Exploit Technique: Redis를 통해 공격할 수 있는 방법들
+* django-redis-cache
+    - Python의 웹 프레임워크 Django에서 Redis를 사용한 캐시(cache)를 구현할 수 있는 모듈
+        + django-redis-cache 모듈의 ```get_serializer_class``` 함수
+            ```python
+            # https://github.com/sebleier/django-redis-cache/blob/cabfcb24476e562fa7275f77bc55f835d125e26c/redis_cache/backends/base.py → Line 132-137
+            def get_serializer_class(self):
+                # serializer_class를 가져올 때 options의 SERIALIZER_CLASS의 값을 가져옴 (해당 값이 없을 경우에는 redis_cache.serializers.PickleSerializer를 기본값으로 사용함)
+                serializer_class = self.options.get(
+                    'SERIALIZER_CLASS',
+                    'redis_cache.serializers.PickleSerializer' # PickleSerializer 클래스는 아래쪽을 참고
+                )
+                return import_class(serializer_class)
+
+            # https://github.com/sebleier/django-redis-cache/blob/cabfcb24476e562fa7275f77bc55f835d125e26c/redis_cache/serializers.py → Line 33-42
+            class PickleSerializer(object):
+                # django-redis-cache 모듈의 기본 Serializer = PickleSerializer
+                def __init__(self, pickle_version=-1):
+                    self.pickle_version = pickle_version
+
+                def serialize(self, value):
+                    return pickle.dumps(value, self.pickle_version)
+
+                def deserialize(self, value):
+                    return pickle.loads(force_bytes(value))
+            ```
+            - ⚠️ django-redis-cache의 기본 Serializer인 ```PickleSerializer```에서 Python의 pickle 모듈을 사용하여 serialize를 수행하고 있음 <br/> &nbsp;&nbsp; → ***Redis에서 원하는 데이터를 저장한 후 해당 데이터가 deserialize하게 되는 과정에서 pickle 모듈을 이용하여 공격을 수행할 수 있음***
+    - django-redis-cache 모듈 예시
 
 <br/><br/><br/>
 
