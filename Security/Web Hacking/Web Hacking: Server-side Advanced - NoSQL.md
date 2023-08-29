@@ -276,7 +276,54 @@
 
 <br/><br/>
 
-### Bug Case
+### Bug Case: Redis를 사용하는 서비스에서 의도하지 않는 명령어를 실행할 수 있는 버그가 발생할 수 있는 상황
+* NodeJS redis 모듈 (처리방식을 이용한 공격)
+    ```javascript
+    // NodeJS에서 Redis를 사용하는 코드
+    var express = require('express');
+    var app = express();
+    app.use(express.json());
+    app.use(express.urlencoded( {extended: false}) );
+    
+    const redis = require('redis');
+    const client = redis.createClient();
+
+    app.get('/init', function(req, res) {
+        // client.set("key", "value");
+        client.set(req.query.uid, JSON.stringify({level: 'guest'})); // 이용자가 입력하는 uid(req.query.uid) 값을 key로 하여 {level: 'guest'} 값을 value로 저장함
+        res.send('ok');
+    });
+
+    var server = app.listen(3000, function() {
+        console.log('app.listen');
+    })
+    ```
+    - ```req.query```에 해당하는 부분에 문자열 타입 외에도 배열(array), 객체(object) 타입도 넣을 수 있음
+        + command의 첫 번째 인자에 해당하는 ```req.query.uid```에 해당하는 이용자의 입력값의 타입 별 처리 방식
+            | 타입 | 처리 방식 |
+            |:---:|------|
+            | 문자열 <br/> (String) | (입력) key, value, callback <br/> &nbsp;&nbsp; ⇒ ```new Command(command, [key, value], callback)``` |
+            | 배열 <br/> (Array) | (입력) [key, value] <br/> &nbsp;&nbsp; ⇒ ```new Command(command, key, value)``` <br/> &nbsp;&nbsp;&nbsp;&nbsp; (```len == 2```일 경우 callback을 배열의 두 번째 값으로 설정하기 때문) |
+            - Redis의 command 라이브러리 일부
+                ```javascript
+                // https://github.com/NodeRedis/node-redis/blob/0041e3e53d5292b13d96ce076653c5b91b314fda/lib/commands.js → Line 20 - 25, 46
+                if (Array.isArray(arguments[0])) { // command의 첫 번째 인자에 array 타입이 올 경우 실행됨
+                    arr = arguments[0];
+                    if (len == 2) {
+                        callback = arguments[1];
+                    }
+                }
+
+                // ...
+
+                return this.internal_send_command(new Command(command, arr, callback));
+                ```
+    - ⚠️ *배열 타입으로 값을 입력할 경우 개발 시 의도한 value로 값이 설정되지 않고 임의의 값을 value로 사용할 수 있음*
+        + 공격자가 ```http://localhost:3000/init?uid[]=test&uid[]={"level": "admin"}```와 같이 입력함 <br/> &nbsp;&nbsp; → Redis에 요청하는 명령어로 ```Command("set", "test", '{"level": "admin"}')```가 실행되어 원하는 value를 가지는 데이터를 생성할 수 있음
+
+<br/>
+
+* SSRF(Server-Side Request Forgery)
 
 <br/><br/><br/>
 
