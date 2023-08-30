@@ -511,6 +511,39 @@
 <br/>
 
 * 중복 키 사용(Same key, prefix 없는 key 사용)
+    - Redis는 기본 설정 상 **Key-Value 쌍으로 데이터를 저장**하는 구조임
+        + RDBMS의 Schema/Table, MongoDB의 Collection과 같이 시스템적으로 특정한 영역으로 구분되어 저장하지 않음
+    - ⚠️ 중복 키 문제가 발생하는 상황 (서로 다른 용도로 사용하는 키 명칭이 중복되는 경우)
+        + Cache를 Redis에서 구현할 때 Cache Type별 Redis 서버를 분리하지 않을 때 Key 값이 중복되어 사용될 경우 문제가 발생함
+            - Cache Type에는 유저 정보 캐시, 인증 관련 캐시, 임시 데이터 등이 포함됨
+        + Key를 구분자 없이 사용하고, 사용자의 입력에 의해 Key가 결졍되는 경우 문제가 발생함 <br/> &nbsp;&nbsp; *→ 사용자가 임의로 다른 로직의 키를 생성시켜 어플리케이션 로직에 혼선을 발생시킬 수 있음*
+            - 문제 발생 상황 예시 1: Redis에서 사용자의 메일 인증번호와 인증 횟수를 확인하기 위한 정보를 저장하는 어플리케이션에서 Prefix 없는 key를 사용하는 경우
+                ```
+                SET key value
+                SET {email} {random number} # 사용자 메일 인증 번호 저장
+                SET {email}_count 0 # 사용자 메일 인증 횟수 저장
+                ```
+                + 사용자 메일 인증 번호와 인증 횟수를 저장할 때 이용자의 입력값(```{email}```)를 key 명칭으로 하여 값을 저장함
+                + 공격 예시
+                    - ```user1@sample.com_count``` 매일 주소로 인증 번호를 요청하면 Redis의 데이터는 아래와 같이 저장됨
+                        ```
+                        user1@sample.com_count = {random number}
+                        user1@sample.com_count_count = 0
+                        ```
+                    - ```user1@sample.com``` 메일 주소로 인증 번호를 요청하면 Redis의 데이터는 아래와 같이 처리됨
+                        ```
+                        user1@sample.com_count = 0
+                        user1@sample.com_count_count = 0
+                        user1@sample.com = {random number}
+                        ```
+                        + 기존에 사용되던 키 ```user1@sample.com_count```가 새로 저장되는 키와 중복되어 이전에 저장된 인증 번호가 아닌 추측 가능한 숫자(```0```)으로 변경됨 → 어플리케이션의 인증 과정을 우회할 수 있음
+                + ⚠️ *prefix가 지정되지 않은 키를 사용하기 때문에 유저가 임의로 키를 지정할 수 있으면 해당 키의 데이터가 어떤 값이 오게 될 지 예측할 수 있음*
+            - 문제 상황 발생 예시 2: 각 데이터 별로 서로 다른 구분자를 사용하여 구현하는 경우
+                ```
+                Cache_A = f'CACHE_A:{input}'
+                Cache_B = f'{input}.CACHE_B'
+                ```
+                + ```CACHE_A:tet.CACHE_B```와 같은 값이 들어오면 문제가 발생함
 
 <br/><br/><br/>
 
