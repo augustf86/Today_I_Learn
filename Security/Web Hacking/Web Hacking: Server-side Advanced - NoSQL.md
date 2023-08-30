@@ -434,7 +434,55 @@
                 | 01 | Redis 서버에서 ```SLAVEOF 127.0.0.1 8888``` 또는 ```REPLICAOF 127.0.0.1 8888```를 실행함 <br/> &nbsp;&nbsp; *→ 127.0.0.1 호스트의 8888번 포트로 연결을 맺는 과정이 포함됨 ⇒ 네트워크 트래픽 발생* |
                 | 02 | 복제한 서버(마스터 노드)에서 지정한 포트를 바인딩하는 명령어를 실행하면 노드의 상태를 확인하기 위한 데이터를 수신한 것을 <br/> 확인할 수 있음 <br/> &nbsp;&nbsp; - 🔖 ```$ nc -l 8888 -kv``` 명령어 실행 결과 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```Listening on [0.0.0.0] (family 0, port 8888)``` <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```Connection from [127.0.0.1] port 8888 [tcp/*] accepted (family 2, sport 52613)``` <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```PING``` |
         + ⚠️ 마스터 노드의 데이터를 가져오기 위한 Sync(동기화) 과정의 RDB 데이터를 임의의 데이터로 조작해 원하는 파일을 업로드하는 공격 방식도 존재함
-    - **```MODULE LOAD```**
+    - **```MODULE LOAD```**: 새로운 라이브러리를 추가해 사용할 수 있도록 Redis 4.0 버전부터 제공하는 명령어 [🔗](https://redis.io/commands/module-load/)
+        | command | syntax | description |
+        |:---:|----|------|
+        | MODULE LOAD | ```MODULE LOAD path [arg [arg ...]]``` | ```path```로 지정된 동적 라이브러리에서 Redis 모듈을 로드하고 초기화함 <br/> &nbsp;&nbsp; - ```path```: 전체 파일 이름을 포함하는 라이브러리의 **절대 경로**여야 함 |
+        + ⚠️ RedisModuleSDK를 기반으로 공유 라이브러리를 제작해 파일 업로드 또는 Sync(동기화) 과정을 조작하여 임의의 데이터를 업로드하는 등의 로직을 통해 해당 Reids 파일 시스템에 업로드한 후 ```MODULE LOAD```를 통해 해당 라이브러리를 로드할 수 있음
+            + **라이브러리를 업로드해 공격하기 위해서는 Redis 클라이언트가 접근할 수 있는 디렉터리에 라이브러리를 업로드(생성)할 수 있어야 함**
+        + 공격 예시
+            - RedisModuleSDK를 기반으로 제작한 모듈 예시
+                ```javascript
+                // https://github.com/RedisLabs/RedisModulesSDK/blob/e756dd897fd08ac7eb8f3eb611c2cd4b591183c3/example/module.c
+
+                // Unit test entry point for the module
+                int TestModule(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+                    RedisModule_AutoMemory(ctx);
+
+                    RMUtil_Test(testParse);
+                    RMUtil_Test(testHgetSet);
+
+                    RedisModule_ReplyWithSimpleString(ctx, "PASS");
+                    return REDISMODULE_OK;
+                }
+
+                int RedisModule_OnLoad(RedisModuleCtx *ctx) {
+                    ...
+                    // register the unit test
+                    RMUtil_RegisterWriteCmd(ctx, "example.test", TestModule);
+
+                    return REDISMOUDLE_OK;
+                }
+                ```
+                + 이와 같이 제작된 Redis Module를 컴파일한 후 Redis가 접근할 수 있는 디렉터리에 모듈이 존재할 경우 Redis 클라이언트에서 ```MODULE LOAD```를 이용해 모듈 코드를 실행할 수 있음
+            - ```MODULE LOAD``` 명령어를 이용해 Redis 클라이언트에서 라이브러리를 로드함
+                ```
+                $ redis-cli
+                127.0.0.1:6379> module load /var/lib/redis/module.so
+                OK
+                127.0.0.1:6379> module list
+                1) 1) "name"
+                   2) "example"
+                   3) "var"
+                   4) (integer) 1
+                127.0.0.1:6379> EXAMPLE.TEST
+                PASS
+                ```
+                + ⚠️ Redis Module에 ```system``` 함수와 같이 **OS 명령어를 실행하는 함수** 또는 **원하는 파일 시스템에 접근할 수 있는 함수** 등을 포함시켜 공격에 사용할 수 있음
+
+<br/><br/>
+
+### Redis 주의사항: Redis를 통해 서비스 사용 시 주의해야 할 사항들
 
 <br/><br/><br/>
 
