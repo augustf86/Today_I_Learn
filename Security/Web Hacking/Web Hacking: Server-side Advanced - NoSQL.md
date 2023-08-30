@@ -483,6 +483,22 @@
 <br/><br/>
 
 ### Redis 주의사항: Redis를 통해 서비스 사용 시 주의해야 할 사항들
+* 인증 체계
+    - Redis는 기본 설정 상 **인증 과정이 포함되어 있지 않은** DBMS임 <br/> &nbsp;&nbsp; → ⚠️ 공격자는 Redis 서버에 접근이 가능한 경우 원하는 명령어를 통해 Exploit Tech의 공격들을 수행하는 데 어려움이 없음
+    - 해결방법
+        + **인증 과정을 추가**하는 방법
+            - Redis에서 DBMS의 설정을 관리하는 **/etc/redis/redis.conf** 파일의 ```requirepass```를 이용해 패스워드를 지정할 수 있음 <br/> &nbsp;&nbsp; → 설정 이후 Redis 사용 시 ```AUTH``` 명령어를 통해 인증 과정을 거쳐야만 Redis 명령어를 사용할 수 있음
+                | | 설명 |
+                |:---:|------|
+                | 01 | **/etc/redis/redis.conf** 파일에 ```requirepass password``` 형식으로 패스워드를 지정한 후 저장함 |
+                | 02 | 설정 파일을 적용하기 위해 Redis 서버를 재시작함 (```sudo service redis-server restart```) |
+                | 03 | 이후 클라이언트에서는 ```AUTH``` 명령어를 입력하여 인증 과정을 거쳐야만 명령어 실행이 가능함 <br/> &nbsp;&nbsp; - ```AUTH``` 명령어로 인증 과정을 거치기 전의 명령어들은 에러(NOAUTH Authentication require)를 발생시킴 |
+        + Redis 6.0 버전 이후부터 추가된 **Multi Users와 ACL(Access Control List)를 통해 접근 제어를 설정할 수 있는 기능**을 이용하는 방법
+            - 다양한 사용자에 대한 인증을 수행할 수 있고, 권한과 명령어 등을 분리할 수 있음
+
+<br/>
+
+* bind
 
 <br/><br/><br/>
 
