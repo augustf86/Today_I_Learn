@@ -4,6 +4,7 @@
 * [Dreamhack Web Hacking] Background: Non-Relational DBMS [🔗](https://dreamhack.io/lecture/courses/168)
 * [Dreamhack Web Hacking] ServerSide: NoSQL Injectoin [🔗](https://dreamhack.io/lecture/courses/189)
 * [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: MongoDB DBMS [🔗](https://dreamhack.io/lecture/courses/285)
+* [Dreamhack Web Hacking Advanced - Server Side] Exploit Tech: Redis DBMS [🔗](https://dreamhack.io/lecture/courses/284)
 
 <br/><br/>
 
