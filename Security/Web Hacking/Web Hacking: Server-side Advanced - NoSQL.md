@@ -576,4 +576,53 @@
 
 <br/><br/>
 
-### Bug Case
+### Bug Case: nano 패키지
+* Background: **nano**
+    - Apache에서 개발한, NodeJS에서 CouchDB를 사용할 때 주로 사용하는 패키지 [🔗](https://github.com/apache/couchdb-nano)
+    - ```get``` 함수를 사용해 ```_id``` 정보를 기반으로 데이터를 조회하거나 ```find``` 함수를 사용해 쿼리 기반으로 데이터를 가져올 수 있음
+        | 사용 함수 | 설명 |
+        |:---:|------|
+        | ```get``` | 특수 구성 요소인 ```_all_docs```, ```_db``` 등에 접근하여 데이터베이스의 정보를 획득하는 등 의도하지 않은 행위를 수행할 수 있음 |
+        | ```find``` | 연산자와 같이 객체(오브젝트) 타입의 값을 입력해 의도하지 않은 행위를 수행할 수 있음 |
+        + nano 패캐지의 ```get``` 험수의 구현
+            ```javascript
+            // https://github.com/apache/couchdb-nano/blob/main/lib/nano.js → Line 680-688
+            function getDoc (docName, qs0, callback0) {
+                const { opts, callback } = getCallback(qs0, callback0);
+
+                if (missing(docName)) {
+                    return callbackOrRejectError(callback);
+                }
+
+                // https://github.com/apache/couchdb-nano/blob/main/lib/nano.js → Line 257-461 (relax 함수) 참고
+                return relax({ db: dbName, doc: docName, qs: opts }, callback);
+            }
+            ```
+            - ```relax``` 함수를 호출하여 처리되는 과정
+                | | 설명 |
+                |:---:|------|
+                | 01 | init(초기화) 과정에서 등록된 URL(```cfg.url```)의 뒤에 db 이름을 합침 <br/> (```req.uri = urlResolveFix(req.uri, encodeURIComponent(opts.db));```) |
+                | 02 | 그 뒤에 입력받은 ```doc```를 추가함 (```req.uri += '/' + encodeURIComponent(opts.doc);```) |
+                | 03 | 만들어진 URL로 HTTP GET 메소드를 이용해 요청을 보냄 |
+            - ⚠️ **전달된 인자에 대해 특수 구성요소의 포함 여부를 검사하지 않음**
+        + nano 패키지의 ```find``` 함수의 구현
+            ```javascript
+            // https://github.com/apache/couchdb-nano/blob/main/lib/nano.js → Line 1025-1036
+            function find (query, callback) {
+                if (missing(query) || typeof query !== 'object') {
+                    return callbackOrRejectError(callback);
+                }
+
+                 return relax({
+                    db: dbName,
+                    path: '_find',
+                    method: 'POST',
+                    body: query
+                 }, callback);
+            }
+            ```
+            - if문의 조건식을 이용해 전달된 쿼리가 NUL인지, 객체 타입이 아닌지를 검사하여 둘 중 하나라도 참이 되면 에러를 발생시킴 <br/> &nbsp;&nbsp; *→ ⚠️ **객체 형태의 데이터를 전달할 수 있음**을 알 수 있음*
+
+<br/>
+
+* nano 패키지의 ```get``` 함수를 이용한 공격
