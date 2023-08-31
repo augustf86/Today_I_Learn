@@ -549,3 +549,31 @@
 <br/><br/><br/>
 
 ## CouchDB
+* Background: CouchDB
+    - **key-value** 쌍인 구조로 **JSON objects 형태인 document**를 저장하는 웹 기반의 DBMS
+        + HTTP 기반의 서버로 **REST API 형식**으로 HTTP Method(```GET```, ```POST```, ```PUT```, ```DELETE``` 등)을 기반해 요청을 처리함 <br/> &nbsp;&nbsp; ↳ ```curl```과 같은 HTTP Client로 접근할 수 있음
+    - CouchDB의 특수 구성요소
+        + 일반적으로 ```_```(밑줄) 문자로 시작하는 URL 구성요소/JSON 필드는 특수 구성 요소를 나타냄
+        + 특수 구성요소의 종류 [🔗](https://docs.couchdb.org/en/latest/api/index.html)
+            - Server [🔗](https://docs.couchdb.org/en/latest/api/server/index.html)
+                | 요소 | 설명 |
+                |:---:|------|
+                | ```/``` | 인스턴스 루트에 접근하여 인스턴스에 대한 메타 정보를 반환함 <br/> &nbsp;&nbsp; - Response: 서버에 대한 정보를 포함하는 JSON structure |
+                | ```/_all_dbs``` | 인스턴스의 모든 데이터베이스 목록을 반환함 |
+                | ```/_utils``` | 관리자 페이지(built-in Fauxton administration interface)로 이동함 |
+            - Database [🔗](https://docs.couchdb.org/en/latest/api/database/index.html)
+                | 요소 | 설명 |
+                |:---:|------|
+                | ```/{db}``` | 지정된 데이터베이스에 대한 정보를 반환함 |
+                | ```/{db}/_all_docs``` | 지정된 데이터베이스에 포함된 모든 도큐먼트를 반환함 |
+                | ```/{db}/_find``` | 지정된 데이터베이스에서 JSON 쿼리에 해당하는 모든 도큐먼트를 반환함 |
+            - JSON 내부의 특수 필드 → ```_```(밑줄)로 시작하는 필드 중 속성 값으로 사용되는 필드
+                | 필드 | 설명 |
+                |:---:|------|
+                | ```_id``` | 도큐먼트의 아이디(id) <br/> &nbsp;&nbsp; - 처음에 설정하지 않으면 랜던함 값으로 설정되고 Primary Key 역할을 함 |
+                | ```_rev``` | 문서의 버전 정보 |
+    - ⚠️ **주로 사용자 입력 데이터에 대한 타입 검증이 충분하지 않거나 특수 구성요소로 사용되어지는 값들에 대한 접근으로 인해 취약점이 발생함**
+
+<br/><br/>
+
+### Bug Case
