@@ -693,3 +693,123 @@
 <br/><br/>
 
 ### CouchDB 특수 구성요소를 이용한 공격
+* CouchDB 사용 시 ```/{db}/...```와 같은 구조로 접근함
+    | 접근 | 설명 |
+    |:---:|------|
+    | 일반적인 접근 | ```/{db}/{_id}``` 구조로 접근함 → ```{_id}``` 값을 통해 Database 안의 도큐먼트에 접근할 수 있음 |
+    | 특수 구성요소를 <br/> 이용한 접근 | ```/{db}/...``` 경로에서 미리 정의된 특수 구성요소들을 사용할 수 있음 <br/> &nbsp;&nbsp; - 특수 구성요소는 ```_```(밑줄)을 Prefix로 사용함 <br/> &nbsp;&nbsp; - 대표적인 예시: ```/{db}/_all_docs``` *→ 해당 페이지 접근 시 지정된 데이터베이스에 포함된 모든 도큐먼트를 반환함* |
+
+<br/>
+
+* 예시
+    ```javascript
+    // app.js (이용자가 전달한 uid에 해당하는 데이터를 조회하고 반환된 에러와 결과를 비교하여 인증 과정을 진행하는 코드)
+    const express = require('express');
+    const session = require('express-session');
+    const app = express();
+
+    app.use(express.json());
+    app.use(express.urlencoded({extended: false}));
+
+    app.use(session({'secret': 'secret'}));
+
+    const nano = require('nano')('http://{username}:{password}@localhost:5984');
+    const users = nano.db.use('users');
+
+    app.post('/auth', function(req, res) {
+        users.get(req.body.uid, function(err, result) { // 이용자가 전달한 uid에 해당하는 데이터를 조회하고 반환된 에러 또는 결과를 통해 인증을 진행함
+            if (err) { // 에러가 반환된 경우
+                res.send('error');
+                return;
+            }
+            if (result.upw == req.body.upw) { // 조회한 uid의 upw와 이용자가 입력한 upw가 일치하는 경우
+                res.session.auth = true;
+                res.send('success'); // 인증에 성공
+            } else { // 그 외의 경우
+                res.send('fail'); // 인증 실패
+            }
+        });
+    });
+
+    const server = app.listen(3000, function() {
+        console.log('app.listen');
+    });
+    ```
+    - CouchDB에서 ```PUT``` 메소드를 통해 새로운 Document를 생성할 수 있음
+        ```
+        $ curl -X PUT http://{username}:{password}@localhost:5984/users/test -d '{"_id": "admin", "upw": "secretpassword"}'
+        {"ok":true,"id":"admin","rev":"2-142ddb6e06fd298e86fa54f9b3b9d7f2"} → 📝 데이터 추가 성공
+        ```
+        + ```curl``` 명령어의 옵션을 통해 데이터를 전송함
+            | 옵션 | 설명 |
+            |:---:|------|
+            | ```-X``` | (```--request```) GET, POST, PUT, PATCH, DELETE 중 **요청 시 사용할 메소드를 지정**함 <br/> &nbsp;&nbsp; → ```-X``` 옵션을 이용해 ```PUT``` 메소드를 지정함 (```-X PUT```) |
+            | ```-d``` | (```--data```) HTTP POST, PUT 요청 데이터 입력할 때 사용함 <br/> &nbsp;&nbsp; → ```-d``` 옵션을 이용해 ```{"_id": "admin", "upw": "secretpassword"}``` 데이터를 전송함 |
+    + ⚠️ nano 패키지의 ```get``` 함수를 사용할 때 **사용자의 입력 데이터를 사용하고, 입력에 대한 검증이 없는 경우** 특수 구성요소를 입력해 개발자가 의도하지 않은 행위를 수행할 수 있음
+    + 이용자의 입력 데이터(```req.body.uid```)에 따른 결과
+        - ```admin```을 입력한 경우
+            + /auth 페이지에서 ```uid```의 값으로 "admin"을 입력한 경우 내부적으로 실행되는 동작을 ```curl``` 명령어의 ```-i``` 옵션(Response header, body 출력)으로 확인한 결과
+                ```linux
+                $ curl -i http://{username}:{password}@localhost:5984/users/admin
+                HTTP/1.1 200 OK
+                Cache-Control: must-revalidate
+                Content-Length: 83
+                Content-Type: application/json
+                Date: Tue, 19 May 2020 16:47:49 GMT
+                ETag: "2-142ddb6e06fd298e86fa54f9b3b9d7f2"
+                Server: CouchDB/3.1.0 (Erlang OTP/20)
+                X-Couch-Request-ID: 028e8b621c
+                X-CouchDB-Body-Time: 0
+
+                {"_id":"admin","_rev":"2-142ddb6e06fd298e86fa54f9b3b9d7f2","upw":"secretpassword"}
+                ```
+                - 요청 결과 각 변수에 들어갈 값 → 요청에 성공함(```HTTP/1.1 200 OK```)
+                    | 변수 | 요청 결과로 들어갈 값 |
+                    |:---:|------|
+                    | ```result``` | curl의 결과값(Response의 body 부분에 들어가 있는 admin 도큐먼트의 내용) <br/> &nbsp;&nbsp; → ```{"_id":"admin","_rev":"2-142ddb6e06fd298e86fa54f9b3b9d7f2","upw":"secretpassword"}``` |
+                    | ```err``` | ```null``` 이 들어감 |
+                - ```if (result.upw == req.body.upw)``` 코드에서 ```result.upw```로 변수에 접근할 경우 admin 도큐먼트의 upw에 해당하는 ```"secretpassword"``` 값으로 설정되어 있게 됨
+        - 유효하지 않은 유저명을 입력한 경우
+            + /auth 페이지에서 ```uid```의 입력값으로 유효하지 않은 유저명을 입력한 경우 내부적으로 실행되는 동작을 ```curl``` 명령어의 ```-i``` 옵션으로 화인한 결과
+                ```linux
+                $ curl -i http://{username}:{password}@localhost:5984/users/undefined_user
+                HTTP/1.1 404 Object Not Found
+                Cache-Control: must-revalidate
+                Content-Length: 41
+                Content-Type: application/json
+                Date: Tue, 19 May 2020 17:07:14 GMT
+                Server: CouchDB/3.1.0 (Erlang OTP/20)
+                X-Couch-Request-ID: be30c84acd
+                X-CouchDB-Body-Time: 0
+
+                {"error":"not_found","reason":"missing"}
+                ```
+                - 요청 결과 각 변수에 들어갈 값 → 요청에 실패함(```HTTP/1.1 404 Object Not Found```)
+                    | 변수 | 요청 결과로 들어갈 값 |
+                    |:---:|------|
+                    | ```result``` | ```null```이 들어감 |
+                    | ```err``` | 요청에 대한 에러 정보(Response의 body 부분에 들어있는 에러 정보) <br/> &nbsp;&nbsp; → ```{"error":"not_found","reason":"missing"}``` |
+                - ```if(err)``` 코드에서 ```err``` 변수 값이 ```null```이 아니기 때문에 해당 조건문이 실행됨 <br/> &nbsp;&nbsp; ↳ 💡 Javascript의 ```if``` 문에서 거짓 조건이 되는 데이터: ```false```, ```0```, ```""```, ```null```, ```undefined```, ```NaN```
+        - ```_all_docs```을 입력한 경우
+            + /auth 페이지에서 ```uid```의 입력값으로 "_all_docs"을 입력한 경우 내부적으로 실행되는 동작을 ```curl``` 명령어의 ```-i``` 옵션으로 확인한 결과
+                ```linux
+                $ curl -i http://{username}:{password}@localhost:5984/users/_all_docs
+                HTTP/1.1 200 OK
+                Cache-Control: must-revalidate
+                Content-Type: application/json
+                Date: Tue, 19 May 2020 17:24:32 GMT
+                Server: CouchDB/3.1.0 (Erlang OTP/20)
+                Transfer-Encoding: chunked
+                X-Couch-Request-ID: 43c8ca548f
+                X-CouchDB-Body-Time: 0
+
+                {"total_rows":1,"offset":0,"rows":[
+                {"id":"admin","key":"admin","value":{"rev":"2-142ddb6e06fd298e86fa54f9b3b9d7f2"}}
+                ]}
+                ```
+                - 요청 결과 각 변수에 들어갈 값 → 요청에 성공함(```HTTP/1.1 200 OK```)
+                    | 변수 | 요청 결과로 들어갈 값 |
+                    |:---:|------|
+                    | ```result``` | curl의 결과값(Response의 body 부분에 들어가 있는 _all_docs 도큐먼트의 내용) |
+                    | ```err``` | ```null```이 들어감 |
+                - ```_all_docs``` 도큐먼트에는 ```upw``` 키에 해당하는 값이 없음 → ```if (result.upw == req.body.upw)``` 코드에서 ```result.upw``` 변수의 값이 ```undefined```가 됨 <br/> &nbsp;&nbsp; *→ ⚠️ 사용자가 POST 요청을 보낼 때 **```upw```의 값을 생략**하면 ```req.body.upw``` 변수 값이 ```undefined```가 되기 때문에 해당 조건을 우회해 인증에 성공한 세션을 얻을 수 있음*
