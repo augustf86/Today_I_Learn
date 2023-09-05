@@ -81,6 +81,36 @@
 <br/><br/>
 
 ### Command Injection 취약점 공격 시 유용하게 사용 가능한 메타 문자들의 목록
+* Directory (Location)
+    | 문자 | 설명 |
+    |:---:|------|
+    | ```.``` | 현재 디렉터리 |
+    | ```..``` | 상위 디렉터리 |
+    | ```~``` | 사용자의 홈 디렉터리(home directory) |
+    | ```-``` | 이전 작업 디렉터리 (rollback) |
+    - 예시
+        ```linux
+        $ pwd
+        /tmp → pwd(print working directory) 명령어로 현재 작업 중인 디렉터리의 이름을 출력함
+        $ cd ..; pwd
+        / → cd .. 명령어로 현재 디렉터리에서 상위 디렉터리로 이동함
+        $ cd ~; pwd 
+        /home/userA → cd ~ 명령어로 홈 디렉터리로 이동함
+        ```
+
+<br/>
+
+* Sequence expression: ```..```
+    - ``시작..끝``형식으로 사용하며, 문자와 정수 범위를 만드는 데 사용함
+    - 예시
+        ```linux
+        $ echo {1..10} 
+        1 2 3 4 5 6 7 8 9 10 → 1에서 10까지의 숫자를 echo 명령어를 통해 터미널에 출력함
+        ```
+
+<br/>
+
+* Redirection
 
 <br/><br/><br/>
 
