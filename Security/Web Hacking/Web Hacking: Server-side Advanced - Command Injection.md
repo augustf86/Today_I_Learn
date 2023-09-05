@@ -111,6 +111,63 @@
 <br/>
 
 * Redirection
+    - Output redirection: ```>```, ```>>```
+        + Write mode(덮어쓰기): ```>```
+            - ```명령어 > 파일``` 형식으로 사용하며, 명령어의 표준 출력 스트림의 도착 지점을 파일로 설정함 (덮어쓰기)
+            - 예시
+                ```linux
+                $ id > /tmp/res.txt → 사용자 및 그룹 ID를 출력하는 id 명령어의 결과를 res.txt 파일에 저장함
+                $ cat /tmp/res.txt → 파일의 내용을 화면에 출력하는 cat 명령어를 이용해 res.txt 파일을 출력함
+                uid=1000(users) gid=1000(users) groups=1000(users)
+                ``` 
+        + Append mode(추가): ```>>```
+            - ```명령어 >> 파일``` 형식으로 사용하며, 명령어의 표준 출력 스트림의 도착지점 파일의 뒷부분에 내용을 추가함
+            - 예시
+                ```linux
+                $ echo 'hello world!' >> /tmp/res.txt → echo 명령어의 출력 스트림을 /tmp/res.txt로 재지정하여 'hello world!' 문자열을 터미널에 출력하는 대신 res.txt 뒷부분에 추가함
+                $ id >> /tmp/res.txt → id 명령어의 결과를 res.txt 파일의 뒷부분에 추가함
+                $ cat /tmp/res.txt → cat 명령어를 이용해 res.txt 파일을 화면에 출력함
+                hello world!
+                uid=1000(users) gid=1000(users) groups=1000(users)
+                ```
+    - Standard output and error redirection (비표준): ```&>```
+        + ```명령어 &> 파일``` 형식으로 사용하며, 명령어의 표준 출력과 표준 에러를 모두 파일에 씀 (덮어쓰기)
+        + 예시
+            ```linux
+            $ cat /etc/pass* &> /tmp/res.txt → cat 명령어를 실행한 결과와 실행 시 발생한 에러를 res.txt 파일에 저장함 (덮어씀)
+            $ cat /tmp/res.txt → cat 명령어를 이용해 res.txt 파일을 화면에 출력함
+            root:x:0:0:root:/root:/bin/bash → 출력 결과
+            daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+            ...
+            cat: /etc/passwd-: Permission denied → 에러
+            ``` 
+    - File descriptor redirection: ```>&```
+        + 표준 출력(0), 표준 입력(1), 표준 오류(2)와 같은 fd 값을 이용해 출력을 재지정함
+            - ```명령어 > 파일 2>&1```은 표준 출력(stout)를 파일에 쓰고, 표준 에러(2)를 백그라운드(&)로 표준 출력(1)에 보내라는 의미
+        + 예시
+            ```linux
+            $ cat /etc/pass* > /tmp/res.txt 2>&1 → cat 명령어를 실행한 결과와 실행 시 발생한 에러를 모두 res.txt 파일에 저장함 (덮어씀)
+            $ cat /tmp/res.txt → cat 명령어를 이용해 res.txt 파일을 화면에 출력함
+            root:x:0:0:root:/root:/bin/bash → 출력 결과
+            daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+            ...
+            cat: /etc/passwd-: Permission denied → 에러
+            ```
+    - Input Redirection (read mode): ```<```
+        + ```명령어 < 파일``` 형식으로 사용하며, 파일로부터 입력을 받음 (입력 스트림을 파일로 지정함)
+        + 예시
+            ```linux
+            $ cat < /etc/passwd → cat 명령어를 통해 화면에 출력할 내용을 /etc/passwd 파일로 지정함
+            root:x:0:0:root:/root:/bin/bash
+            daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+            bin:x:2:2:bin:/bin:/usr/sbin/nologin
+            sys:x:3:3:sys:/dev:/usr/sbin/nologin
+            ...
+            ```
+
+<br/>
+
+* Brace Expansion (Group Command): ```{ }```
 
 <br/><br/><br/>
 
