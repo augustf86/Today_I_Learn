@@ -168,6 +168,37 @@
 <br/>
 
 * Brace Expansion (Group Command): ```{ }```
+    - ```{ }```은 명령어 블록의 시작과 끝을 나타냄
+    - 예시
+        ```linux
+        $ { id; ls; } > /tmp/res.txt → 명령어 블록의 출력 결과를 res.txt 파일에 작성함(덮어씀)
+        $ cat /tmp/res.txt → cat 명령어를 이용해 res.txt 파일을 화면에 출력함
+        uid=1000(users) gid=1000(users) groups=1000(users)
+        bin
+        root
+        dev
+        etc
+        home
+        ...
+        ```
+
+<br/>
+
+* Wildcards
+    - question mark: ```?```
+        + 매칭되는 하나의 문자를 나타내는 와일드카드 문자로, **1개의 문자**로 대체됨
+        + 예시
+            ```linux
+            $ ls /bin/c??
+            /bin/cat → ?은 임의의 문자 하나와 매칭되므로 cat은 c??와 매칭됨
+            ```
+    - asterisk: ```*```
+        + 매칭되는 모든 문자를 나타내는 와일드카드 문자로, **0개 이상의 문자**로 대체됨
+        + 예시
+            ```linux
+            $ ls /bin/c*
+            /bin/cat  /bin/chacl  /bin/chgrp  /bin/chmod  /bin/chown  /bin/chvt  /bin/cp  /bin/cpio
+            ```
 
 <br/><br/><br/>
 
