@@ -546,6 +546,26 @@
 <br/><br/><br/>
 
 ## Windows 환경
+* 윈도우에서 명령어를 실행하기 위해 cmd.exe 또는 파워쉘(Powershell)을 사용할 수 있음
+    - cmd.exe와 파워셸은 같은 운영체제 상에서 구동되지만 각 인터프리터에서 제공하는 문자와 기능은 서로 다름
+
+<br/><br/>
+
+### Windows와 Linux 비교
+* 쉘 메타문자 비교
+    | Linux | Windows (cmd, powershell) | 설명 |
+    |---|---|:---:|
+    | ```-A```, ```--A``` | ```/c``` | 커맨드 라인 옵션 |
+    | ```$PATH``` | ```%PATH%``` | 환경 변수 |
+    | ```$ABCD``` | ```$AVCD``` (powershell only) | 쉘 변수 |
+    | ```;``` | ```&``` (cmd only) <br/> ```;``` (powershell only) | 명령어 구분자 |
+    | ```echo $(id)``` | ```for /f "delims=" %a in ('whoami') dp echo %a``` | 명령어 치환 |
+    | ```> /dev/null``` | ```> NUL``` (cmd only) <br/> ```\| Out-Null``` (powershell only) | 출력 제거 |
+    | ```command \|\| true``` | ```command & rem``` (cmd only) <br/> ```command -ErrorAction SilentlyContinue``` (powershell only) | ```command``` 명령어 오류 무시 |
+
+<br/>
+
+* Windows Command(명령어)
 
 <br/><br/><br/>
 
