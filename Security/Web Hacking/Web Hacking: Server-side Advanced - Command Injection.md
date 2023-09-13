@@ -728,3 +728,10 @@
 <br/><br/><br/>
 
 ## Command Injection Bug Cases
+* ⚠️ Command Injection 주의사항
+    - 모든 시스템 명령어가 Commnad Injection에 취약한 것은 아님 → 각 함수의 특징을 정확히 이해하고 있어야 함
+    - 패치가 적용되었을 경우 이를 우회할 수 있는 방법을 모색하는 것이 중요함
+
+<br/><br/>
+
+### ruby / perl
