@@ -922,3 +922,19 @@
 <br/>
 
 * ```escapeshellarg``` 함수
+    - PHP에서 명령어의 인자를 조작할 수 없도록 하기 위해 사용하는 함수 [🔗](https://www.php.net/manual/en/function.escapeshellarg.php)
+        ```php
+        escapeshellarg(string $arg): string
+        ```
+        + 이스케이프될 인수(```$arg```)를 매개변수로 받아 이스케이프된 문자열을 반환함
+            - 문자열 주위에 작은 따옴표를 추가하고 기존의 작은 따옴표를 따옴표/이스케이프 처리하여 쉘 함수에 직접 전달하고 하나의 안전한 인수로 처리하도록 함
+        + **사용자 입력에 오는 쉘 함수(```exec()``` 또는 ```system()``` 함수, 백틱(backtick) 연산자)에 대한 개별 인수를 이스케이프/따옴표 처리하는 데 사용해야 함**
+    - ```escapeshellcmd``` 함수와 ```escapeshellarg``` 함수의 비교
+        | 함수 | 예시 | 결과 |
+        |:---:|------|----|
+        | escapeshellcmd | ```var_dump(escapeshellcmd("a -h -d -e"));``` | ```string(10) "a -h -d -e``` <br/> (전달한 입력값이 그대로 반환됨) |
+        | escapeshellarg | ```var_dump(escapeshellarg("a -h -d -e"));``` | ```string(12) "'a -h -d -e'"``` <br/> (하나의 문자열(```'a -h -d -e'```)로 반환됨) |
+
+<br/><br/>
+
+### Program Options
