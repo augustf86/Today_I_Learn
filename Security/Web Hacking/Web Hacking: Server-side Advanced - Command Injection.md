@@ -873,3 +873,28 @@
 <br/><br/>
 
 ### PHP
+* ```system``` 함수
+    - PHP에서 시스템 명령어를 실행하기 위해 제공하는 함수 [🔗](https://www.php.net/manual/en/function.system.php)
+        ```php
+        system(string $command, int &$result_code = null): string|false
+        ```
+        + 실행할 명령(```$command```)와 결과 코드(```$result_code```)를 매개변수의 값으로 받음
+            - ```$result_code```는 선택사항으로, 존재할 경우 실행할 명령의 반환 상태가 여기에 기록됨
+        + 함수 실행에 성공하면 명령의 마지막 줄(```string```)을 반환하고, 실패하면 ```false```를 반환함 
+    - Commnad Injection에 취약한 코드 예시
+        ```php
+        <?php
+            $cmd = "ls ".$_GET['filename']." 2>&1";
+            system($cmd);
+        ?>
+        ```
+        ```linux
+        $ curl 'http://dreamhack.local/a.php?filename=-al /etc/passwd; id'
+        -rw-r--r-- 1 root root 1602 May  4 04:35 /etc/passwd → ls -al 명령어의 실행 결과
+        uid=1000(dreamhack) gid=1000(dreamhack) groups=1000(dreamhack) → id 명령어의 실행 결과
+        ```
+        + ```filename```의 인자값으로 명령어 구분자(```;```)를 이용해 ```ls -al``` 명령 외에 ```id``` 명령도 실행시키고 있음 <br/> &nbsp;&nbsp; *→ ⚠️ ```&&```, ```;```, ```|``` 메타 문자를 이용해 명령어를 연속으로 실행시킬 수 있어 공격자는 임의 명령어를 실행하도록 만들 수 있음*
+
+<br/>
+
+* ```escapeshellcmd``` 함수
