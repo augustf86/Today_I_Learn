@@ -898,3 +898,27 @@
 <br/>
 
 * ```escapeshellcmd``` 함수
+    - PHP에서 메타 문자를 통한 Command Injection을 방지하기 위해 사용하는 함수 [🔗](https://www.php.net/manual/en/function.escapeshellcmd.php)
+        ```php
+        escapeshellcmd(string $command): string
+        ```
+        + 이스케이프될 명령(```$command```)를 매개변수로 받아 이스케이프된 문자열을 반환함
+            - 메타 문자가 입력되었을 때 해당 문자 앞에 ```\```를 삽입해 타 명령어를 실행할 수 없도록 함 <br/> &nbsp;&nbsp; = 임의의 명령을 실행하도록 셸 명령을 속이는 데 사용할 수 있는 모든 문자열을 이스케이프함
+        + **데이터가 ```exec()``` 또는 ```system()``` 함수 또는 백틱(backtick) 연산자로 전달되기 전에 사용자 입력에서 오는 모든 문자가 이스케이프되도록 하는 데 사용해야 함**
+    - 예시: ```escapeshellcmd``` 함수를 이용한 PHP Command Injection 패치
+        ```php
+        <?php
+            $cmd = "ls ".escapeshellcmd($_GET['filename'])." 2>&1";
+            system($cmd);
+        >
+        ```
+    - 📌 ```escapeshellcmd``` 함수로 입력값에 포함된 메타문자를 이스케이프하는 경우 **메타 문자를 사용한 Command Injection은 불가능함** <br/> &nbsp;&nbsp; *→ ⚠️ 특정 명령어의 인자로 입력값이 전달되는 경우 공격자는 **실행하려는 명령어의 옵션 또는 인자**를 조작할 수 있음*
+        + 예시: ```escapeshellcmd``` 함수 사용 시 명령어의 옵션/인자 조작
+            | 상황 | 설명 |
+            |:---:|------|
+            | 메타문자 <br/> 이스케이프 | ```$ curl 'http://dreamhack.local/a.php?filename=-al%20/etc/passwd;%20id'``` <br/> &nbsp;&nbsp; → ```-al%20/etc/passwd;%20id``` 내 메타문자인 ```;```가 이스케이프 처리되어 '/etc/passwd;'와 'id' 문자열을 이름으로 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 가지는 파일 또는 디렉터리를 찾을 수 없다는 결과를 반환함 <br/> &nbsp;&nbsp; *⇒ ```id``` 명령어를 실행할 수 없도록 하여 Command Injection을 방지함*
+            | 인자/옵션 <br/> 조작 | ```$ curl 'http://dreamhack.local/a.php?filename=-al%20/etc/passwd'``` <br/> &nbsp;&nbsp; → ```-al%20/etc/passwd``` 내에는 메타문자가 존재하지 않으므로 ```ls -al /etc/passwd 2>&1```가 실행됨 <br/> &nbsp;&nbsp; *⇒ 인자와 옵션을 조작하여 Command Injection을 통해 정보를 탈취할 수 있음* | 
+
+<br/>
+
+* ```escapeshellarg``` 함수
