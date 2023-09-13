@@ -826,3 +826,50 @@
 <br/>
 
 * Command Injection 취약점이 발생할 수 있는 다른 I/O 함수: ```rb_io_open_generic``` 함수
+    ```ruby
+    static VALUE rb_io_open_generic(VALUE klass, VALUE filename, int oflags, int fmode, const convconfig_t *convconfig, mode_t perm) {
+        VALUE cmd;
+        if (klass == rb_cIO && !NIL_P(cmd = check_pipe_command(filename))) { # filename 내 파이프 문자의 포함 여부를 check_pipe_command 함수로 검사함
+            return pipe_open_s(cmd, rb_io_oflags_modestr(oflags), fmode, convconfig); # 파이프 문자가 포함되어 있는 경우
+        } else {
+            return rb_file_open_generic(io_alloc(klass), filename, oflags, fmode, convconfig, perm); # 파이프 문자가 포함되어 있지 않은 경우
+        }
+    }
+    ```
+    - ```open``` 함수처럼 ```rb_define_global_function```으로 등록된 함수는 아님
+    - 전달된 인자의 첫 번째 문자가 ```|``` 인지 확인하고 프로세스의 생성 여부를 결정함
+        + ```check_pipe_command``` 함수를 이용해 ```filename```에 ```|``` 문자가 포함되어 있는지 확인함 <br/> &nbsp;&nbsp; → 포함되어 있으면 ```pipe_open_s``` 함수를, 포함되어 있지 않으면 ```rb_file_open_generic``` 함수를 호출함
+
+<br/>
+
+* 공격 예시
+    - Ruby: Command Injection 예시
+        ```ruby
+        # irb(main):... > 다음에 입력
+        open("|id > /tmp/1")
+        # 결과: #<IO:fd 11>
+        IO.read("/tmp/1")
+        # 결과: "uid=1000(...) gid=1000(...) groups=1000(...)\n"
+
+        IO.read("|id")
+        # 결과: "uid=1000(...) gid=1000(...) groups=1000(...)\n"
+
+        IO.binread("|id");
+        # 결과: "uid=1000(...) gid=1000(...) groups=1000(...)\n"
+        ```
+        + ```rb_io_s_binread```, ```rb_io_open```, ```rb_io_s_read```를 사용한 ```IO.read```, ```IO.binread``` 등이 전달된 인자에 따라 프로세스를 실행함
+            | 함수 | 설명 |
+            |:---:|------|
+            | ```IO.read``` | 파일을 열고 length의 바이트를 반환함 (default: the rest of the file) [🔗](https://ruby-doc.org/core-2.5.1/IO.html#method-c-binread) <br/> &nbsp;&nbsp; - (Optional) offset을 지정할 경우 지정된 오프셋을 찾음 <br/> &nbsp;&nbsp; - ```\|``` 문자로 시작하는 경우 ```open``` 함수와 동일하게 하위 프로세스가 생성됨 → 임의 명령어를 실행할 수 있음 |
+            | ```IO.binread``` | 파일을 열고 length의 바이트를 반환함 (default: the rest of the file) [🔗](https://ruby-doc.org/core-2.5.1/IO.html#method-c-read) <br/> &nbsp;&nbsp; - (Optional) offset을 지정할 경우 지정된 오프셋을 찾음 <br/> &nbsp;&nbsp; - ```IO.binread``` 함수의 정의를 보면 ```rb_io_open_generic``` 함수를 호출하는 것을 알 수 있음 <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; → ```\|``` 문자가 포함되어 있으면 임의 명령어를 실행할 수 있음 |
+            - 각 함수의 인자로 ```|``` 문자와 함께 명령어를 입력하면 커맨드를 처리해 이를 실행함
+    - Perl: Command Injection 예시
+        ```perl
+        # 터미널에서 입력
+        $ perl -e 'open A, "|id"'
+        # 결과: uid=1000(...) gid=1000(...) groups=1000(...)
+        ```
+
+<br/><br/>
+
+### PHP
