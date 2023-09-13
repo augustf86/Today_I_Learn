@@ -938,3 +938,41 @@
 <br/><br/>
 
 ### Program Options
+* 취약한 실행 파일
+    - 모든 명령어가 인자를 조작한다고 해서 서버에 악영향을 끼치는 것은 아님 <br/> &nbsp;&nbsp; *→ ⚠️ **옵션으로 임의의 명령어를 실행할 수 있는 기능을 제공하는 프로그램**의 경우 해당 프로그램의 인자를 조작할 수 있는 상황이라면 Command Injection 공격이 가능함*
+    - 대표적인 프로그램으로 zip, python이 있음
+        + ```zip```: 압축 파일을 생성하거나 해제하는 명령어
+            - ```zip``` 명령어의 특징
+                + 리눅스 터미널에 ```sudo apt install zip```을 입력하여 설치할 수 있음
+                + ```zip --help```, ```zip -h2```를 입력하여 ```zip``` 명령어에 대한 설명을 볼 수 있음
+            - 📌 **```--unzip-command``` 옵션**
+                + 압축 파일을 테스트할 때 사용하는 옵션 ***→ ⚠️ 인자로 전달된 명령어를 실행함***
+                + 예시: ```"sh -c id"```를 인자로 전달하는 경우
+                    ```linux
+                    # zip /tmp/test.zip /etc/passwd -T --unzip-command="sh -c id"
+
+                    $ strace -e execve zip /tmp/test.zip /etc/passwd -T --unzip-command="sh -c id"
+                    execve("/usr/bin/zip", ["zip", "/tmp/test.zip", "/etc/passwd", "-T", "--unzip-command=sh -c id"], 0x7fffe1dc1320 /* 31 vars */) = 0
+                    updating: etc/passwd (deflated 64%)
+                    uid=1000(dreamhack) gid=1000(dreamhack) groups=1000(dreamhack)
+                    --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13097, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+                    test of /tmp/test.zip OK
+                    +++ exited with 0 +++
+                    ```
+        + ```python```: 파이썬 코드를 실행시키는 명령어
+            - ```python``` 명령어의 특징
+                + 리눅스 터미널에 ```sudo apt install python```를 입력하여 설치할 수 있음 (```python3``` 명령어 사용 시에는```sudo apt install python3```를 입력함)
+                + ```python --help``` 또는 ```python3 --help```를 터미널에 입력하여 ```python```/```python3``` 명령어에 대한 설명을 볼 수 있음
+            - 📌 **```-c``` 옵션**
+                + 명령줄로 코드를 실행시킬 수 있는 옵션
+                + 예시: ```python3 -c```를 이용한 시스템 명령어의 실행
+                    ```linux
+                    # python3 -c "[Python Code]" input.py
+
+                    $ python3 -c '__import__("os").system("id")' input.py
+                    uid=1000(dreamhack) gid=1000(dreamhack) groups=1000(dreamhack)
+                    ```
+
+<br/>
+
+* curl/wget
